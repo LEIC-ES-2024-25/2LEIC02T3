@@ -37,7 +37,7 @@ Thank you!
 * Carlos Cristelo up202307628
 * Francisco Antunes up202307639
 * João Quental up202307755
-* Luís Ferreira up20
+* Luís Ferreira up202007664
 
 ---
 ## Business Modelling
