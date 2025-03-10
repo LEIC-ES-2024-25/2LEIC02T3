@@ -78,7 +78,7 @@ To learn more about how to write a good product vision, please see:
 
 ### Features and Assumptions
 
-## Initial/Tentative List of High-Level Features
+#### Initial/Tentative List of High-Level Features
 
 - **Eco-Challenges & Point System** – Users complete challenges (e.g., walking, trading items) to earn points.
 - **Step Tracking** – Integration with device pedometer to measure steps and convert them into points.
