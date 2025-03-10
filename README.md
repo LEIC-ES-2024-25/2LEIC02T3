@@ -49,8 +49,11 @@ Business modeling in software development involves defining the product's vision
 Our app empowers users to adopt eco-friendly habits through engaging challenges, rewarding achievements, and friendly competition. By tracking steps and promoting the exchange of study materials, we encourage sustainable behaviors while fostering a sense of community.
 
 For: Environmentally conscious individuals and students
+
 Who: Want to track their eco-friendly activities and engage in friendly competition
+
 The app: Provides a platform to earn points, unlock badges, and compare progress with friends
+
 Unlike: Other fitness or trading apps, our solution uniquely combines sustainability challenges with gamification to promote long-term engagement and positive environmental impact
 
 <!-- 
