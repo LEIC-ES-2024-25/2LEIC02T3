@@ -108,26 +108,19 @@ Take a look at the following links to learn some techniques:
 
 ### User Stories
 
-- **As a user, I want to earn points through my steps**  
-  so that I can contribute to a sustainable environment.  
+- As a user, I want to earn points through my steps so that I can contribute to a sustainable environment.  
 
-- **As a user, I want to trade study materials**  
-  so that I can reduce waste and promote the reuse of resources.  
+- As a user, I want to trade study materials so that I can reduce waste and promote the reuse of resources.  
 
-- **As a user, I want to earn badges**  
-  so that I feel motivated to complete more challenges.  
+- As a user, I want to earn badges so that I feel motivated to complete more challenges.  
 
-- **As a user, I want a friend leaderboard**  
-  so that I can compete in a fun and eco-friendly way.  
+- As a user, I want a friend leaderboard so that I can compete in a fun and eco-friendly way.  
 
-- **As a user, I want to be notified**  
-  so that I stay updated and motivated to participate in eco-friendly activities.  
+- As a user, I want to be notified so that I stay updated and motivated to participate in eco-friendly activities.  
 
-- **As a user, I want to be evaluated over time**  
-  so that I can see how my eco-friendly habits are improving.  
+- As a user, I want to be evaluated over time so that I can see how my eco-friendly habits are improving.  
 
-- **As a user, I want to invite my friends**  
-  so that I can encourage more people to participate in sustainable challenges. ****
+- As a user, I want to invite my friends so that I can encourage more people to participate in sustainable challenges. 
 <!-- 
 In this section, you should describe all kinds of requirements for your module: functional and non-functional requirements.
 
