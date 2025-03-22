@@ -22,6 +22,18 @@ class _ChallengesScreenState extends State<ChallengesScreen> {
       totalSteps: 5000,
       currentSteps: 0,
     ),
+    Challenge(
+      title: "Car-Free Day",
+      description: "Avoid using a car today.",
+      points:50,
+      carFreeStatus: "car-free by now",
+    ),
+    Challenge(
+      title: "Rode a Bike Today",
+      description: "Swap your car ride for a bike ride today.",
+      points: 30,
+      bikeRideStatus: "not done yet",
+    ),
   ];
 
   //----------------------------------------------------------------------------
@@ -30,6 +42,7 @@ class _ChallengesScreenState extends State<ChallengesScreen> {
   StreamSubscription<StepCount>? _stepCountStream;
   int _lastRecordedStepCount = 0; // Tracks the step count at the start of the day
   DateTime? _lastRecordedDate; // Tracks the last recorded date
+  StreamSubscription<Activity>? _activitySubscription;
 
 
   //----------------------------------------------------------------------------
@@ -39,8 +52,7 @@ class _ChallengesScreenState extends State<ChallengesScreen> {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
       _lastRecordedStepCount = prefs.getInt('lastRecordedStepCount') ?? 0;
-      _lastRecordedDate =
-          DateTime.tryParse(prefs.getString('lastRecordedDate') ?? '');
+      _lastRecordedDate = DateTime.tryParse(prefs.getString('lastRecordedDate') ?? '');
     });
   }
 
@@ -115,6 +127,48 @@ class _ChallengesScreenState extends State<ChallengesScreen> {
     });
   }
 
+  //----------------------------------------------------------------------------
+  //activity recognition----------------------------------------------------------------------------
+
+  Future<bool> _checkAndRequestPermission() async {
+    ActivityPermission permission =
+    await FlutterActivityRecognition.instance.checkPermission();
+    if (permission == ActivityPermission.PERMANENTLY_DENIED) {
+      return false;
+    } else if (permission == ActivityPermission.DENIED) {
+      permission = await FlutterActivityRecognition.instance.requestPermission();
+      if (permission != ActivityPermission.GRANTED) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  Future<void> _subscribeActivityStream() async {
+    if (await _checkAndRequestPermission()) {
+      _activitySubscription = FlutterActivityRecognition.instance.activityStream
+          .handleError(_onError)
+          .listen(_onActivity);
+    }
+  }
+
+  void _onActivity(Activity activity) {
+    setState(() {
+      if (activity.confidence == ActivityConfidence.HIGH) {
+        if (activity.type == ActivityType.WALKING) {
+          challenges[1].carFreeStatus = "not-car-free";
+        }
+        if (activity.type == ActivityType.ON_BICYCLE) {
+          challenges[2].bikeRideStatus = "done";
+        }
+      }
+    });
+  }
+
+  void _onError(dynamic error) {
+    print('Error >> $error');
+  }
+
 
   //----------------------------------------------------------------------------
   //----------------------------------------------------------------------------
@@ -157,7 +211,5 @@ class _ChallengesScreenState extends State<ChallengesScreen> {
     super.dispose();
   }
 
-//----------------------------------------------------------------------------
-//front-end----------------------------------------------------------------------------
 
 }
