@@ -25,7 +25,7 @@ class _ChallengesScreenState extends State<ChallengesScreen> {
     Challenge(
       title: "Car-Free Day",
       description: "Avoid using a car today.",
-      points: 50,
+      points:50,
       carFreeStatus: "car-free by now",
     ),
     Challenge(
@@ -42,7 +42,13 @@ class _ChallengesScreenState extends State<ChallengesScreen> {
       elapsedTime: 0,
       showerStatus: "not started",
     ),
-
+    Challenge(
+      title: "Screen Time",
+      description: "Limit your screen time to 2 hours.",
+      points: 50,
+      totalSteps: 120, // 2 hours
+      currentSteps: 0, // Track screen time
+    ),
   ];
 
   //----------------------------------------------------------------------------
@@ -62,8 +68,7 @@ class _ChallengesScreenState extends State<ChallengesScreen> {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
       _lastRecordedStepCount = prefs.getInt('lastRecordedStepCount') ?? 0;
-      _lastRecordedDate =
-          DateTime.tryParse(prefs.getString('lastRecordedDate') ?? '');
+      _lastRecordedDate = DateTime.tryParse(prefs.getString('lastRecordedDate') ?? '');
     });
   }
 
@@ -147,8 +152,7 @@ class _ChallengesScreenState extends State<ChallengesScreen> {
     if (permission == ActivityPermission.PERMANENTLY_DENIED) {
       return false;
     } else if (permission == ActivityPermission.DENIED) {
-      permission =
-      await FlutterActivityRecognition.instance.requestPermission();
+      permission = await FlutterActivityRecognition.instance.requestPermission();
       if (permission != ActivityPermission.GRANTED) {
         return false;
       }
@@ -240,11 +244,9 @@ class _ChallengesScreenState extends State<ChallengesScreen> {
     final showerStatus = prefs.getString('showerStatus') ?? "not started";
 
     setState(() {
-      challenges[3].elapsedTime =
-          elapsedTime; // Assuming "5-minutes-shower" is at index 3
+      challenges[3].elapsedTime = elapsedTime; // Assuming "5-minutes-shower" is at index 3
       challenges[3].showerStatus = showerStatus;
-      challenges[3].isTimerRunning =
-      false; // Ensure the timer is not running on app start
+      challenges[3].isTimerRunning = false; // Ensure the timer is not running on app start
     });
   }
 
@@ -254,8 +256,7 @@ class _ChallengesScreenState extends State<ChallengesScreen> {
     final hasBeenUsedToday = await _hasShowerChallengeBeenUsedToday();
     if (hasBeenUsedToday) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text(
-            "You can only take the 5-minute shower challenge once per day!")),
+        const SnackBar(content: Text("You can only take the 5-minute shower challenge once per day!")),
       );
       return;
     }
@@ -312,6 +313,30 @@ class _ChallengesScreenState extends State<ChallengesScreen> {
     await prefs.setString('showerStatus', showerStatus);
   }
 
+  //----------------------------------------------------------------------------
+  //screen time----------------------------------------------------------------------------
+
+  // Function to fetch and calculate total screen time
+  Future<void> getTotalScreenTime() async {
+    try {
+      DateTime endDate = DateTime.now();
+      DateTime startDate = endDate.subtract(Duration(days: 0, hours: DateTime.now().hour, minutes: DateTime.now().minute, seconds: DateTime.now().second));
+      // DateTime startDate = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, 0, 0, 0);
+      List<AppUsageInfo> infoList = await AppUsage().getAppUsage(startDate, endDate);
+
+      int totalMinutes = 0;
+      for (var appUsage in infoList) {
+        totalMinutes += appUsage.usage.inMinutes; // Sum up usage time in minutes
+      }
+
+      setState(() {
+        // Update the "Screen Time" challenge's currentSteps with the total screen time
+        challenges[4].currentSteps = totalMinutes; // Assuming "Screen Time" is at index 6
+      });
+    } catch (exception) {
+      print("Error fetching screen time: $exception");
+    }
+  }
 
   //----------------------------------------------------------------------------
   //----------------------------------------------------------------------------
@@ -353,5 +378,6 @@ class _ChallengesScreenState extends State<ChallengesScreen> {
 
     super.dispose();
   }
+
 
 }
