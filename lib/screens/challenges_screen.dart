@@ -379,5 +379,47 @@ class _ChallengesScreenState extends State<ChallengesScreen> {
     super.dispose();
   }
 
+  //----------------------------------------------------------------------------
+  //front-end----------------------------------------------------------------------------
 
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Eco-Friendly Challenges'),
+      ),
+      body: ListView.builder(
+        itemCount: challenges.length,
+        itemBuilder: (context, index) {
+          final challenge = challenges[index];
+          return ListTile(
+            title: Text(challenge.title),
+            subtitle: challenge.title == "5-minutes-shower"
+                ? Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text("Status: ${challenge.showerStatus}"),
+                Text(
+                  "Elapsed Time: ${challenge.elapsedTime ~/ 60}:${(challenge.elapsedTime % 60).toString().padLeft(2, '0')}",
+                ),
+              ],
+            )
+                : challenge.totalSteps > 0
+                ? Text("${challenge.currentSteps} / ${challenge.totalSteps} minutes")
+                : challenge.title == "Car-Free Day"
+                ? Text("Status: ${challenge.carFreeStatus}")
+                : challenge.title == "Rode a Bike Today"
+                ? Text("Status: ${challenge.bikeRideStatus}")
+                : Text(challenge.description),
+            trailing: challenge.title == "5-minutes-shower"
+                ? ElevatedButton(
+              onPressed: () => _toggleShowerTimer(index),
+              child: Text(challenge.isTimerRunning ? "Stop Timer" : "Start Timer"),
+            )
+                : Text('${challenge.points} Points'),
+          );
+        },
+      ),
+    );
+  }
 }
