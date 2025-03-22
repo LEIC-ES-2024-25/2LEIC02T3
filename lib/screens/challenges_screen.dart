@@ -25,7 +25,7 @@ class _ChallengesScreenState extends State<ChallengesScreen> {
     Challenge(
       title: "Car-Free Day",
       description: "Avoid using a car today.",
-      points:50,
+      points: 50,
       carFreeStatus: "car-free by now",
     ),
     Challenge(
@@ -34,6 +34,15 @@ class _ChallengesScreenState extends State<ChallengesScreen> {
       points: 30,
       bikeRideStatus: "not done yet",
     ),
+    Challenge(
+      title: "5-minutes-shower",
+      description: "Take a shower in under 5 minutes.",
+      points: 30,
+      isTimerRunning: false,
+      elapsedTime: 0,
+      showerStatus: "not started",
+    ),
+
   ];
 
   //----------------------------------------------------------------------------
@@ -43,7 +52,8 @@ class _ChallengesScreenState extends State<ChallengesScreen> {
   int _lastRecordedStepCount = 0; // Tracks the step count at the start of the day
   DateTime? _lastRecordedDate; // Tracks the last recorded date
   StreamSubscription<Activity>? _activitySubscription;
-
+  Timer? _showerTimer;
+  Timer? _screenTimeUpdateTimer;
 
   //----------------------------------------------------------------------------
   //count steps----------------------------------------------------------------------------
@@ -52,7 +62,8 @@ class _ChallengesScreenState extends State<ChallengesScreen> {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
       _lastRecordedStepCount = prefs.getInt('lastRecordedStepCount') ?? 0;
-      _lastRecordedDate = DateTime.tryParse(prefs.getString('lastRecordedDate') ?? '');
+      _lastRecordedDate =
+          DateTime.tryParse(prefs.getString('lastRecordedDate') ?? '');
     });
   }
 
@@ -136,7 +147,8 @@ class _ChallengesScreenState extends State<ChallengesScreen> {
     if (permission == ActivityPermission.PERMANENTLY_DENIED) {
       return false;
     } else if (permission == ActivityPermission.DENIED) {
-      permission = await FlutterActivityRecognition.instance.requestPermission();
+      permission =
+      await FlutterActivityRecognition.instance.requestPermission();
       if (permission != ActivityPermission.GRANTED) {
         return false;
       }
@@ -167,6 +179,137 @@ class _ChallengesScreenState extends State<ChallengesScreen> {
 
   void _onError(dynamic error) {
     print('Error >> $error');
+  }
+
+  //----------------------------------------------------------------------------
+  //shower timer----------------------------------------------------------------------------
+
+  /*void _toggleShowerTimer(int index) {
+    setState(() {
+      final challenge = challenges[index];
+      if (challenge.isTimerRunning) {
+        _showerTimer?.cancel();
+        challenge.isTimerRunning = false;
+        if (challenge.elapsedTime < 120) {
+          challenge.showerStatus = "porcalhão";
+        } else if (challenge.elapsedTime < 300) {
+          challenge.showerStatus = "quick-shower";
+        } else {
+          challenge.showerStatus = "long-shower";
+        }
+      } else {
+        challenge.isTimerRunning = true;
+        challenge.elapsedTime = 0;
+        challenge.showerStatus = "in progress";
+        _showerTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+          setState(() {
+            if (challenges[index].isTimerRunning) {
+              challenges[index].elapsedTime++;
+            } else {
+              timer.cancel();
+            }
+          });
+        });
+      }
+    });
+  }*/
+
+  // Add a new method to check if the shower challenge has been used today
+  Future<bool> _hasShowerChallengeBeenUsedToday() async {
+    final prefs = await SharedPreferences.getInstance();
+    final lastShowerDate = prefs.getString('lastShowerDate');
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+
+    if (lastShowerDate == null) {
+      return false; // No record of usage yet
+    }
+
+    final lastDate = DateTime.tryParse(lastShowerDate);
+    if (lastDate == null) {
+      return false; // Invalid date stored
+    }
+
+    // Check if the last usage was today
+    return lastDate.isAtSameMomentAs(today);
+  }
+
+  Future<void> _loadShowerState() async {
+    final prefs = await SharedPreferences.getInstance();
+    final elapsedTime = prefs.getInt('showerElapsedTime') ?? 0;
+    final showerStatus = prefs.getString('showerStatus') ?? "not started";
+
+    setState(() {
+      challenges[3].elapsedTime =
+          elapsedTime; // Assuming "5-minutes-shower" is at index 3
+      challenges[3].showerStatus = showerStatus;
+      challenges[3].isTimerRunning =
+      false; // Ensure the timer is not running on app start
+    });
+  }
+
+// Update the shower timer logic to include the daily restriction
+  void _toggleShowerTimer(int index) async {
+    // Check if the shower challenge has already been used today
+    final hasBeenUsedToday = await _hasShowerChallengeBeenUsedToday();
+    if (hasBeenUsedToday) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text(
+            "You can only take the 5-minute shower challenge once per day!")),
+      );
+      return;
+    }
+
+    setState(() {
+      final challenge = challenges[index];
+      if (challenge.isTimerRunning) {
+        _showerTimer?.cancel();
+        challenge.isTimerRunning = false;
+
+        // Determine the shower status based on elapsed time
+        if (challenge.elapsedTime < 120) {
+          challenge.showerStatus = "porcalhão";
+        } else if (challenge.elapsedTime < 300) {
+          challenge.showerStatus = "quick-shower";
+        } else {
+          challenge.showerStatus = "long-shower";
+        }
+
+        // Save the current date as the last shower date
+        _saveLastShowerDate();
+
+        // Save the shower state (elapsed time and status)
+        _saveShowerState(challenge.elapsedTime, challenge.showerStatus);
+      } else {
+        challenge.isTimerRunning = true;
+        challenge.elapsedTime = 0;
+        challenge.showerStatus = "in progress";
+
+        _showerTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+          setState(() {
+            if (challenges[index].isTimerRunning) {
+              challenges[index].elapsedTime++;
+            } else {
+              timer.cancel();
+            }
+          });
+        });
+      }
+    });
+  }
+
+// Method to save the last shower date
+  Future<void> _saveLastShowerDate() async {
+    final prefs = await SharedPreferences.getInstance();
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    await prefs.setString('lastShowerDate', today.toString());
+  }
+
+  Future<void> _saveShowerState(int elapsedTime, String showerStatus) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt('showerElapsedTime', elapsedTime);
+    await prefs.setString('showerStatus', showerStatus);
   }
 
 
@@ -210,6 +353,5 @@ class _ChallengesScreenState extends State<ChallengesScreen> {
 
     super.dispose();
   }
-
 
 }
