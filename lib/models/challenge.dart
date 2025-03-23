@@ -10,7 +10,7 @@ class Challenge {
   String bikeRideStatus; // New property for bike-riding status
   bool isTimerRunning; // For tracking if the timer is running
   int elapsedTime; // Elapsed time in seconds
-  String showerStatus; // Status of the shower (porcalhÃ£o, quick-shower, long-shower)
+  String showerStatus;
   String qrCodeStatus;
 
   Challenge({
@@ -23,7 +23,7 @@ class Challenge {
     this.bikeRideStatus = "not done yet", // Default status for bike-riding
     this.isTimerRunning = false, // Timer is not running initially
     this.elapsedTime = 0, // Elapsed time starts at 0
-    this.showerStatus = "not started", // Initial shower status
+    this.showerStatus = "not started",
     this.qrCodeStatus = "not scanned"
   });
 }

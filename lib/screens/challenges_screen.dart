@@ -384,6 +384,71 @@ class _ChallengesScreenState extends State<ChallengesScreen> {
   //----------------------------------------------------------------------------
   //qr code scanner----------------------------------------------------------------------------
 
+  Future<bool> _hasQRChallengeBeenUsedToday(String key) async {
+    final prefs = await SharedPreferences.getInstance();
+    final lastScanDate = prefs.getString(key);
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+
+    if (lastScanDate == null) {
+      return false; // No record of usage yet
+    }
+
+    final lastDate = DateTime.tryParse(lastScanDate);
+    if (lastDate == null) {
+      return false; // Invalid date stored
+    }
+
+    // Check if the last usage was today
+    return lastDate.isAtSameMomentAs(today);
+  }
+
+  Future<void> _loadQRChallengeStates() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    setState(() {
+      for (var challenge in challenges) {
+        if (challenge.title == "Go to Clean-up Event" ||
+            challenge.title == "Go to Eco-friendly Market" ||
+            challenge.title == "Go to Sustainable Food Festival" ||
+            challenge.title == "Go to Tree Planting Event" ||
+            challenge.title == "Go to Bicycle Parade" ||
+            challenge.title == "Go to Group Walk Event" ||
+            challenge.title == "Play a Sport Event" ||
+            challenge.title == "Go to Car-free Day Meet-up" ||
+            challenge.title == "Join a Car Pool" ||
+            challenge.title == "Support Local Commerce" ||
+            challenge.title == "Go to Thrift Store" ||
+            challenge.title == "Use Public Transport") {
+          final key = 'lastQRScan_${challenge.title}';
+          final lastScanDate = prefs.getString(key);
+
+          if (lastScanDate != null) {
+            final lastDate = DateTime.tryParse(lastScanDate);
+            final today = DateTime.now();
+
+            // If the last scan was today, mark the challenge as "scanned"
+            if (lastDate != null &&
+                lastDate.year == today.year &&
+                lastDate.month == today.month &&
+                lastDate.day == today.day) {
+              challenge.qrCodeStatus = "scanned";
+            } else {
+              challenge.qrCodeStatus = "not scanned"; // Reset if it's not today
+            }
+          }
+        }
+      }
+    });
+  }
+
+  Future<void> _saveLastQRScanDate(String key) async {
+    final prefs = await SharedPreferences.getInstance();
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    await prefs.setString(key, today.toString());
+  }
+
   bool validateQRCode(String qrCode, String eventType) {
     try {
       // Split the QR code into parts
@@ -422,6 +487,18 @@ class _ChallengesScreenState extends State<ChallengesScreen> {
   }
 
   Future<void> _scanQRCode(int index) async {
+    final challenge = challenges[index];
+    final prefsKey = 'lastQRScan_${challenge.title}'; // Unique key for each challenge
+
+    // Check if the challenge has already been used today
+    final hasBeenUsedToday = await _hasQRChallengeBeenUsedToday(prefsKey);
+    if (hasBeenUsedToday) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("You can only complete this challenge once per day!")),
+      );
+      return;
+    }
+
     final scannerController = MobileScannerController();
     String? qrCodeResult;
 
@@ -454,7 +531,7 @@ class _ChallengesScreenState extends State<ChallengesScreen> {
       ),
     );
 
-    // Validate the QR code after returning from the scanner
+      // Validate the QR code after returning from the scanner
     if (qrCodeResult != null) {
       final challenge = challenges[index];
       String eventType = '';
@@ -491,6 +568,10 @@ class _ChallengesScreenState extends State<ChallengesScreen> {
         setState(() {
           challenge.qrCodeStatus = "scanned";
         });
+
+        // Save the last scan date
+        await _saveLastQRScanDate(prefsKey);
+
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("QR Code Validated!")));
       } else {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Invalid QR Code!")));
@@ -500,7 +581,7 @@ class _ChallengesScreenState extends State<ChallengesScreen> {
 
 
   //----------------------------------------------------------------------------
-  //----------------------------------------------------------------------------
+  //initState & dispose----------------------------------------------------------------------------
 
   @override
   void initState() {
@@ -512,6 +593,7 @@ class _ChallengesScreenState extends State<ChallengesScreen> {
     });
 
     _loadShowerState();
+    _loadQRChallengeStates(); // Load QR challenge states
 
     // Start listening to activity recognition
     _subscribeActivityStream();
@@ -547,7 +629,7 @@ class _ChallengesScreenState extends State<ChallengesScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Eco-Friendly Challenges'),
+        title: const Text('Your Challenges'),
       ),
       body: ListView.builder(
         itemCount: challenges.length,
@@ -613,3 +695,4 @@ class _ChallengesScreenState extends State<ChallengesScreen> {
     );
   }
 }
+
