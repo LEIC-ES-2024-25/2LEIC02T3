@@ -17,7 +17,16 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Eco-Friendly Challenges',
       theme: ThemeData(
-        primarySwatch: Colors.green,
+        primaryColor: Colors.green, // Set the primary color to green
+        colorScheme: ColorScheme.light(
+          primary: Colors.green, // Use green as the primary color
+          secondary: Colors.green, // Use green as the secondary/accent color
+        ),
+        inputDecorationTheme: InputDecorationTheme(
+          focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.green), // Match the focus border color
+          ),
+        ),
       ),
       //home: const ChallengesScreen(), // Set ChallengesScreen as the home screen
       initialRoute: '/challenges', // Set the initial route

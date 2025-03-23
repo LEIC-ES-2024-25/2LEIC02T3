@@ -66,8 +66,8 @@ class CustomBottomNavigationBar extends StatelessWidget {
           label: 'Settings',
         ),
       ],
-      selectedItemColor: Colors.pinkAccent, // Highlight color for the active item
-      unselectedItemColor: Colors.grey, // Color for inactive items
+      selectedItemColor: Colors.green, // Highlight color for the active item
+      unselectedItemColor: Colors.green.shade200, // Color for inactive items
     );
   }
 

@@ -27,7 +27,7 @@ class _ChallengesScreenState extends State<ChallengesScreen> {
     Challenge(
       title: "Car-Free Day",
       description: "Avoid using a car today.",
-      points:60,
+      points: 60,
       carFreeStatus: "car-free by now",
     ),
     Challenge(
@@ -48,7 +48,8 @@ class _ChallengesScreenState extends State<ChallengesScreen> {
       title: "Screen Time",
       description: "Limit your screen time to 2 hours.",
       points: 80,
-      totalSteps: 120, // 2 hours
+      totalSteps: 120,
+      // 2 hours
       currentSteps: 0, // Track screen time
     ),
     Challenge(
@@ -142,7 +143,8 @@ class _ChallengesScreenState extends State<ChallengesScreen> {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
       _lastRecordedStepCount = prefs.getInt('lastRecordedStepCount') ?? 0;
-      _lastRecordedDate = DateTime.tryParse(prefs.getString('lastRecordedDate') ?? '');
+      _lastRecordedDate =
+          DateTime.tryParse(prefs.getString('lastRecordedDate') ?? '');
     });
   }
 
@@ -226,7 +228,8 @@ class _ChallengesScreenState extends State<ChallengesScreen> {
     if (permission == ActivityPermission.PERMANENTLY_DENIED) {
       return false;
     } else if (permission == ActivityPermission.DENIED) {
-      permission = await FlutterActivityRecognition.instance.requestPermission();
+      permission =
+      await FlutterActivityRecognition.instance.requestPermission();
       if (permission != ActivityPermission.GRANTED) {
         return false;
       }
@@ -288,9 +291,11 @@ class _ChallengesScreenState extends State<ChallengesScreen> {
     final showerStatus = prefs.getString('showerStatus') ?? "not started";
 
     setState(() {
-      challenges[3].elapsedTime = elapsedTime; // Assuming "5-minutes-shower" is at index 3
+      challenges[3].elapsedTime =
+          elapsedTime; // Assuming "5-minutes-shower" is at index 3
       challenges[3].showerStatus = showerStatus;
-      challenges[3].isTimerRunning = false; // Ensure the timer is not running on app start
+      challenges[3].isTimerRunning =
+      false; // Ensure the timer is not running on app start
     });
   }
 
@@ -300,7 +305,8 @@ class _ChallengesScreenState extends State<ChallengesScreen> {
     final hasBeenUsedToday = await _hasShowerChallengeBeenUsedToday();
     if (hasBeenUsedToday) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("You can only take the 5-minute shower challenge once per day!")),
+        const SnackBar(content: Text(
+            "You can only take the 5-minute shower challenge once per day!")),
       );
       return;
     }
@@ -364,18 +370,22 @@ class _ChallengesScreenState extends State<ChallengesScreen> {
   Future<void> getTotalScreenTime() async {
     try {
       DateTime endDate = DateTime.now();
-      DateTime startDate = endDate.subtract(Duration(days: 0, hours: DateTime.now().hour, minutes: DateTime.now().minute, seconds: DateTime.now().second));
+      DateTime startDate = endDate.subtract(Duration(hours: 2, minutes: 53));
+      // DateTime startDate = endDate.subtract(Duration(days: 0, hours: DateTime.now().hour, minutes: DateTime.now().minute, seconds: DateTime.now().second));
       // DateTime startDate = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, 0, 0, 0);
-      List<AppUsageInfo> infoList = await AppUsage().getAppUsage(startDate, endDate);
+      List<AppUsageInfo> infoList = await AppUsage().getAppUsage(
+          startDate, endDate);
 
       int totalMinutes = 0;
       for (var appUsage in infoList) {
-        totalMinutes += appUsage.usage.inMinutes; // Sum up usage time in minutes
+        totalMinutes +=
+            appUsage.usage.inMinutes; // Sum up usage time in minutes
       }
 
       setState(() {
         // Update the "Screen Time" challenge's currentSteps with the total screen time
-        challenges[4].currentSteps = totalMinutes; // Assuming "Screen Time" is at index 6
+        challenges[4].currentSteps =
+            totalMinutes; // Assuming "Screen Time" is at index 6
       });
     } catch (exception) {
       print("Error fetching screen time: $exception");
@@ -464,7 +474,8 @@ class _ChallengesScreenState extends State<ChallengesScreen> {
 
       // Check if it matches today's date
       List<String> dateParts = datePart.split('-');
-      if (dateParts.length != 3) return false; // Ensure the date is properly formatted
+      if (dateParts.length != 3)
+        return false; // Ensure the date is properly formatted
 
       int year = int.parse(dateParts[0]);
       int month = int.parse(dateParts[1]);
@@ -477,7 +488,8 @@ class _ChallengesScreenState extends State<ChallengesScreen> {
       DateTime today = DateTime.now();
 
       // Compare the dates (ignoring time)
-      if (qrDate.year != today.year || qrDate.month != today.month || qrDate.day != today.day) {
+      if (qrDate.year != today.year || qrDate.month != today.month ||
+          qrDate.day != today.day) {
         return false;
       }
 
@@ -489,13 +501,15 @@ class _ChallengesScreenState extends State<ChallengesScreen> {
 
   Future<void> _scanQRCode(int index) async {
     final challenge = challenges[index];
-    final prefsKey = 'lastQRScan_${challenge.title}'; // Unique key for each challenge
+    final prefsKey = 'lastQRScan_${challenge
+        .title}'; // Unique key for each challenge
 
     // Check if the challenge has already been used today
     final hasBeenUsedToday = await _hasQRChallengeBeenUsedToday(prefsKey);
     if (hasBeenUsedToday) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("You can only complete this challenge once per day!")),
+        const SnackBar(content: Text(
+            "You can only complete this challenge once per day!")),
       );
       return;
     }
@@ -507,32 +521,35 @@ class _ChallengesScreenState extends State<ChallengesScreen> {
     await Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => Scaffold(
-          appBar: AppBar(title: const Text('Scan QR Code')),
-          body: Column(
-            children: [
-              Expanded(
-                child: MobileScanner(
-                  controller: scannerController,
-                  onDetect: (capture) {
-                    final List<Barcode> barcodes = capture.barcodes;
-                    for (final barcode in barcodes) {
-                      if (barcode.rawValue != null) {
-                        qrCodeResult = barcode.rawValue!;
-                        scannerController.stop(); // Stop scanning after detecting a QR code
-                        Navigator.pop(context); // Return to ChallengesScreen
-                      }
-                    }
-                  },
-                ),
+        builder: (context) =>
+            Scaffold(
+              appBar: AppBar(title: const Text('Scan QR Code')),
+              body: Column(
+                children: [
+                  Expanded(
+                    child: MobileScanner(
+                      controller: scannerController,
+                      onDetect: (capture) {
+                        final List<Barcode> barcodes = capture.barcodes;
+                        for (final barcode in barcodes) {
+                          if (barcode.rawValue != null) {
+                            qrCodeResult = barcode.rawValue!;
+                            scannerController
+                                .stop(); // Stop scanning after detecting a QR code
+                            Navigator.pop(
+                                context); // Return to ChallengesScreen
+                          }
+                        }
+                      },
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
-        ),
+            ),
       ),
     );
 
-      // Validate the QR code after returning from the scanner
+    // Validate the QR code after returning from the scanner
     if (qrCodeResult != null) {
       final challenge = challenges[index];
       String eventType = '';
@@ -573,9 +590,11 @@ class _ChallengesScreenState extends State<ChallengesScreen> {
         // Save the last scan date
         await _saveLastQRScanDate(prefsKey);
 
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("QR Code Validated!")));
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text("QR Code Validated!")));
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Invalid QR Code!")));
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text("Invalid QR Code!")));
       }
     }
   }
@@ -631,6 +650,189 @@ class _ChallengesScreenState extends State<ChallengesScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Your Challenges'),
+          backgroundColor: Colors.green.shade800,
+        titleTextStyle: TextStyle(
+          color: Colors.white, // Set the header text color to white
+          fontSize: 20, // Optional: Adjust font size if needed
+          fontWeight: FontWeight.bold, // Optional: Make the text bold
+        ),
+      ),
+      backgroundColor: Colors.green.shade100,
+      body: ListView.builder(
+        itemCount: challenges.length,
+        itemBuilder: (context, index) {
+          final challenge = challenges[index];
+          return Card(
+            margin: const EdgeInsets.all(8.0),
+            color: Colors.white,
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Title and Points
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        challenge.title,
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Text(
+                        '${challenge.points} Points',
+                        style: const TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.green,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+
+                  // Description
+                  Text(
+                    challenge.description,
+                    style: const TextStyle(fontSize: 14),
+                  ),
+                  const SizedBox(height: 12),
+
+                  // Status or Progress Bar
+                  if (challenge.totalSteps == 5000 ||
+                      challenge.totalSteps == 10000 ||
+                      challenge.totalSteps == 20000 ||
+                      challenge.totalSteps == 50000)
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        LinearProgressIndicator(
+                          value: challenge.currentSteps / challenge.totalSteps,
+                          backgroundColor: Colors.grey[300],
+                          color: Colors.green,
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          "${challenge.currentSteps} / ${challenge.totalSteps} steps",
+                          style: const TextStyle(fontSize: 14),
+                        ),
+                      ],
+                    )
+                  else if (challenge.totalSteps == 120)
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        LinearProgressIndicator(
+                          value: challenge.currentSteps / challenge.totalSteps,
+                          backgroundColor: Colors.grey[300],
+                          color: challenge.currentSteps > challenge.totalSteps
+                              ? Colors.red // Turn red if current steps exceed total steps
+                              : Colors.green, // Otherwise, keep it green
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          "${challenge.currentSteps} / ${challenge.totalSteps} minutes",
+                          style: const TextStyle(fontSize: 14),
+                        ),
+                      ],
+                    )
+                  else
+                    if (challenge.title == "Car-Free Day")
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text("Status: ${challenge.carFreeStatus}",
+                              style: const TextStyle(fontSize: 14)),
+                        ],
+                      )
+                    else
+                      if (challenge.title == "Rode a Bike Today")
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text("Status: ${challenge.bikeRideStatus}",
+                                style: const TextStyle(fontSize: 14)),
+                          ],
+                        )
+                      else
+                        if (challenge.title == "Go to Clean-up Event" ||
+                            challenge.title == "Go to Eco-friendly Market" ||
+                            challenge.title == "Go to Sustainable Food Festival" ||
+                            challenge.title == "Go to Tree Planting Event" ||
+                            challenge.title == "Go to Bicycle Parade" ||
+                            challenge.title == "Go to Group Walk Event" ||
+                            challenge.title == "Play a Sport Event" ||
+                            challenge.title == "Go to Car-free Day Meet-up" ||
+                            challenge.title == "Join a Car Pool" ||
+                            challenge.title == "Support Local Commerce" ||
+                            challenge.title == "Go to Thrift Store" ||
+                            challenge.title == "Use Public Transport")
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text("QR Code Status: ${challenge.qrCodeStatus}",
+                                  style: const TextStyle(fontSize: 14)),
+                              ElevatedButton(
+                                onPressed: () => _scanQRCode(index),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.blue,
+                                ),
+                                child: const Icon(
+                                  Icons.qr_code,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ],
+                          )
+                        else
+                          if (challenge.title == "5-minutes-shower")
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text("Status: ${challenge.showerStatus}",
+                                        style: const TextStyle(fontSize: 14)),
+                                    Text(
+                                      "Timer: ${challenge.elapsedTime ~/ 60}:${(challenge.elapsedTime % 60).toString().padLeft(2, '0')}",
+                                      style: const TextStyle(fontSize: 14),
+                                    ),
+                                  ],
+                                ),
+                                ElevatedButton(
+                                  onPressed: () => _toggleShowerTimer(index),
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: challenge.isTimerRunning ? Colors.green.shade800 : Colors.green,
+                                  ),
+                                  child: Icon(
+                                    challenge.isTimerRunning ? Icons.timer_off : Icons.timer,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ],
+                            ),
+                ],
+              ),
+            ),
+          );
+        },
+      ),
+      bottomNavigationBar: const CustomBottomNavigationBar(
+        currentScreen: 'ChallengesScreen', // Pass the current screen name
+      ),
+    );
+  }
+}
+
+
+  /*@override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Your Challenges'),
       ),
       body: ListView.builder(
         itemCount: challenges.length,
@@ -648,8 +850,10 @@ class _ChallengesScreenState extends State<ChallengesScreen> {
                 ),
               ],
             )
-                : challenge.totalSteps > 0
+                : challenge.totalSteps == 5000 || challenge.totalSteps == 10000 || challenge.totalSteps == 20000 || challenge.totalSteps == 50000
                 ? Text("${challenge.currentSteps} / ${challenge.totalSteps} steps")
+                : challenge.totalSteps == 120
+                ? Text("${challenge.currentSteps} / ${challenge.totalSteps} minutes")
                 : challenge.title == "Car-Free Day"
                 ? Text("Status: ${challenge.carFreeStatus}")
                 : challenge.title == "Rode a Bike Today"
@@ -698,5 +902,7 @@ class _ChallengesScreenState extends State<ChallengesScreen> {
       ),
     );
   }
-}
+}*/
+
+
 
