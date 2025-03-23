@@ -6,6 +6,7 @@ import 'package:flutter_activity_recognition/flutter_activity_recognition.dart';
 import 'package:app_usage/app_usage.dart'; // Import the app_usage package
 import 'package:mobile_scanner/mobile_scanner.dart'; // Import mobile_scanner for QR code scanning
 import '../models/challenge.dart';
+import 'bottom_navigation_bar.dart';
 
 class ChallengesScreen extends StatefulWidget {
   const ChallengesScreen({super.key});
@@ -691,6 +692,9 @@ class _ChallengesScreenState extends State<ChallengesScreen> {
                 : Text('${challenge.points} Points'),
           );
         },
+      ),
+      bottomNavigationBar: const CustomBottomNavigationBar(
+        currentScreen: 'ChallengesScreen', // Pass the current screen name
       ),
     );
   }
