@@ -11,6 +11,7 @@ class Challenge {
   bool isTimerRunning; // For tracking if the timer is running
   int elapsedTime; // Elapsed time in seconds
   String showerStatus; // Status of the shower (porcalhÃ£o, quick-shower, long-shower)
+  String qrCodeStatus;
 
   Challenge({
     required this.title,
@@ -23,5 +24,6 @@ class Challenge {
     this.isTimerRunning = false, // Timer is not running initially
     this.elapsedTime = 0, // Elapsed time starts at 0
     this.showerStatus = "not started", // Initial shower status
+    this.qrCodeStatus = "not scanned"
   });
 }

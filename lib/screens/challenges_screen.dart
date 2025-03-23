@@ -4,6 +4,7 @@ import 'package:pedometer/pedometer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_activity_recognition/flutter_activity_recognition.dart';
 import 'package:app_usage/app_usage.dart'; // Import the app_usage package
+import 'package:mobile_scanner/mobile_scanner.dart'; // Import mobile_scanner for QR code scanning
 import '../models/challenge.dart';
 
 class ChallengesScreen extends StatefulWidget {
@@ -25,7 +26,7 @@ class _ChallengesScreenState extends State<ChallengesScreen> {
     Challenge(
       title: "Car-Free Day",
       description: "Avoid using a car today.",
-      points:50,
+      points:60,
       carFreeStatus: "car-free by now",
     ),
     Challenge(
@@ -45,9 +46,81 @@ class _ChallengesScreenState extends State<ChallengesScreen> {
     Challenge(
       title: "Screen Time",
       description: "Limit your screen time to 2 hours.",
-      points: 50,
+      points: 80,
       totalSteps: 120, // 2 hours
       currentSteps: 0, // Track screen time
+    ),
+    Challenge(
+      title: "Go to Clean-up Event",
+      description: "Participate in a clean-up event today.",
+      points: 50,
+      qrCodeStatus: "not scanned", // New property for QR code status
+    ),
+    Challenge(
+      title: "Go to Eco-friendly Market",
+      description: "Visit an eco-friendly market today.",
+      points: 50,
+      qrCodeStatus: "not scanned", // New property for QR code status
+    ),
+    Challenge(
+      title: "Go to Sustainable Food Festival",
+      description: "Attend a sustainable food festival today.",
+      points: 50,
+      qrCodeStatus: "not scanned", // New property for QR code status
+    ),
+    Challenge(
+      title: "Go to Tree Planting Event",
+      description: "Attend a attend a tree planting event today.",
+      points: 50,
+      qrCodeStatus: "not scanned", // New property for QR code status
+    ),
+    Challenge(
+      title: "Go to Bicycle Parade",
+      description: "Attend a bicycle parade today.",
+      points: 50,
+      qrCodeStatus: "not scanned", // New property for QR code status
+    ),
+    Challenge(
+      title: "Go to Group Walk Event",
+      description: "Join a group walk event today.",
+      points: 50,
+      qrCodeStatus: "not scanned", // New property for QR code status
+    ),
+    Challenge(
+      title: "Play a Sport Event",
+      description: "Participate in a sport event today.",
+      points: 50,
+      qrCodeStatus: "not scanned", // New property for QR code status
+    ),
+    Challenge(
+      title: "Go to Car-free Day Meet-up",
+      description: "Join a car-free day meet-up today.",
+      points: 50,
+      qrCodeStatus: "not scanned", // New property for QR code status
+    ),
+    Challenge(
+      title: "Join a Car Pool",
+      description: "Share a ride by joining a car pool today.",
+      points: 50,
+      qrCodeStatus: "not scanned", // New property for QR code status
+    ),
+    Challenge(
+      title: "Support Local Commerce",
+      description: "Shop at a local commerce store today.",
+      points: 50,
+      qrCodeStatus: "not scanned", // New property for QR code status
+    ),
+    Challenge(
+      title: "Go to Thrift Store",
+      description: "Visit a thrift store today.",
+      points: 50,
+      qrCodeStatus: "not scanned", // New property for QR code status
+    ),
+    Challenge(
+      title: "Use Public Transport",
+      description: "Take public transport today.",
+      points: 50,
+      qrCodeStatus: "not scanned", // New property for QR code status
     ),
   ];
 
@@ -188,36 +261,6 @@ class _ChallengesScreenState extends State<ChallengesScreen> {
   //----------------------------------------------------------------------------
   //shower timer----------------------------------------------------------------------------
 
-  /*void _toggleShowerTimer(int index) {
-    setState(() {
-      final challenge = challenges[index];
-      if (challenge.isTimerRunning) {
-        _showerTimer?.cancel();
-        challenge.isTimerRunning = false;
-        if (challenge.elapsedTime < 120) {
-          challenge.showerStatus = "porcalhão";
-        } else if (challenge.elapsedTime < 300) {
-          challenge.showerStatus = "quick-shower";
-        } else {
-          challenge.showerStatus = "long-shower";
-        }
-      } else {
-        challenge.isTimerRunning = true;
-        challenge.elapsedTime = 0;
-        challenge.showerStatus = "in progress";
-        _showerTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
-          setState(() {
-            if (challenges[index].isTimerRunning) {
-              challenges[index].elapsedTime++;
-            } else {
-              timer.cancel();
-            }
-          });
-        });
-      }
-    });
-  }*/
-
   // Add a new method to check if the shower challenge has been used today
   Future<bool> _hasShowerChallengeBeenUsedToday() async {
     final prefs = await SharedPreferences.getInstance();
@@ -269,7 +312,7 @@ class _ChallengesScreenState extends State<ChallengesScreen> {
 
         // Determine the shower status based on elapsed time
         if (challenge.elapsedTime < 120) {
-          challenge.showerStatus = "porcalhão";
+          challenge.showerStatus = "still a little dirty, no?";
         } else if (challenge.elapsedTime < 300) {
           challenge.showerStatus = "quick-shower";
         } else {
@@ -339,6 +382,124 @@ class _ChallengesScreenState extends State<ChallengesScreen> {
   }
 
   //----------------------------------------------------------------------------
+  //qr code scanner----------------------------------------------------------------------------
+
+  bool validateQRCode(String qrCode, String eventType) {
+    try {
+      // Split the QR code into parts
+      List<String> parts = qrCode.split(' ');
+      if (parts.length != 2) return false;
+
+      String eventPart = parts[0];
+      String datePart = parts[1];
+
+      // Check if the event type matches
+      if (eventPart != eventType) return false;
+
+      // Check if it matches today's date
+      List<String> dateParts = datePart.split('-');
+      if (dateParts.length != 3) return false; // Ensure the date is properly formatted
+
+      int year = int.parse(dateParts[0]);
+      int month = int.parse(dateParts[1]);
+      int day = int.parse(dateParts[2]);
+
+      // Create a DateTime object for the QR code date
+      DateTime qrDate = DateTime(year, month, day);
+
+      // Get today's date
+      DateTime today = DateTime.now();
+
+      // Compare the dates (ignoring time)
+      if (qrDate.year != today.year || qrDate.month != today.month || qrDate.day != today.day) {
+        return false;
+      }
+
+      return true;
+    } catch (e) {
+      return false; // Invalid format or parsing error
+    }
+  }
+
+  Future<void> _scanQRCode(int index) async {
+    final scannerController = MobileScannerController();
+    String? qrCodeResult;
+
+    // Navigate to a temporary screen for scanning
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => Scaffold(
+          appBar: AppBar(title: const Text('Scan QR Code')),
+          body: Column(
+            children: [
+              Expanded(
+                child: MobileScanner(
+                  controller: scannerController,
+                  onDetect: (capture) {
+                    final List<Barcode> barcodes = capture.barcodes;
+                    for (final barcode in barcodes) {
+                      if (barcode.rawValue != null) {
+                        qrCodeResult = barcode.rawValue!;
+                        scannerController.stop(); // Stop scanning after detecting a QR code
+                        Navigator.pop(context); // Return to ChallengesScreen
+                      }
+                    }
+                  },
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+
+    // Validate the QR code after returning from the scanner
+    if (qrCodeResult != null) {
+      final challenge = challenges[index];
+      String eventType = '';
+
+      // Determine the expected event type based on the challenge title
+      if (challenge.title == "Go to Clean-up Event") {
+        eventType = 'clean|up|event';
+      } else if (challenge.title == "Go to Eco-friendly Market") {
+        eventType = 'eco|friendly|market';
+      } else if (challenge.title == "Go to Sustainable Food Festival") {
+        eventType = 'sustainable|food|festival';
+      } else if (challenge.title == "Go to Tree Planting Event") {
+        eventType = 'tree|planting|event';
+      } else if (challenge.title == "Go to Bicycle Parade") {
+        eventType = 'bicycle|parade';
+      } else if (challenge.title == "Go to Group Walk Event") {
+        eventType = 'group|walk|event';
+      } else if (challenge.title == "Play a Sport Event") {
+        eventType = 'play|a|sport|event';
+      } else if (challenge.title == "Go to Car-free Day Meet-up") {
+        eventType = 'car|free|day|meet|up';
+      } else if (challenge.title == "Join a Car Pool") {
+        eventType = 'car|pool';
+      } else if (challenge.title == "Support Local Commerce") {
+        eventType = 'local|commerce';
+      } else if (challenge.title == "Go to Thrift Store") {
+        eventType = 'thrift|store';
+      } else if (challenge.title == "Use Public Transport") {
+        eventType = 'public|transport';
+      }
+
+      // Validate the QR code
+      if (validateQRCode(qrCodeResult!, eventType)) {
+        setState(() {
+          challenge.qrCodeStatus = "scanned";
+        });
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("QR Code Validated!")));
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Invalid QR Code!")));
+      }
+    }
+  }
+
+
+  //----------------------------------------------------------------------------
   //----------------------------------------------------------------------------
 
   @override
@@ -405,16 +566,45 @@ class _ChallengesScreenState extends State<ChallengesScreen> {
               ],
             )
                 : challenge.totalSteps > 0
-                ? Text("${challenge.currentSteps} / ${challenge.totalSteps} minutes")
+                ? Text("${challenge.currentSteps} / ${challenge.totalSteps} steps")
                 : challenge.title == "Car-Free Day"
                 ? Text("Status: ${challenge.carFreeStatus}")
                 : challenge.title == "Rode a Bike Today"
                 ? Text("Status: ${challenge.bikeRideStatus}")
+                : challenge.title == "Go to Clean-up Event" ||
+                challenge.title == "Go to Eco-friendly Market" ||
+                challenge.title == "Go to Sustainable Food Festival" ||
+                challenge.title == "Go to Tree Planting Event" ||
+                challenge.title == "Go to Bicycle Parade" ||
+                challenge.title == "Go to Group Walk Event" ||
+                challenge.title == "Play a Sport Event" ||
+                challenge.title == "Go to Car-free Day Meet-up" ||
+                challenge.title == "Join a Car Pool" ||
+                challenge.title == "Support Local Commerce" ||
+                challenge.title == "Go to Thrift Store" ||
+                challenge.title == "Use Public Transport"
+                ? Text("QR Code Status: ${challenge.qrCodeStatus}")
                 : Text(challenge.description),
             trailing: challenge.title == "5-minutes-shower"
                 ? ElevatedButton(
               onPressed: () => _toggleShowerTimer(index),
               child: Text(challenge.isTimerRunning ? "Stop Timer" : "Start Timer"),
+            )
+                : challenge.title == "Go to Clean-up Event" ||
+                challenge.title == "Go to Eco-friendly Market" ||
+                challenge.title == "Go to Sustainable Food Festival" ||
+                challenge.title == "Go to Tree Planting Event" ||
+                challenge.title == "Go to Bicycle Parade" ||
+                challenge.title == "Go to Group Walk Event" ||
+                challenge.title == "Play a Sport Event" ||
+                challenge.title == "Go to Car-free Day Meet-up" ||
+                challenge.title == "Join a Car Pool" ||
+                challenge.title == "Support Local Commerce" ||
+                challenge.title == "Go to Thrift Store" ||
+                challenge.title == "Use Public Transport"
+                ? ElevatedButton(
+              onPressed: () => _scanQRCode(index),
+              child: const Text("Read QR Code"),
             )
                 : Text('${challenge.points} Points'),
           );
