@@ -72,7 +72,7 @@ class _ChallengesScreenState extends State<ChallengesScreen> {
     ),
     Challenge(
       title: "Go to Tree Planting Event",
-      description: "Attend a attend a tree planting event today.",
+      description: "Attend a tree planting event today.",
       points: 50,
       qrCodeStatus: "not scanned", // New property for QR code status
     ),
@@ -805,7 +805,7 @@ class _ChallengesScreenState extends State<ChallengesScreen> {
                                 ElevatedButton(
                                   onPressed: () => _toggleShowerTimer(index),
                                   style: ElevatedButton.styleFrom(
-                                    backgroundColor: challenge.isTimerRunning ? Colors.green.shade800 : Colors.green,
+                                    backgroundColor: challenge.isTimerRunning ? Colors.red : Colors.green,
                                   ),
                                   child: Icon(
                                     challenge.isTimerRunning ? Icons.timer_off : Icons.timer,
