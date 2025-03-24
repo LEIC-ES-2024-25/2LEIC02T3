@@ -100,7 +100,7 @@ class _QRcodeGeneratorScreenState extends State<QRcodeGeneratorScreen> {
                           child: Text(
                             index == 0
                                 ? "Organize an Eco-friendly Event and create a QR Code for it. Then show the QR Code to the people who join your event so they can scan it and earn points."
-                                : "You must create the QR Code beforehand. To ensure that there are no fraudulent actions, it isn't allowed to generate QR Codes for current day event.",
+                                : "You must create the QR Code beforehand. To ensure that there are no fraudulent actions, it isn't allowed to generate QR Codes for a current day event.",
                             style: TextStyle(
                               color: Colors.black87, // Dark text for contrast
                               fontSize: 14, // Slightly larger font size for emphasis
