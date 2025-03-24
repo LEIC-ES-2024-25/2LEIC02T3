@@ -79,6 +79,55 @@ class _QRcodeGeneratorScreenState extends State<QRcodeGeneratorScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // Horizontal Swipe Cards
+            SizedBox(
+              height: 120, // Fixed height for the cards
+              child: PageView.builder(
+                itemCount: 2, // Total number of cards
+                itemBuilder: (context, index) {
+                  return Stack(
+                    children: [
+                      // Card Content
+                      Card(
+                        color: Colors.white, // White background
+                        elevation: 4, // Add subtle shadow for depth
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8), // Rounded corners
+                        ),
+                        margin: EdgeInsets.zero, // Remove default margin
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0), // Add padding inside the card
+                          child: Text(
+                            index == 0
+                                ? "Organize an Eco-friendly Event and create a QR Code for it. Then show the QR Code to the people who join your event so they can scan it and earn points."
+                                : "You must create the QR Code beforehand. To ensure that there are no fraudulent actions, it isn't allowed to generate QR Codes for current day event.",
+                            style: TextStyle(
+                              color: Colors.black87, // Dark text for contrast
+                              fontSize: 14, // Slightly larger font size for emphasis
+                              fontWeight: FontWeight.w500, // Medium weight for readability
+                            ),
+                          ),
+                        ),
+                      ),
+                      // Index Indicator (Bottom-Right Corner)
+                      Positioned(
+                        bottom: 30, // Reduced from 8 to bring it closer to the card
+                        right: 8, // Reduced from 8 to bring it closer to the card
+                        child: Text(
+                          "${index + 1}/2", // Display index (1/2 or 2/2)
+                          style: TextStyle(
+                            color: Colors.black54, // Subtle text color
+                            fontSize: 14, // Smaller font size
+                            fontWeight: FontWeight.bold, // Bold for emphasis
+                          ),
+                        ),
+                      ),
+                    ],
+                  );
+                },
+              ),
+            ),
+            SizedBox(height: 0), // Add spacing between the cards and the dropdown
             // Dropdown for selecting event type
             DropdownButtonFormField<String>(
               decoration: InputDecoration(
