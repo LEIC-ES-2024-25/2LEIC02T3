@@ -46,15 +46,15 @@ Business modeling in software development involves defining the product's vision
 
 ### Product Vision
 
-Our app empowers users to adopt eco-friendly habits through engaging challenges, rewarding achievements, and friendly competition. By tracking steps and promoting the exchange of study materials, we encourage sustainable behaviors while fostering a sense of community.
+Our app empowers users to adopt eco-friendly habits through engaging challenges and rewarding achievements. By tracking steps, encourage to limit shower and screen time, to take public transports, to walk and/or ride a bike instead of using a car and promoting the exchange of study materials, we encourage sustainable behaviors while fostering a sense of community.
 
 For: Environmentally conscious individuals and students
 
-Who: Want to track their eco-friendly activities and engage in friendly competition
+Who: Want to track their eco-friendly activities and feel motivated to do these more and more often
 
-The app: Provides a platform to earn points, unlock badges, and compare progress with friends
+The app: Provides a platform to earn points, unlock badges,, and enable users to exchange study materials
 
-Unlike: Other fitness or trading apps, our solution uniquely combines sustainability challenges with gamification to promote long-term engagement and positive environmental impact
+Unlike: Other fitness or trading apps, our solution uniquely combines sustainability challenges with gamification to promote long-term engagement and positive environmental impact, while presenting a very smart and intuitive way to encourage users to adopt sustainable behaviours.
 
 <!-- 
 Start by defining a clear and concise vision for your app, to help members of the team, contributors, and users into focusing their often disparate views into a concise, visual, and short textual form. 
@@ -80,8 +80,11 @@ To learn more about how to write a good product vision, please see:
 
 #### Initial/Tentative List of High-Level Features
 
-- **Eco-Challenges & Point System** – Users complete challenges (e.g., walking, trading items) to earn points.
+- **Eco-Challenges & Point System** – Users complete challenges (e.g., walking, limit shower time, limit screen time) to earn points.
 - **Step Tracking** – Integration with device pedometer to measure steps and convert them into points.
+- **Check If Rode Bike and/or Drove Car** - Integration with device activity recognition pluggin.
+- **QR Code scanning & generating** - Integration with camera + QR Code pluggin.
+- **Screen Time Tracking** - Integration with device screen activity pluggin.
 - **Item Trading System** – Users can list, request, and exchange study materials and electronic items.
 - **Badges & Achievements** – Unlockable rewards for milestones to boost motivation.
 
@@ -108,19 +111,27 @@ Take a look at the following links to learn some techniques:
 
 ### User Stories
 
-- As a user, I want to earn points through my steps so that I can contribute to a sustainable environment.  
+- As a user, I want to complete eco-friendly challenges so that I can contribute to a sustainable environment.   XXL
 
-- As a user, I want to trade study materials so that I can reduce waste and promote the reuse of resources.  
+- As a user, I want to trade study materials so that I can reduce waste and promote the reuse of resources.   XXL
 
-- As a user, I want to earn badges so that I feel motivated to complete more challenges.  
+- As a user, I want to earn points by completing challenges & earn badges so that I feel motivated to complete more challenges.   L  
 
-- As a user, I want a friend leaderboard so that I can compete in a fun and eco-friendly way.  
+<!-- - As a user, I want a friend leaderboard so that I can compete in a fun and eco-friendly way. -->
 
-- As a user, I want to be notified so that I stay updated and motivated to participate in eco-friendly activities.  
+- As a user, I want to generate QR Codes for the eco-friendly events I organize, so the other users who join it can scan it and earn points.   M
+
+- As a user, I want to be notified so that I stay updated and motivated to participate in eco-friendly activities.   M
 
 - As a user, I want to be evaluated over time so that I can see how my eco-friendly habits are improving.  
 
-- As a user, I want to invite my friends so that I can encourage more people to participate in sustainable challenges. 
+- As a user, I want to invite my friends so that I can encourage more people to participate in sustainable challenges.   S
+
+**User Interface Mockups:**
+Figma Design: https://www.figma.com/design/ezcvtAeSm4rhMbg6pXw0XD/es_app?node-id=0-1&t=yXBQLDWbp9WCTYYV-1
+
+Figma Prototype: https://www.figma.com/proto/ezcvtAeSm4rhMbg6pXw0XD/es_app?node-id=4-12247&p=f&t=zRR4YlXjMTRbgPGt-1&scaling=scale-down&content-scaling=fixed&page-id=0%3A1&starting-point-node-id=4%3A12247&show-proto-sidebar=1
+
 <!-- 
 In this section, you should describe all kinds of requirements for your module: functional and non-functional requirements.
 
@@ -228,8 +239,18 @@ You can find below information and references related with the project managemen
     * list of a few improvements to implement next Sprint;
 
 -->
+**Start:**
+![Screenshot from 2025-03-24 23-56-38](https://github.com/user-attachments/assets/c05f2625-4c02-4990-8a6b-d901457af861)
+
 
 ### Sprint 0
+**Before:**
+![Screenshot from 2025-03-24 23-57-36](https://github.com/user-attachments/assets/b6869127-dac7-46b3-af50-9eed03e196b0)
+
+**After:**
+![Screenshot from 2025-03-25 00-00-22](https://github.com/user-attachments/assets/3ba5a248-b84e-4eac-8f95-4e4bcc9a7bf6)
+
+**Retrospective:** The plan that the team agreed for sprint 0 has been entirely fullfiled.
 
 ### Sprint 1
 
