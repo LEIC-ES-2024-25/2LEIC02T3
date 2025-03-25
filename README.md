@@ -129,7 +129,8 @@ Take a look at the following links to learn some techniques:
 
 **User Interface Mockups:**
 Figma Design: https://www.figma.com/design/ezcvtAeSm4rhMbg6pXw0XD/es_app?node-id=0-1&t=yXBQLDWbp9WCTYYV-1
-Figma Prototype: https://www.figma.com/proto/ezcvtAeSm4rhMbg6pXw0XD/es_app?node-id=4-11874&p=f&t=zRR4YlXjMTRbgPGt-1&scaling=scale-down&content-scaling=fixed&page-id=0%3A1&starting-point-node-id=4%3A12247&show-proto-sidebar=1
+
+Figma Prototype: https://www.figma.com/proto/ezcvtAeSm4rhMbg6pXw0XD/es_app?node-id=4-12247&p=f&t=zRR4YlXjMTRbgPGt-1&scaling=scale-down&content-scaling=fixed&page-id=0%3A1&starting-point-node-id=4%3A12247&show-proto-sidebar=1
 
 <!-- 
 In this section, you should describe all kinds of requirements for your module: functional and non-functional requirements.
