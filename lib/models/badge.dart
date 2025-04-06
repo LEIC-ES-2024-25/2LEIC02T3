@@ -6,7 +6,7 @@ class Badge_ {
   final String description;
   final IconData icon;
   final bool isUnlocked;
-  final int pointsToUnlock;
+  final int pointsToGain;
 
   Badge_({
     required this.id,
@@ -14,6 +14,6 @@ class Badge_ {
     required this.description,
     required this.icon,
     this.isUnlocked = false,
-    required this.pointsToUnlock,
+    required this.pointsToGain,
   });
 }

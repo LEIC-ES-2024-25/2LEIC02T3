@@ -1,12 +1,21 @@
 import 'package:flutter/material.dart';
-import 'screens/shop_screen.dart'; // Import your screens
+import 'package:provider/provider.dart';
+import 'screens/shop_screen.dart';
 import 'screens/badges_screen.dart';
 import 'screens/challenges_screen.dart';
 import 'screens/qrcode_generator_screen.dart';
 import 'screens/settings_screen.dart';
+import 'providers/points_provider.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => PointsProvider()),
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {

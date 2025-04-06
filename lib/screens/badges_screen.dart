@@ -15,7 +15,7 @@ class BadgesScreen extends StatelessWidget {
         title: const Text('Your Badges'),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(10.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -26,11 +26,11 @@ class BadgesScreen extends StatelessWidget {
             const SizedBox(height: 16),
             Expanded(
               child: GridView.builder(
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  childAspectRatio: 0.9,
-                  crossAxisSpacing: 16,
-                  mainAxisSpacing: 16,
+                gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                  maxCrossAxisExtent: 180, // Slightly smaller maximum width
+                  childAspectRatio: 1, // More height compared to width
+                  crossAxisSpacing: 12,
+                  mainAxisSpacing: 12,
                 ),
                 itemCount: badges.length,
                 itemBuilder: (context, index) {
@@ -61,70 +61,82 @@ class BadgeTile extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
       ),
       child: Padding(
-        padding: const EdgeInsets.all(12.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Stack(
-              alignment: Alignment.center,
+        padding: const EdgeInsets.all(8.0), // Reduced padding
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            // Calculate icon size based on available width
+            final iconSize = constraints.maxWidth * 0.25;
+            
+            return Column(
+              mainAxisSize: MainAxisSize.min,
               children: [
-                Container(
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: badge.isUnlocked ? Colors.green.shade100 : Colors.grey.shade300,
-                    shape: BoxShape.circle,
-                  ),
-                  child: Icon(
-                    badge.icon,
-                    size: 36,
-                    color: badge.isUnlocked ? Colors.green : Colors.grey,
+                Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    Container(
+                      padding: EdgeInsets.all(iconSize * 0.3),
+                      decoration: BoxDecoration(
+                        color: badge.isUnlocked ? Colors.green.shade100 : Colors.grey.shade300,
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(
+                        badge.icon,
+                        size: iconSize,
+                        color: badge.isUnlocked ? Colors.green : Colors.grey,
+                      ),
+                    ),
+                    if (!badge.isUnlocked)
+                      Container(
+                        padding: EdgeInsets.all(iconSize * 0.1),
+                        decoration: const BoxDecoration(
+                          color: Colors.black54,
+                          shape: BoxShape.circle,
+                        ),
+                        child: Icon(
+                          Icons.lock,
+                          size: iconSize * 0.5,
+                          color: Colors.white,
+                        ),
+                      ),
+                  ],
+                ),
+                const SizedBox(height: 4),
+                FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    badge.name,
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: badge.isUnlocked ? Colors.green : Colors.grey,
+                    ),
+                    textAlign: TextAlign.center,
                   ),
                 ),
-                if (!badge.isUnlocked)
-                  Container(
-                    padding: const EdgeInsets.all(4),
-                    decoration: BoxDecoration(
-                      color: Colors.black54,
-                      shape: BoxShape.circle,
+                const SizedBox(height: 2),
+                Expanded(
+                  child: Text(
+                    badge.description,
+                    style: TextStyle(
+                      fontSize: 10,
+                      color: Colors.grey.shade700,
                     ),
-                    child: Icon(
-                      Icons.lock,
-                      size: 18,
-                      color: Colors.white,
-                    ),
+                    textAlign: TextAlign.center,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
                   ),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  '${badge.pointsToGain} points',
+                  style: TextStyle(
+                    fontSize: 10,
+                    color: Colors.orange.shade800,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ],
-            ),
-            const SizedBox(height: 8),
-            Text(
-              badge.name,
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: badge.isUnlocked ? Colors.green : Colors.grey,
-              ),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 4),
-            Text(
-              badge.description,
-              style: TextStyle(
-                fontSize: 12,
-                color: Colors.grey.shade700,
-              ),
-              textAlign: TextAlign.center,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-            ),
-            const SizedBox(height: 4),
-            Text(
-              '${badge.pointsToUnlock} points',
-              style: TextStyle(
-                fontSize: 12,
-                color: Colors.orange.shade800,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ],
+            );
+          }
         ),
       ),
     );
