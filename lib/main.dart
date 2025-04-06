@@ -6,12 +6,14 @@ import 'screens/challenges_screen.dart';
 import 'screens/qrcode_generator_screen.dart';
 import 'screens/settings_screen.dart';
 import 'providers/points_provider.dart';
+import 'providers/badges_provider.dart';
 
 void main() {
   runApp(
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => PointsProvider()),
+        ChangeNotifierProvider(create: (_) => BadgesProvider()),
       ],
       child: const MyApp(),
     ),
