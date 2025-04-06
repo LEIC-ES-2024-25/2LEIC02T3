@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../models/badge.dart';
-import '../services/badge_service.dart';
+import '../providers/badges_provider.dart';
 import 'bottom_navigation_bar.dart';
 
 class BadgesScreen extends StatelessWidget {
@@ -8,8 +9,6 @@ class BadgesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final badges = BadgeService().getAllBadges();
-    
     return Scaffold(
       appBar: AppBar(
         title: const Text('Your Badges'),
@@ -24,19 +23,24 @@ class BadgesScreen extends StatelessWidget {
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
-            Expanded(
-              child: GridView.builder(
-                gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                  maxCrossAxisExtent: 180, // Slightly smaller maximum width
-                  childAspectRatio: 1, // More height compared to width
-                  crossAxisSpacing: 12,
-                  mainAxisSpacing: 12,
-                ),
-                itemCount: badges.length,
-                itemBuilder: (context, index) {
-                  return BadgeTile(badge: badges[index]);
-                },
-              ),
+            Consumer<BadgesProvider>(
+              builder: (context, badgesProvider, child) {
+                final badges = badgesProvider.badges;
+                return Expanded(
+                  child: GridView.builder(
+                    gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                      maxCrossAxisExtent: 180,
+                      childAspectRatio: 1,
+                      crossAxisSpacing: 12,
+                      mainAxisSpacing: 12,
+                    ),
+                    itemCount: badges.length,
+                    itemBuilder: (context, index) {
+                      return BadgeTile(badge: badges[index]);
+                    },
+                  ),
+                );
+              },
             ),
           ],
         ),
