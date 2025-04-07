@@ -22,7 +22,7 @@ class BadgeService {
       Badge_(
         id: 'water_saver',
         name: 'Water Saver',
-        description: 'Complete 5 shower time challenges',
+        description: 'Complete shower time challenge',
         icon: Icons.water_drop,
         pointsToGain: 75,
       ),
