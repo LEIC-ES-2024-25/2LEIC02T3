@@ -1,7 +1,4 @@
 // lib/models/challenge.dart
-
-import 'package:flutter/foundation.dart';
-
 class Challenge {
   final String id;
   String title;
