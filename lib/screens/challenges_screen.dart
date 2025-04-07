@@ -414,9 +414,9 @@ class QRScannerPage extends StatelessWidget {
               Navigator.pop(context);
               
               // Update challenge status
-              final challengesProvider = Provider.of<ChallengesProvider>(context, listen: false);
-              final pointsProvider = Provider.of<PointsProvider>(context, listen: false);
-              final badgesProvider = Provider.of<BadgesProvider>(context, listen: false);
+              //final challengesProvider = Provider.of<ChallengesProvider>(context, listen: false);
+              //final pointsProvider = Provider.of<PointsProvider>(context, listen: false);
+              //final badgesProvider = Provider.of<BadgesProvider>(context, listen: false);
               
               // This would be where you process the QR code and update points/badges
               
