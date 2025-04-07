@@ -27,8 +27,12 @@ class ChallengesScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Your Challenges'),
+        title: const Text('Your Challenges',
+        style: TextStyle(color: Colors.white),
+        ),
+        backgroundColor: Colors.green, // Green app bar
       ),
+      backgroundColor: Colors.green.shade100, // Green background for the entire screen
       body: Consumer<ChallengesProvider>(
         builder: (context, challengesProvider, child) {
           final challenges = challengesProvider.challenges;
@@ -41,7 +45,7 @@ class ChallengesScreen extends StatelessWidget {
               return Padding(
                 padding: const EdgeInsets.only(bottom: 16),
                 child: Card(
-                  color: Colors.green.shade50,  // Add green background
+                  color: Colors.white, // White cards
                   elevation: 4,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
