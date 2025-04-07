@@ -336,8 +336,8 @@ class ChallengesProvider with ChangeNotifier {
       
       // Example badge logic
       if (challengeId == 'shower' && challenge.showerStatus == 'completed') {
-        await badgesProvider.unlockBadge('water_saver', context);
         await badgesProvider.unlockBadge('eco_beginner', context);
+        await badgesProvider.unlockBadge('water_saver', context);
       } else if (challengeId == 'steps' && challenge.totalSteps >= 10000) {
         await badgesProvider.unlockBadge('active_walker', context);
       }
