@@ -1,10 +1,13 @@
 // lib/models/challenge.dart
 
+import 'package:flutter/foundation.dart';
+
 class Challenge {
-  final String title;
-  final String description;
-  final int points;
-  final int totalSteps; // Total steps required for this challenge
+  final String id;
+  String title;
+  String description;
+  int points;
+  int totalSteps; // Total steps required for this challenge
   int currentSteps; // Current steps completed (mutable)
   String carFreeStatus; // For Car-Free Day challenge
   String bikeRideStatus; // New property for bike-riding status
@@ -12,8 +15,10 @@ class Challenge {
   int elapsedTime; // Elapsed time in seconds
   String showerStatus;
   String qrCodeStatus;
+  bool isCompleted;
 
   Challenge({
+    required this.id,
     required this.title,
     required this.description,
     required this.points,
@@ -24,6 +29,7 @@ class Challenge {
     this.isTimerRunning = false, // Timer is not running initially
     this.elapsedTime = 0, // Elapsed time starts at 0
     this.showerStatus = "not started",
-    this.qrCodeStatus = "not scanned"
+    this.qrCodeStatus = "not scanned",
+    this.isCompleted = false,
   });
 }

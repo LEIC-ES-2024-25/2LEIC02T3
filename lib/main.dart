@@ -7,6 +7,7 @@ import 'screens/qrcode_generator_screen.dart';
 import 'screens/settings_screen.dart';
 import 'providers/points_provider.dart';
 import 'providers/badges_provider.dart';
+import 'providers/challenges_provider.dart';
 
 void main() {
   runApp(
@@ -14,6 +15,7 @@ void main() {
       providers: [
         ChangeNotifierProvider(create: (_) => PointsProvider()),
         ChangeNotifierProvider(create: (_) => BadgesProvider()),
+        ChangeNotifierProvider(create: (_) => ChallengesProvider()),
       ],
       child: const MyApp(),
     ),
