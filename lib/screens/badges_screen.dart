@@ -14,7 +14,7 @@ class BadgesScreen extends StatelessWidget {
         title: const Text('Your Badges'),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(10.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

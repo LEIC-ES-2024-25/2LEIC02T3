@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'challenges_screen.dart'; // Import your screens here
 
 class CustomBottomNavigationBar extends StatelessWidget {
   final String currentScreen;
