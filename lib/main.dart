@@ -10,8 +10,7 @@ import 'providers/badges_provider.dart';
 import 'providers/challenges_provider.dart';
 
 void main() {
-  // Ensure Flutter is initialized
-  WidgetsFlutterBinding.ensureInitialized();
+  
   runApp(
     MultiProvider(
       providers: [
