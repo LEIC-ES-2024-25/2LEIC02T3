@@ -3,8 +3,8 @@ import 'package:mobile_scanner/mobile_scanner.dart'; // Import mobile_scanner fo
 import 'package:provider/provider.dart';
 import '../models/challenge.dart';
 import '../providers/challenges_provider.dart';
-import '../providers/points_provider.dart';
-import '../providers/badges_provider.dart';
+//import '../providers/points_provider.dart';
+//import '../providers/badges_provider.dart';
 import 'bottom_navigation_bar.dart';
 
 class ChallengesScreen extends StatelessWidget {
