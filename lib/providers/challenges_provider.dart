@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:pedometer/pedometer.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_activity_recognition/flutter_activity_recognition.dart';
 import '../models/challenge.dart';
 import '../providers/points_provider.dart';
 import '../providers/badges_provider.dart';
@@ -16,6 +17,9 @@ class ChallengesProvider with ChangeNotifier {
   StreamSubscription<StepCount>? _stepCountSubscription;
   bool _stepGoalAchieved = false;
   String _completedStepGoal = '';
+  
+  // Activity recognition properties
+  StreamSubscription<Activity>? _activitySubscription;
   
   List<Challenge> get challenges => _challenges;
   bool get isShowerTimerRunning => _challenges.any((c) => c.id == 'shower' && c.isTimerRunning);
@@ -32,6 +36,7 @@ class ChallengesProvider with ChangeNotifier {
   ChallengesProvider() {
     _initChallenges();
     _initStepCounter();
+    _initActivityRecognition();
   }
   
   void _initChallenges() {
@@ -89,6 +94,7 @@ class ChallengesProvider with ChangeNotifier {
   void dispose() {
     _showerTimer?.cancel();
     _stepCountSubscription?.cancel();
+    _activitySubscription?.cancel();
     super.dispose();
   }
   
@@ -363,5 +369,60 @@ class ChallengesProvider with ChangeNotifier {
         await badgesProvider.unlockBadge('super_walker', context);
       }
     }
+  }
+
+  void _initActivityRecognition() {
+    _subscribeActivityStream();
+  }
+
+  Future<bool> _checkAndRequestPermission() async {
+    ActivityPermission permission =
+        await FlutterActivityRecognition.instance.checkPermission();
+    if (permission == ActivityPermission.PERMANENTLY_DENIED) {
+      return false;
+    } else if (permission == ActivityPermission.DENIED) {
+      permission =
+          await FlutterActivityRecognition.instance.requestPermission();
+      if (permission != ActivityPermission.GRANTED) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  Future<void> _subscribeActivityStream() async {
+    if (await _checkAndRequestPermission()) {
+      _activitySubscription = FlutterActivityRecognition.instance.activityStream
+          .handleError(_onError)
+          .listen(_onActivity);
+    }
+  }
+
+  void _onActivity(Activity activity) {
+    if (activity.confidence == ActivityConfidence.HIGH) {
+      if (activity.type == ActivityType.IN_VEHICLE) {
+        final carFreeChallenge = _challenges.firstWhere((c) => c.id == 'car-free');
+        carFreeChallenge.carFreeStatus = "not car-free";
+        _saveChallengeState('carFreeStatus', carFreeChallenge.carFreeStatus);
+        notifyListeners();
+      }
+      
+      if (activity.type == ActivityType.ON_BICYCLE) {
+        final bikeChallenge = _challenges.firstWhere((c) => c.id == 'bike');
+        bikeChallenge.bikeRideStatus = "done";
+        _saveChallengeState('bikeRideStatus', bikeChallenge.bikeRideStatus);
+        notifyListeners();
+      }
+    }
+  }
+
+  void _onError(dynamic error) {
+    print('Activity Recognition Error >> $error');
+  }
+
+  // Helper method to save challenge state
+  Future<void> _saveChallengeState(String key, String value) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(key, value);
   }
 }
