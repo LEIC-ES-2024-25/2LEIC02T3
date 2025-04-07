@@ -1,9 +1,4 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:pedometer/pedometer.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:flutter_activity_recognition/flutter_activity_recognition.dart';
-import 'package:app_usage/app_usage.dart'; // Import the app_usage package
 import 'package:mobile_scanner/mobile_scanner.dart'; // Import mobile_scanner for QR code scanning
 import 'package:provider/provider.dart';
 import '../models/challenge.dart';
