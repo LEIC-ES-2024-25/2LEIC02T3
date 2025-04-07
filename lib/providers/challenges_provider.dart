@@ -312,18 +312,28 @@ class ChallengesProvider with ChangeNotifier {
     if (!challenge.isCompleted) {
       challenge.isCompleted = true;
       
-      // Award points
+      // Award points for completing the challenge
       final pointsProvider = Provider.of<PointsProvider>(context, listen: false);
       await pointsProvider.addPoints(challenge.points);
       
-      // Unlock relevant badges
+      // Show notification for challenge completion
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Challenge completed: ${challenge.title} (+${challenge.points} points)'),
+          duration: const Duration(seconds: 3),
+          backgroundColor: Colors.green,
+        ),
+      );
+      
+      // Unlock relevant badges - pass context so badge points can be awarded
       final badgesProvider = Provider.of<BadgesProvider>(context, listen: false);
       
       // Example badge logic
       if (challengeId == 'shower' && challenge.showerStatus == 'completed') {
-        await badgesProvider.unlockBadge('water_saver');
+        await badgesProvider.unlockBadge('water_saver', context);
+        await badgesProvider.unlockBadge('eco_beginner', context);
       } else if (challengeId == 'steps' && challenge.totalSteps >= 10000) {
-        await badgesProvider.unlockBadge('active_walker');
+        await badgesProvider.unlockBadge('active_walker', context);
       }
       
       notifyListeners();
@@ -343,14 +353,14 @@ class ChallengesProvider with ChangeNotifier {
       // Complete the challenge with proper ID
       await completeChallenge('steps', context);
       
-      // Unlock specific badges based on the completed goal
+      // Unlock specific badges based on the completed goal - pass context for points
       final badgesProvider = Provider.of<BadgesProvider>(context, listen: false);
       if (goalType == '5000') {
-        await badgesProvider.unlockBadge('beginner_walker');
+        await badgesProvider.unlockBadge('beginner_walker', context);
       } else if (goalType == '10000') {
-        await badgesProvider.unlockBadge('active_walker');
+        await badgesProvider.unlockBadge('active_walker', context);
       } else if (goalType == '20000') {
-        await badgesProvider.unlockBadge('super_walker');
+        await badgesProvider.unlockBadge('super_walker', context);
       }
     }
   }
