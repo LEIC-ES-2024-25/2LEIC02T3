@@ -304,7 +304,7 @@ You can find below information and references related with the project managemen
 
 Here's a quick demo of the project:
 
-You can download the demo video [here](assets/Demo_sprint1.mp4).
+You can download the demo video [here](assets/demos/Demo_sprint1.mp4).
 
 ### Sprint 2
 
