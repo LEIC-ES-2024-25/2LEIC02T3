@@ -299,6 +299,13 @@ You can find below information and references related with the project managemen
 *What we would change:*
 -Refactor the codebase to improve readability, maintainability, and adherence to best practices.
 
+
+## Demo Video
+
+Here's a quick demo of the project:
+
+You can download the demo video [here](assets/demo.mp4).
+
 ### Sprint 2
 
 ### Sprint 3
