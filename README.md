@@ -261,7 +261,16 @@ You can find below information and references related with the project managemen
 **After:**
 ![Screenshot sprint1_2](https://github.com/user-attachments/assets/e5deb17a-8300-4d60-929c-463dfeedbd19)
 
-**Retrospective:** The plan that the team agreed for sprint 1 has been entirely fullfiled.
+**Retrospective:** 
+
+*What went well:*
+-Correctly implemented earn points and earn badges feature.
+
+*What went wrong:*
+-Code refractoring is needed.
+
+*What we would change:*
+-Refactor the codebase to improve readability, maintainability, and adherence to best practices.
 
 ### Sprint 2
 
