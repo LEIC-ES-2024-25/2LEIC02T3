@@ -10,7 +10,6 @@ import 'providers/badges_provider.dart';
 import 'providers/challenges_provider.dart';
 
 void main() {
-  
   runApp(
     MultiProvider(
       providers: [
