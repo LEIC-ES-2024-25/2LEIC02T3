@@ -254,6 +254,14 @@ You can find below information and references related with the project managemen
 **Retrospective:** The plan that the team agreed for sprint 0 has been entirely fullfiled.
 
 ### Sprint 1
+**Before:**
+![Screenshot sprint1_1](https://github.com/user-attachments/assets/830da8dd-1ed5-4ec6-9506-e02ff4c3f370)
+
+
+**After:**
+![Screenshot sprint1_2](https://github.com/user-attachments/assets/e5deb17a-8300-4d60-929c-463dfeedbd19)
+
+**Retrospective:** The plan that the team agreed for sprint 1 has been entirely fullfiled.
 
 ### Sprint 2
 
