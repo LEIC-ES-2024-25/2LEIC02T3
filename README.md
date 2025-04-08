@@ -133,6 +133,32 @@ Figma Design: https://www.figma.com/design/ezcvtAeSm4rhMbg6pXw0XD/es_app?node-id
 
 Figma Prototype: https://www.figma.com/proto/ezcvtAeSm4rhMbg6pXw0XD/es_app?node-id=4-12247&p=f&t=zRR4YlXjMTRbgPGt-1&scaling=scale-down&content-scaling=fixed&page-id=0%3A1&starting-point-node-id=4%3A12247&show-proto-sidebar=1
 
+
+## Acceptance tests
+
+### Feature: Earn Points by Completing Challenges
+
+#### Scenario: User completes an eco-friendly challenge and earns points
+
+```gherkin
+Given the user is using the app
+And the user has an active eco-friendly challenge (e.g., "Walk 5000 steps")
+When the user completes the challenge
+Then the user's point balance should increase by the points assigned to the challenge
+And a notification should appear (e.g., "Challenge completed: Walk 5000 steps (+20 points)")
+```
+
+### Feature: Earn Badges by Completing Milestones
+
+#### Scenario: User earns a badge for completing a milestone
+```gherkin
+Given the user is using the app
+And the user has completed a milestone (e.g., "Eco Beginner Complete your first eco challenge")
+When the system detects the milestone completion
+Then the user should receive a badge associated with the milestone and the point balance should increase by the points assigned to the badge
+And a notification should appear (e.g., "Badge unlocked: Eco Beginner (+10 points) ")
+```
+
 <!-- 
 In this section, you should describe all kinds of requirements for your module: functional and non-functional requirements.
 
