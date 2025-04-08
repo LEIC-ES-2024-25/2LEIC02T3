@@ -1,8 +1,8 @@
-# _[your product name]_ Development Report
+# _FEUP-COINS_ Development Report
 
-Welcome to the documentation pages of _[your product name]_!
+Welcome to the documentation pages of _FEUP-COINS_!
 
-This Software Development Report, tailored for LEIC-ES-2024-25, provides comprehensive details about _[your product name]_, from high-level vision to low-level implementation decisions. It’s organised by the following activities.
+This Software Development Report, tailored for LEIC-ES-2024-25, provides comprehensive details about _FEUP-COINS_, from high-level vision to low-level implementation decisions. It’s organised by the following activities.
 
 * [Business modeling](#Business-Modelling)
   * [Product Vision](#Product-Vision)
@@ -33,7 +33,6 @@ Thank you!
 
 ## Projeto realizado por:
 
-* Bogos Sismanoglu up202201389
 * Carlos Cristelo up202307628
 * Francisco Antunes up202307639
 * João Quental up202307755
@@ -127,11 +126,39 @@ Take a look at the following links to learn some techniques:
 
 - As a user, I want to invite my friends so that I can encourage more people to participate in sustainable challenges.   S
 
+- As a user, I want to create and access a personal account through a login process. XL
+  
 **User Interface Mockups:**
 
 Figma Design: https://www.figma.com/design/ezcvtAeSm4rhMbg6pXw0XD/es_app?node-id=0-1&t=yXBQLDWbp9WCTYYV-1
 
 Figma Prototype: https://www.figma.com/proto/ezcvtAeSm4rhMbg6pXw0XD/es_app?node-id=4-12247&p=f&t=zRR4YlXjMTRbgPGt-1&scaling=scale-down&content-scaling=fixed&page-id=0%3A1&starting-point-node-id=4%3A12247&show-proto-sidebar=1
+
+
+## Acceptance tests
+
+### Feature: Earn Points by Completing Challenges
+
+#### Scenario: User completes an eco-friendly challenge and earns points
+
+```gherkin
+Given the user is using the app
+And the user has an active eco-friendly challenge (e.g., "Walk 5000 steps")
+When the user completes the challenge
+Then the user's point balance should increase by the points assigned to the challenge
+And a notification should appear (e.g., "Challenge completed: Walk 5000 steps (+20 points)")
+```
+
+### Feature: Earn Badges by Completing Milestones
+
+#### Scenario: User earns a badge for completing a milestone
+```gherkin
+Given the user is using the app
+And the user has completed a milestone (e.g., "Eco Beginner Complete your first eco challenge")
+When the system detects the milestone completion
+Then the user should receive a badge associated with the milestone and the point balance should increase by the points assigned to the badge
+And a notification should appear (e.g., "Badge unlocked: Eco Beginner (+10 points) ")
+```
 
 <!-- 
 In this section, you should describe all kinds of requirements for your module: functional and non-functional requirements.
@@ -261,7 +288,16 @@ You can find below information and references related with the project managemen
 **After:**
 ![Screenshot sprint1_2](https://github.com/user-attachments/assets/e5deb17a-8300-4d60-929c-463dfeedbd19)
 
-**Retrospective:** The plan that the team agreed for sprint 1 has been entirely fullfiled.
+**Retrospective:** 
+
+*What went well:*
+-Correctly implemented earn points and earn badges feature.
+
+*What went wrong:*
+-Code refractoring is needed.
+
+*What we would change:*
+-Refactor the codebase to improve readability, maintainability, and adherence to best practices.
 
 ### Sprint 2
 
