@@ -2,7 +2,7 @@
 
 Welcome to the documentation pages of _FEUP-COINS_!
 
-This Software Development Report, tailored for LEIC-ES-2024-25, provides comprehensive details about _[your product name]_, from high-level vision to low-level implementation decisions. It’s organised by the following activities.
+This Software Development Report, tailored for LEIC-ES-2024-25, provides comprehensive details about _FEUP-COINS_, from high-level vision to low-level implementation decisions. It’s organised by the following activities.
 
 * [Business modeling](#Business-Modelling)
   * [Product Vision](#Product-Vision)
@@ -33,7 +33,6 @@ Thank you!
 
 ## Projeto realizado por:
 
-* Bogos Sismanoglu up202201389
 * Carlos Cristelo up202307628
 * Francisco Antunes up202307639
 * João Quental up202307755
