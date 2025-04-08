@@ -127,6 +127,8 @@ Take a look at the following links to learn some techniques:
 
 - As a user, I want to invite my friends so that I can encourage more people to participate in sustainable challenges.   S
 
+- As a user, I want to create and access a personal account through a login process. XL
+  
 **User Interface Mockups:**
 
 Figma Design: https://www.figma.com/design/ezcvtAeSm4rhMbg6pXw0XD/es_app?node-id=0-1&t=yXBQLDWbp9WCTYYV-1
