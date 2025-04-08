@@ -1,4 +1,4 @@
-# _[your product name]_ Development Report
+# _FEUP-COINS_ Development Report
 
 Welcome to the documentation pages of _[your product name]_!
 
