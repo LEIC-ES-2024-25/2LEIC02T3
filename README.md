@@ -1,6 +1,6 @@
 # _FEUP-COINS_ Development Report
 
-Welcome to the documentation pages of _[your product name]_!
+Welcome to the documentation pages of _FEUP-COINS_!
 
 This Software Development Report, tailored for LEIC-ES-2024-25, provides comprehensive details about _[your product name]_, from high-level vision to low-level implementation decisions. It’s organised by the following activities.
 
