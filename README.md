@@ -2,9 +2,9 @@
 
 Welcome to the documentation pages of _[your product name]_!
 
-This Software Development Report, tailored for LEIC-ES-2024-25, provides comprehensive details about _[your product name]_, from high-level vision to low-level implementation decisions. It’s organised by the following activities. 
+This Software Development Report, tailored for LEIC-ES-2024-25, provides comprehensive details about _[your product name]_, from high-level vision to low-level implementation decisions. It’s organised by the following activities.
 
-* [Business modeling](#Business-Modelling) 
+* [Business modeling](#Business-Modelling)
   * [Product Vision](#Product-Vision)
   * [Features and Assumptions](#Features-and-Assumptions)
   * [Elevator Pitch](#Elevator-pitch)
@@ -115,7 +115,7 @@ Take a look at the following links to learn some techniques:
 
 - As a user, I want to trade study materials so that I can reduce waste and promote the reuse of resources.   XXL
 
-- As a user, I want to earn points by completing challenges & earn badges so that I feel motivated to complete more challenges.   L  
+- As a user, I want to earn points by completing challenges & earn badges so that I feel motivated to complete more challenges.   L
 
 <!-- - As a user, I want a friend leaderboard so that I can compete in a fun and eco-friendly way. -->
 
@@ -123,7 +123,7 @@ Take a look at the following links to learn some techniques:
 
 - As a user, I want to be notified so that I stay updated and motivated to participate in eco-friendly activities.   M
 
-- As a user, I want to be evaluated over time so that I can see how my eco-friendly habits are improving.  
+- As a user, I want to be evaluated over time so that I can see how my eco-friendly habits are improving.
 
 - As a user, I want to invite my friends so that I can encourage more people to participate in sustainable challenges.   S
 
