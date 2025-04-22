@@ -291,14 +291,28 @@ You can find below information and references related with the project managemen
 **Retrospective:** 
 
 *What went well:*
--Correctly implemented earn points and earn badges feature.
+Correctly implemented earn points and earn badges feature.
 
 *What went wrong:*
--Code refractoring is needed.
+Code refractoring is needed.
 
 *What we would change:*
--Refactor the codebase to improve readability, maintainability, and adherence to best practices.
+Refactor the codebase to improve readability, maintainability, and adherence to best practices.
 
+**Happiness Meter**
+
+| **Avaliador \ Avaliado** | **Francisco Antunes** | **Carlos Cristelo** | **Luis Ferreira** | **Joao Quental** |
+|--------------------------|------------------------|----------------------|-------------------|------------------|
+| **Francisco Antunes**    |           😊           |         ⭐           |        😊          |       ⭐          |
+| **Carlos Cristelo**      |          ⭐              |          😊           |        ⭐           |      😊           |
+| **Luis Ferreira**        |            😊             |         ⭐              |          😊       |             ⭐      |
+| **Joao Quental**         |           ⭐             |           😊          |         ⭐          |         😊         |
+
+
+⭐ Excellent
+😊 Good
+😒 Fair
+🤔 No idea
 
 ## Demo Video
 
