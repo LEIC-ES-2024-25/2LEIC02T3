@@ -321,6 +321,46 @@ Here's a quick demo of the project:
 You can download the demo video [here](assets/demos/Demo_sprint1.mp4).
 
 ### Sprint 2
+**Before:**
+![Screenshot from 2025-04-27 20-15-09](https://github.com/user-attachments/assets/24b892d5-5c31-4919-acca-62185f0c1279)
+
+
+
+**After:**
+![Screenshot from 2025-04-27 20-16-00](https://github.com/user-attachments/assets/b63d5b0f-7df0-4a6c-a1d2-757aa3771756)
+
+
+**Retrospective:** 
+
+*What went well:*
+Correctly implemented firebase authentication, notifications handler and we also refactored the entire app code (the thing we said we would change in the last sprint "retrospective").
+
+*What went wrong:*
+Many Plugins/APIs we wanted to use had impeding bugs and/or were outdated - we had to find alternatives or try to achieve things in a different way, so it led to a not so good work efficiency because we lost a big amount of time just trying out Plugins/APIs that turned out to be problematic.
+
+*What we would change:*
+Nothing.
+
+**Happiness Meter**
+
+| **Avaliador \ Avaliado** | **Francisco Antunes** | **Carlos Cristelo** | **Luis Ferreira** | **Joao Quental** |
+|--------------------------|------------------------|----------------------|-------------------|------------------|
+| **Francisco Antunes**    |           😊           |          ⭐           |        ⭐          |       ⭐          |
+| **Carlos Cristelo**      |          😊              |          😊           |        ⭐           |      😊           |
+| **Luis Ferreira**        |            ⭐             |         😊              |          😊       |             ⭐      |
+| **Joao Quental**         |           😊             |           😊          |         ⭐          |         😊         |
+
+
+⭐ Excellent
+😊 Good
+😒 Fair
+🤔 No idea
+
+## Demo Video
+
+Here's a quick demo of the project:
+
+You can download the demo video [here](assets/demos/Demo_sprint1.mp4).
 
 ### Sprint 3
 
