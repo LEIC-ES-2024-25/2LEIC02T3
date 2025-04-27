@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 import 'package:provider/provider.dart';
 import 'screens/shop_screen.dart';
 import 'screens/badges_screen.dart';
@@ -8,11 +10,19 @@ import 'screens/settings_screen.dart';
 import 'providers/points_provider.dart';
 import 'providers/badges_provider.dart';
 import 'providers/challenges_provider.dart';
+import 'services/auth_service.dart'; 
+import 'widgets/auth_wrapper.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
   runApp(
     MultiProvider(
       providers: [
+        Provider<AuthService>(create: (_) => AuthService()), // Provide AuthService
         ChangeNotifierProvider(create: (_) => PointsProvider()),
         ChangeNotifierProvider(create: (_) => BadgesProvider()),
         ChangeNotifierProvider(create: (_) => ChallengesProvider()),
@@ -41,8 +51,7 @@ class MyApp extends StatelessWidget {
           ),
         ),
       ),
-      //home: const ChallengesScreen(), // Set ChallengesScreen as the home screen
-      initialRoute: '/challenges', // Set the initial route
+      home: const AuthWrapper(),
       routes: {
         '/shop': (context) => const ShopScreen(),
         '/badges': (context) => const BadgesScreen(),

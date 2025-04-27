@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../models/badge.dart';
-import '../services/badge_service.dart';
+import '../data/badge_data.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'points_provider.dart';
 
