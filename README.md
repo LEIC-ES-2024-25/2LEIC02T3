@@ -333,7 +333,7 @@ You can download the demo video [here](assets/demos/Demo_sprint1.mp4).
 **Retrospective:** 
 
 *What went well:*
-Correctly implemented firebase authentication, notifications handler and we also refactored the entire app code (the thing we said we would change in the last sprint "retrospective").
+Correctly implemented firebase authentication, notifications handler and we also we made some changes to the code structure in order to improve readability, maintainability and simplicity.
 
 *What went wrong:*
 Many Plugins/APIs we wanted to use had impeding bugs and/or were outdated - we had to find alternatives or try to achieve things in a different way, so it led to a not so good work efficiency because we lost a big amount of time just trying out Plugins/APIs that turned out to be problematic.
