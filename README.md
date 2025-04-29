@@ -365,10 +365,15 @@ You can download the demo video [here](assets/demos/demo_sprint2.mp4).
 **Video Description**
 
 0:00-0:20 : Register and Login pages;
+
 0:21-0:40 : Notifications inside the app;
+
 0:41-0:49 : Notifications outside the app;
+
 0:50-0:54 : Log Out;
+
 0:55-1:12 : Example of misspelled Log In credentials;
+
 1:13-1:19 : Another login in with the same credentials -> same app data.
 
 **Next Sprint Planning**
