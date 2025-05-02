@@ -7,6 +7,7 @@ import 'package:flutter_activity_recognition/flutter_activity_recognition.dart';
 import '../models/challenge.dart';
 import '../providers/points_provider.dart';
 import '../providers/badges_provider.dart';
+import '../services/notification_service.dart';
 
 class ChallengesProvider with ChangeNotifier {
   List<Challenge> _challenges = [];
@@ -91,6 +92,7 @@ class ChallengesProvider with ChangeNotifier {
     _loadChallengeState();
   }
   
+  @override
   void dispose() {
     _showerTimer?.cancel();
     _stepCountSubscription?.cancel();
@@ -203,7 +205,6 @@ class ChallengesProvider with ChangeNotifier {
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
     
-    // If this is the first time we're receiving step count data
     if (_lastRecordedDate == null) {
       _lastRecordedStepCount = event.steps;
       _lastRecordedDate = today;
@@ -211,16 +212,9 @@ class ChallengesProvider with ChangeNotifier {
       return;
     }
     
-    // Check if the date changed, reset the step counter
     if (!_lastRecordedDate!.isAtSameMomentAs(today)) {
       _lastRecordedStepCount = event.steps;
       _lastRecordedDate = today;
-      _saveStepData(_lastRecordedStepCount, _lastRecordedDate!);
-    }
-    
-    // Ensure _lastRecordedStepCount is not greater than the current step count
-    if (_lastRecordedStepCount > event.steps) {
-      _lastRecordedStepCount = event.steps;
       _saveStepData(_lastRecordedStepCount, _lastRecordedDate!);
     }
     
@@ -228,38 +222,11 @@ class ChallengesProvider with ChangeNotifier {
     final todaySteps = event.steps - _lastRecordedStepCount;
     final stepsChallenge = _challenges.firstWhere((c) => c.id == 'steps');
     stepsChallenge.currentSteps = todaySteps;
+
+    // Update the background notification with current steps
+    NotificationService().showStepCountNotification(stepsChallenge.currentSteps);
     
-    // Check if the user has completed the current steps challenge
-    if (stepsChallenge.currentSteps >= stepsChallenge.totalSteps && !_stepGoalAchieved) {
-      // Set the flag to indicate a step goal was achieved
-      _stepGoalAchieved = true;
-      
-      // Store the completed goal for badge awarding
-      _completedStepGoal = stepsChallenge.totalSteps.toString();
-      
-      // Update the challenge based on the current totalSteps
-      if (stepsChallenge.totalSteps == 5000) {
-        stepsChallenge.title = "Walk 10,000 Steps";
-        stepsChallenge.description = "Take a walk and complete 10,000 steps today.";
-        stepsChallenge.points = 40;
-        stepsChallenge.totalSteps = 10000;
-        stepsChallenge.isCompleted = false;  // Reset completion status
-      } else if (stepsChallenge.totalSteps == 10000) {
-        stepsChallenge.title = "Walk 20,000 Steps";
-        stepsChallenge.description = "Take a walk and complete 20,000 steps today.";
-        stepsChallenge.points = 60;
-        stepsChallenge.totalSteps = 20000;
-        stepsChallenge.isCompleted = false;  // Reset completion status
-      } else if (stepsChallenge.totalSteps == 20000) {
-        stepsChallenge.title = "Walk 50,000 Steps";
-        stepsChallenge.description = "Take a walk and complete 50,000 steps today.";
-        stepsChallenge.points = 100;
-        stepsChallenge.totalSteps = 50000;
-        stepsChallenge.isCompleted = false;  // Reset completion status
-      }
-    }
-    
-    _saveStepData(_lastRecordedStepCount, _lastRecordedDate!);
+    // Continue with any other updates and notify listeners
     notifyListeners();
   }
   
