@@ -12,12 +12,16 @@ import 'providers/badges_provider.dart';
 import 'providers/challenges_provider.dart';
 import 'services/auth_service.dart'; 
 import 'widgets/auth_wrapper.dart';
+import 'services/notification_service.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  // Initialize notifications
+  await NotificationService().init();
 
   runApp(
     MultiProvider(
