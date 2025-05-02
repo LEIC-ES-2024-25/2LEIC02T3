@@ -232,30 +232,28 @@ class ChallengesProvider with ChangeNotifier {
   
   // SHOWER METHODS
   void toggleShowerTimer(BuildContext context) async {
-    // Check if the shower challenge has already been used today
     final hasBeenUsedToday = await hasShowerChallengeBeenUsedToday();
     if (hasBeenUsedToday) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text(
-            "You can only take the 5-minute shower challenge once per day!")),
+        const SnackBar(
+          content: Text("You can only take the 5-minute shower challenge once per day!"),
+        ),
       );
       return;
     }
 
     final showerChallenge = _challenges.firstWhere((c) => c.id == 'shower');
-    
+
     if (showerChallenge.isTimerRunning) {
       _showerTimer?.cancel();
       showerChallenge.isTimerRunning = false;
 
-      // Determine the shower status based on elapsed time
-      if (showerChallenge.elapsedTime < 300) { // 5 minutes = 300 seconds
+      print("Shower elapsed time: ${showerChallenge.elapsedTime} seconds");
+
+      // Award points only if the elapsed time is under 300 sec (5 minutes)
+      if (showerChallenge.elapsedTime < 300) {
         showerChallenge.showerStatus = "completed";
-        
-        // Mark the challenge as used today
         await markShowerChallengeUsedToday();
-        
-        // Use the completeChallenge method to award points and unlock badges
         await completeChallenge('shower', context);
       } else {
         showerChallenge.showerStatus = "failed";
@@ -265,15 +263,15 @@ class ChallengesProvider with ChangeNotifier {
       showerChallenge.elapsedTime = 0;
       showerChallenge.showerStatus = "in progress";
       showerChallenge.isTimerRunning = true;
-      
+
       _showerTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
         showerChallenge.elapsedTime++;
         _saveShowerState();
         notifyListeners();
       });
     }
-    
-    _saveShowerState();
+
+    await _saveShowerState();
     notifyListeners();
   }
   
