@@ -122,8 +122,6 @@ Take a look at the following links to learn some techniques:
 
 - As a user, I want to be notified so that I stay updated and motivated to participate in eco-friendly activities.   M
 
-- As a user, I want to be evaluated over time so that I can see how my eco-friendly habits are improving.
-
 - As a user, I want to invite my friends so that I can encourage more people to participate in sustainable challenges.   S
 
 - As a user, I want to create and access a personal account through a login process. XL
