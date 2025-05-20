@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../providers/points_provider.dart';
 import 'bottom_navigation_bar.dart';
+import '../providers/badges_provider.dart';
 
 class QRScannerScreen extends StatefulWidget {
   const QRScannerScreen({super.key});
@@ -59,6 +60,9 @@ class _QRScannerScreenState extends State<QRScannerScreen> {
       final points = _calculatePoints(eventType);
       await Provider.of<PointsProvider>(context, listen: false).addPoints(points);
       await prefs.setBool(key, true);
+      // Unlock badge related to this event
+      final badgesProvider = Provider.of<BadgesProvider>(context, listen: false);
+      await badgesProvider.unlockBadge(eventType, context);
       _showSuccessMessage('Parabéns! Você ganhou $points pontos.');
     } catch (e) {
       _showErrorMessage('Erro ao processar QR Code: $e');
