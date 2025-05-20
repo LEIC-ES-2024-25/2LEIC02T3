@@ -12,7 +12,7 @@ class BadgesScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Suas Conquistas',
+          'Your Achievements',
           style: TextStyle(color: Colors.white),
         ),
         backgroundColor: Colors.green,
@@ -40,7 +40,7 @@ class BadgesScreen extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Conquiste Distintivos!',
+                            'Collect Badges!',
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
@@ -49,7 +49,7 @@ class BadgesScreen extends StatelessWidget {
                           ),
                           SizedBox(height: 4),
                           Text(
-                            'Complete desafios ecológicos para ganhar distintivos especiais',
+                            'Complete ecological challenges to earn special badges',
                             style: TextStyle(fontSize: 14),
                           ),
                         ],
@@ -67,7 +67,7 @@ class BadgesScreen extends StatelessWidget {
                   return const Expanded(
                     child: Center(
                       child: Text(
-                        'Nenhum distintivo disponível ainda',
+                        'No badges available yet',
                         style: TextStyle(fontSize: 16),
                       ),
                     ),
@@ -197,7 +197,7 @@ class BadgeTile extends StatelessWidget {
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Text(
-                  '${badge.pointsToGain} pontos',
+                  '${badge.pointsToGain} points',
                   style: TextStyle(
                     fontSize: 12,
                     color: badge.isUnlocked ? Colors.orange.shade800 : Colors.grey.shade600,
@@ -242,7 +242,7 @@ class BadgeTile extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              'Valor: ${badge.pointsToGain} pontos',
+              'Value: ${badge.pointsToGain} points',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 color: Colors.orange.shade800,
@@ -250,7 +250,7 @@ class BadgeTile extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              badge.isUnlocked ? 'Distintivo desbloqueado!' : 'Complete desafios para desbloquear',
+              badge.isUnlocked ? 'Badge unlocked!' : 'Complete challenges to unlock',
               style: TextStyle(
                 fontStyle: FontStyle.italic,
                 color: badge.isUnlocked ? Colors.green : Colors.grey.shade600,
@@ -261,7 +261,7 @@ class BadgeTile extends StatelessWidget {
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Fechar'),
+            child: const Text('Close'),
           ),
         ],
       ),
