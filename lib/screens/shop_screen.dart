@@ -88,14 +88,17 @@ class _ShopScreenState extends State<ShopScreen> {
                     'Add Item to Trade',
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
+                  const SizedBox(height: 12),
                   TextField(
                     controller: _titleController,
                     decoration: const InputDecoration(labelText: 'Title'),
                   ),
+                  const SizedBox(height: 12),
                   TextField(
                     controller: _descriptionController,
                     decoration: const InputDecoration(labelText: 'Description'),
                   ),
+                  const SizedBox(height: 12),
                   TextField(
                     controller: _priceController,
                     keyboardType: TextInputType.number,
