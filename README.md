@@ -379,8 +379,12 @@ You can download the demo video [here](assets/demos/demo_sprint2.mp4).
 - Add the trade study materials shop feature.
 
 ### Sprint 3
-##Demo Video:
-You can download the demo video [here](assets/demos/demo_sprint3_trade_items.mp4) -- Trade Items.
+
+## Demo Video:
+You can download the demo video:
+
+[here](assets/demos/demo_sprint3_trade_items.mp4) -- Trade Items.
+
 [here](assets/demos/demo_sprint3_invite_friends.mp4) -- Invite Friends.
 
 
