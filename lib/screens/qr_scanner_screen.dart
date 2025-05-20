@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../providers/points_provider.dart';
 import 'bottom_navigation_bar.dart';
 import '../providers/badges_provider.dart';
 import '../providers/challenges_provider.dart';
@@ -63,13 +62,13 @@ class _QRScannerScreenState extends State<QRScannerScreen> {
       if (parsedDate.isBefore(today) && !_isSameDay(parsedDate, today)) {
         _showErrorMessage('Este QR Code é para um evento passado');
         return;
-      }
-      final prefs = await SharedPreferences.getInstance();
+      }      final prefs = await SharedPreferences.getInstance();
       final key = '${eventType}_${parsedDate.year}-${parsedDate.month}-${parsedDate.day}_${today.year}-${today.month}-${today.day}';
       if (prefs.getBool(key) ?? false) {
         _showErrorMessage('Você já escaneou este QR Code hoje!');
         return;
-      }      final points = _calculatePoints(eventType);      await Provider.of<PointsProvider>(context, listen: false).addPoints(points);
+      }
+      
       await prefs.setBool(key, true);
       
       // Unlock badge related to this event
@@ -83,15 +82,14 @@ class _QRScannerScreenState extends State<QRScannerScreen> {
       
       // First, complete the cleanup challenge regardless of event type
       await challengesProvider.completeChallenge('cleanup', context);
-      
-      // Then complete additional challenges based on specific event types if applicable
+        // Then complete additional challenges based on specific event types if applicable
       if (eventType == 'bicycle|parade' || eventType == 'car|pool') {
         await challengesProvider.completeChallenge('bike', context);
       } else if (eventType == 'car|free|day|meet|up') {
         await challengesProvider.completeChallenge('car-free', context);
       }
       
-      _showSuccessMessage('Parabéns! Você ganhou $points pontos.');
+      _showSuccessMessage('Parabéns! QR code escaneado com sucesso!');
       
       // Navigate back after a short delay to show the success message
       Future.delayed(const Duration(seconds: 2), () {
@@ -103,27 +101,9 @@ class _QRScannerScreenState extends State<QRScannerScreen> {
       _showErrorMessage('Erro ao processar QR Code: $e');
     }
   }
-
   bool _isSameDay(DateTime a, DateTime b) =>
       a.year == b.year && a.month == b.month && a.day == b.day;
 
-  int _calculatePoints(String eventType) {
-    const eventPoints = {
-      'clean|up|event': 50,
-      'eco|friendly|market': 30,
-      'sustainable|food|festival': 40,
-      'tree|planting|event': 60,
-      'bicycle|parade': 25,
-      'group|walk|event': 20,
-      'play|a|sport|event': 15,
-      'car|free|day|meet|up': 35,
-      'car|pool': 30,
-      'local|commerce': 20,
-      'thrift|store': 25,
-      'public|transport': 15,
-    };
-    return eventPoints[eventType] ?? 10;
-  }
 
   void _showSuccessMessage(String msg) => setState(() {
         _showSuccess = true;
