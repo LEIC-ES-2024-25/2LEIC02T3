@@ -6,6 +6,7 @@ import 'bottom_navigation_bar.dart';
 import '../providers/badges_provider.dart';
 import '../providers/points_provider.dart';
 import '../providers/challenges_provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -40,8 +41,34 @@ class SettingsScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: const Center(
-        child: Text('User Settings Area'),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            ElevatedButton.icon(
+              icon: const Icon(Icons.share),
+              label: const Text('Share App'),
+              onPressed: () async {
+                final uri = Uri.parse('https://github.com/LuisF775/ESOF_APP');
+                try {
+                  final success = await launchUrl(uri, mode: LaunchMode.externalApplication);
+                  if (!success) {
+                    throw 'Could not launch $uri';
+                  }
+                } catch (_) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Could not open URL')),
+                  );
+                }
+              },
+            ),
+            const SizedBox(height: 24),
+            const Expanded(
+              child: Center(child: Text('User Settings Area')),
+            ),
+          ],
+        ),
       ),
       bottomNavigationBar: const CustomBottomNavigationBar(
         currentScreen: 'SettingsScreen',
