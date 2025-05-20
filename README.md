@@ -427,10 +427,9 @@ You can download the demo video:
 
 0:53-end : Shop showcase and item bought from the first user logged in;
 
-**Next Sprint Planning**
-- Invite people to the app via link.
-- Add the trade study materials shop feature.
-
+**Video Description: Invite Friend**
+0:00-0:05 : Share app button showcase;
+0:05-end : Browser open on a public repository that has the apk ready to download;
 
 ### Sprint 4
 
