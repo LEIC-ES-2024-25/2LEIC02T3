@@ -20,10 +20,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
   bool _notificationsEnabled = true;
 
   Future<void> _savePreferences() async {
-    // Implementação do salvamento de preferências
+    // Implementation of preferences saving
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
-        content: Text('Preferências salvas com sucesso!'),
+        content: Text('Preferences saved successfully!'),
         backgroundColor: Colors.green,
       ),
     );
@@ -35,19 +35,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
     try {
       final authService = Provider.of<AuthService>(context, listen: false);
 
-      // 1. Limpar dados locais
+      // 1. Clear local data
       await Provider.of<BadgesProvider>(context, listen: false).clearLocalProgress();
       await Provider.of<PointsProvider>(context, listen: false).clearLocalPoints();
       await Provider.of<ChallengesProvider>(context, listen: false).clearLocalChallengeProgress();
 
-      // 2. Fazer logout do usuário
+      // 2. Log out the user
       await authService.signOut();
 
-      // 3. Limpar SnackBars pendentes
+      // 3. Clear pending SnackBars
       if (mounted) {
         ScaffoldMessenger.of(context).clearSnackBars();
 
-        // 4. Navegar para tela de autenticação
+        // 4. Navigate to authentication screen
         Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(builder: (_) => const AuthWrapper()),
               (route) => false,
@@ -57,7 +57,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       setState(() => _isLoading = false);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Erro ao fazer logout: $e'),
+          content: Text('Error logging out: $e'),
           backgroundColor: Colors.red,
         ),
       );
@@ -69,14 +69,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Configurações',
+          'Settings',
           style: TextStyle(color: Colors.white),
         ),
         backgroundColor: Colors.green,
         actions: [
           IconButton(
             icon: const Icon(Icons.logout, color: Colors.white),
-            tooltip: 'Sair',
+            tooltip: 'Logout',
             onPressed: _isLoading ? null : () => _handleLogout(context),
           ),
         ],
@@ -89,8 +89,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            // Seção de conta
-            _buildSectionHeader('Conta'),
+            // Account section
+            _buildSectionHeader('Account'),
             Card(
               elevation: 2,
               shape: RoundedRectangleBorder(
@@ -100,14 +100,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 padding: const EdgeInsets.all(12.0),
                 child: ListTile(
                   leading: const Icon(Icons.account_circle, color: Colors.green),
-                  title: const Text('Meu Perfil'),
+                  title: const Text('My Profile'),
                   subtitle: Text(
-                    Provider.of<AuthService>(context).currentUser?.email ?? 'Não logado',
+                    Provider.of<AuthService>(context).currentUser?.email ?? 'Not logged in',
                   ),
                   onTap: () {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
-                        content: Text('Recurso em desenvolvimento'),
+                        content: Text('Feature in development'),
                         backgroundColor: Colors.green,
                       ),
                     );
@@ -118,8 +118,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
             const SizedBox(height: 20),
 
-            // Seção de preferências
-            _buildSectionHeader('Preferências'),
+            // Preferences section
+            _buildSectionHeader('Preferences'),
             Card(
               elevation: 2,
               shape: RoundedRectangleBorder(
@@ -128,8 +128,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
               child: Padding(
                 padding: const EdgeInsets.all(12.0),
                 child: SwitchListTile(
-                  title: const Text('Notificações'),
-                  subtitle: const Text('Receber alertas sobre desafios'),
+                  title: const Text('Notifications'),
+                  subtitle: const Text('Receive alerts about challenges'),
                   secondary: Icon(
                       _notificationsEnabled ? Icons.notifications_active : Icons.notifications_off,
                       color: Colors.green
@@ -146,8 +146,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
             const SizedBox(height: 20),
 
-            // Seção de sobre
-            _buildSectionHeader('Sobre'),
+            // About section
+            _buildSectionHeader('About'),
             Card(
               elevation: 2,
               shape: RoundedRectangleBorder(
@@ -159,7 +159,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   children: [
                     ListTile(
                       leading: const Icon(Icons.share, color: Colors.green),
-                      title: const Text('Compartilhar App'),
+                      title: const Text('Share App'),
                       onTap: () async {
                         final uri = Uri.parse('https://github.com/LuisF775/ESOF_APP');
                         try {
@@ -168,12 +168,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               mode: LaunchMode.externalApplication
                           );
                           if (!success && mounted) {
-                            throw 'Não foi possível abrir $uri';
+                            throw 'Could not open $uri';
                           }
                         } catch (e) {
                           if (mounted) {
                             ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text('Erro: $e')),
+                              SnackBar(content: Text('Error: $e')),
                             );
                           }
                         }
@@ -182,7 +182,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     const Divider(),
                     ListTile(
                       leading: const Icon(Icons.info_outline, color: Colors.green),
-                      title: const Text('Versão do App'),
+                      title: const Text('App Version'),
                       subtitle: const Text('1.0.0'),
                     ),
                   ],
@@ -192,7 +192,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
             const SizedBox(height: 20),
 
-            // Botão de salvar configurações
+            // Save settings button
             ElevatedButton(
               onPressed: _savePreferences,
               style: ElevatedButton.styleFrom(
@@ -200,7 +200,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 padding: const EdgeInsets.symmetric(vertical: 15),
               ),
               child: const Text(
-                'Salvar Configurações',
+                'Save Settings',
                 style: TextStyle(color: Colors.white, fontSize: 16),
               ),
             ),
@@ -213,7 +213,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
-  /// Cria o cabeçalho de uma seção
+  /// Creates a section header
   Widget _buildSectionHeader(String title) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
