@@ -37,14 +37,26 @@ class _QRScannerScreenState extends State<QRScannerScreen> {
       if (parts.length < 2) {
         _showErrorMessage('QR Code inválido. Formato: "tipo_evento AAAA-MM-DD"');
         return;
-      }
-      final eventType = parts[0];
+      }      final eventType = parts[0];
       final eventDateStr = parts[1];
       late DateTime parsedDate;
       try {
-        parsedDate = DateTime.parse(eventDateStr);
-      } catch (_) {
-        _showErrorMessage('Formato de data inválido no QR Code');
+        // Make date format more flexible by handling both formats
+        if (eventDateStr.split('-').length == 3) {
+          final dateParts = eventDateStr.split('-');
+          if (dateParts.length == 3) {
+            final year = int.parse(dateParts[0]);
+            final month = int.parse(dateParts[1]);
+            final day = int.parse(dateParts[2]);
+            parsedDate = DateTime(year, month, day);
+          } else {
+            parsedDate = DateTime.parse(eventDateStr);
+          }
+        } else {
+          parsedDate = DateTime.parse(eventDateStr);
+        }
+      } catch (e) {
+        _showErrorMessage('Formato de data inválido no QR Code: $eventDateStr. Formato esperado: AAAA-MM-DD');
         return;
       }
       final today = DateTime.now();
