@@ -368,7 +368,10 @@ class ChallengesScreen extends StatelessWidget {
           children: [
             const Icon(Icons.qr_code, color: Colors.purple),
             const SizedBox(width: 8),
-            Text('Status: ${challenge.qrCodeStatus}'),
+            if (challenge.qrCodeStatus == "not scanned")
+              const Text("Status: Not scanned yet")
+            else
+              Text("Status: ${challenge.qrCodeStatus}"),
           ],
         ),
         const SizedBox(height: 12),
@@ -382,7 +385,7 @@ class ChallengesScreen extends StatelessWidget {
               );
             },
             icon: const Icon(Icons.qr_code_scanner),
-            label: const Text('Scan QR Code'),
+            label: const Text('Scan Event QR Code'),
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.green,
               foregroundColor: Colors.white,

@@ -59,7 +59,7 @@ class ChallengesProvider with ChangeNotifier {
       Challenge(id: 'bike', title: "Rode a Bike Today", description: "Swap your car ride for a bike ride today.", points: 30, bikeRideStatus: "not done yet"),
       Challenge(id: 'shower', title: "5-minutes-shower", description: "Take a shower in under 5 minutes.", points: 30, isTimerRunning: false, elapsedTime: 0, showerStatus: "not started"),
       Challenge(id: 'screen-time', title: "Screen Time", description: "Limit your screen time to 2 hours.", points: 80, totalSteps: 120, currentSteps: 0),
-      Challenge(id: 'cleanup', title: "Go to Clean-up Event", description: "Participate in a clean-up event today.", points: 50, qrCodeStatus: "not scanned"),
+      Challenge(id: 'cleanup', title: "Attend Any Eco Event", description: "Participate in any environmental event and scan the QR code.", points: 50, qrCodeStatus: "not scanned"),
     ];
   }
   
@@ -391,5 +391,15 @@ class ChallengesProvider with ChangeNotifier {
   //   // });
   // }
 
+  // Method to update the QR code status for the cleanup challenge
+  Future<void> updateQRCodeStatus(String eventType) async {
+    final cleanupChallenge = _challenges.firstWhere((c) => c.id == 'cleanup', orElse: () => Challenge(id: '', title: '', description: '', points: 0));
+    if (cleanupChallenge.id.isNotEmpty) {
+      cleanupChallenge.qrCodeStatus = "Scanned: $eventType";
+      await _saveChallengeProgressToFirestore();
+      notifyListeners();
+    }
+  }
+  
   // ... (rest of the class, including any methods related to QR code, activity recognition if they exist)
 }

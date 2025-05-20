@@ -69,17 +69,22 @@ class _QRScannerScreenState extends State<QRScannerScreen> {
       if (prefs.getBool(key) ?? false) {
         _showErrorMessage('Você já escaneou este QR Code hoje!');
         return;
-      }      final points = _calculatePoints(eventType);
-      await Provider.of<PointsProvider>(context, listen: false).addPoints(points);
+      }      final points = _calculatePoints(eventType);      await Provider.of<PointsProvider>(context, listen: false).addPoints(points);
       await prefs.setBool(key, true);
       
       // Unlock badge related to this event
       final badgesProvider = Provider.of<BadgesProvider>(context, listen: false);
-      await badgesProvider.unlockBadge(eventType, context);      // Complete 'cleanup' challenge if QR code was scanned
+      await badgesProvider.unlockBadge(eventType, context);      
+        // Complete 'cleanup' challenge for ANY QR code scanned successfully
       final challengesProvider = Provider.of<ChallengesProvider>(context, listen: false);
+      
+      // Update the QR code status with the event type
+      await challengesProvider.updateQRCodeStatus(eventType.replaceAll('|', ' '));
+      
+      // First, complete the cleanup challenge regardless of event type
       await challengesProvider.completeChallenge('cleanup', context);
       
-      // Complete additional challenges based on event type
+      // Then complete additional challenges based on specific event types if applicable
       if (eventType == 'bicycle|parade' || eventType == 'car|pool') {
         await challengesProvider.completeChallenge('bike', context);
       } else if (eventType == 'car|free|day|meet|up') {
