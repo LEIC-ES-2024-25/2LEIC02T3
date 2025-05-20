@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'bottom_navigation_bar.dart';
 import 'package:qr_flutter/qr_flutter.dart';
-import 'package:es_app/screens/qr_scanner_screen.dart';
 
 class QRcodeGeneratorScreen extends StatefulWidget {
   const QRcodeGeneratorScreen({super.key});
@@ -244,27 +243,10 @@ class _QRcodeGeneratorScreenState extends State<QRcodeGeneratorScreen> {
                         style: TextStyle(color: Colors.red),
                       ),
                     );
-                  },
-                ),
-              ),
-
-            // Scan QR Code button
-            const SizedBox(height: 16),
-            OutlinedButton.icon(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const QRScannerScreen()),
-                );
-              },
-              style: OutlinedButton.styleFrom(
-                foregroundColor: Colors.green,
-                side: const BorderSide(color: Colors.green),
-                padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
-              ),
-              icon: const Icon(Icons.qr_code_scanner),
-              label: const Text('Scan QR Code', style: TextStyle(fontSize: 16)),
+                  },              ),
             ),
+
+            // Scan QR Code button removed
           ],
         ),
       ),

@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:mobile_scanner/mobile_scanner.dart'; // Import mobile_scanner for QR code scanning
 import 'package:provider/provider.dart';
 import '../models/challenge.dart';
 import '../providers/challenges_provider.dart';
-//import '../providers/points_provider.dart';
-//import '../providers/badges_provider.dart';
 import 'bottom_navigation_bar.dart';
+import 'qr_scanner_screen.dart'; // Import the QR scanner screen
 
 class ChallengesScreen extends StatelessWidget {
   const ChallengesScreen({Key? key}) : super(key: key);
@@ -374,59 +372,31 @@ class ChallengesScreen extends StatelessWidget {
           ],
         ),
         const SizedBox(height: 12),
-        ElevatedButton.icon(
-          onPressed: () {
-            // Start QR code scanner
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const QRScannerPage(),
-              ),
-            );
-          },
-          icon: const Icon(Icons.qr_code_scanner),
-          label: const Text('Scan QR Code'),
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.green,
-            foregroundColor: Colors.white,
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class QRScannerPage extends StatelessWidget {
-  const QRScannerPage({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Scan QR Code'),
-      ),
-      body: MobileScanner(
-        onDetect: (capture) {
-          final List<Barcode> barcodes = capture.barcodes;
-          for (final barcode in barcodes) {
-            if (barcode.rawValue != null) {
-              // Process QR code data
-              Navigator.pop(context);
-              
-              // Update challenge status
-              //final challengesProvider = Provider.of<ChallengesProvider>(context, listen: false);
-              //final pointsProvider = Provider.of<PointsProvider>(context, listen: false);
-              //final badgesProvider = Provider.of<BadgesProvider>(context, listen: false);
-              
-              // This would be where you process the QR code and update points/badges
-              
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('QR Code scanned successfully! Points awarded.')),
+        if (!challenge.isCompleted)
+          ElevatedButton.icon(
+            onPressed: () {
+              // Navigate to the QRScannerScreen
+              Navigator.push(
+                context, 
+                MaterialPageRoute(builder: (context) => const QRScannerScreen())
               );
-            }
-          }
-        },
-      ),
+            },
+            icon: const Icon(Icons.qr_code_scanner),
+            label: const Text('Scan QR Code'),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.green,
+              foregroundColor: Colors.white,
+            ),
+          ),
+        if (challenge.isCompleted)
+          const Row(
+            children: [
+              Icon(Icons.check_circle, color: Colors.green),
+              SizedBox(width: 8),
+              Text('Challenge completed!', style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold)),
+            ],
+          ),
+      ],
     );
   }
 }

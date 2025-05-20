@@ -75,8 +75,7 @@ class _QRScannerScreenState extends State<QRScannerScreen> {
       
       // Unlock badge related to this event
       final badgesProvider = Provider.of<BadgesProvider>(context, listen: false);
-      await badgesProvider.unlockBadge(eventType, context);
-        // Complete 'cleanup' challenge if QR code was scanned
+      await badgesProvider.unlockBadge(eventType, context);      // Complete 'cleanup' challenge if QR code was scanned
       final challengesProvider = Provider.of<ChallengesProvider>(context, listen: false);
       await challengesProvider.completeChallenge('cleanup', context);
       
@@ -88,6 +87,13 @@ class _QRScannerScreenState extends State<QRScannerScreen> {
       }
       
       _showSuccessMessage('Parabéns! Você ganhou $points pontos.');
+      
+      // Navigate back after a short delay to show the success message
+      Future.delayed(const Duration(seconds: 2), () {
+        if (mounted) {
+          Navigator.pop(context);
+        }
+      });
     } catch (e) {
       _showErrorMessage('Erro ao processar QR Code: $e');
     }
