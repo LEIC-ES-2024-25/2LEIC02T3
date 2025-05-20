@@ -118,6 +118,12 @@ class ChallengesProvider with ChangeNotifier {
           _totalSteps = 0;
         }
 
+        // Load QR code status if available
+        final cleanupChallenge = _challenges.firstWhere((c) => c.id == 'cleanup', orElse: () => Challenge(id:'', title:'', description:'', points:0));
+        if (cleanupChallenge.id.isNotEmpty && firestoreData.containsKey('qrCodeStatus')) {
+          cleanupChallenge.qrCodeStatus = firestoreData['qrCodeStatus'] as String? ?? "not scanned";
+        }
+
         // Reset baseline on load so sensor subscription calibrates properly
         _firstStepEvent = true;
       } else {
@@ -147,11 +153,14 @@ class ChallengesProvider with ChangeNotifier {
         .map((c) => c.id)
         .toList();
       final stepsChallenge = _challenges.firstWhere((c) => c.id == 'steps');
+      final cleanupChallenge = _challenges.firstWhere((c) => c.id == 'cleanup');
+      
       Map<String, dynamic> progressData = {
         'completedChallenges': completedChallengeIds,
         'currentStepsToday': stepsChallenge.currentSteps,
         'stepsDate': DateTime.now().toIso8601String().substring(0,10),
         'totalSteps': _totalSteps, // persist cumulative steps
+        'qrCodeStatus': cleanupChallenge.qrCodeStatus, // Save QR code status
       };
       if (_lastShowerDate != null) {
         progressData['lastShowerDate'] = _lastShowerDate!.toIso8601String();

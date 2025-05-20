@@ -371,7 +371,7 @@ class ChallengesScreen extends StatelessWidget {
             if (challenge.qrCodeStatus == "not scanned")
               const Text("Status: Not scanned yet")
             else
-              Text("Status: ${challenge.qrCodeStatus}"),
+              Expanded(child: Text("Status: ${challenge.qrCodeStatus}", overflow: TextOverflow.ellipsis)),
           ],
         ),
         const SizedBox(height: 12),
