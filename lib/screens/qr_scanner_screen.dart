@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../providers/points_provider.dart';
 import 'bottom_navigation_bar.dart';
 import '../providers/badges_provider.dart';
+import '../providers/challenges_provider.dart';
 
 class QRScannerScreen extends StatefulWidget {
   const QRScannerScreen({super.key});
@@ -56,13 +57,24 @@ class _QRScannerScreenState extends State<QRScannerScreen> {
       if (prefs.getBool(key) ?? false) {
         _showErrorMessage('Você já escaneou este QR Code hoje!');
         return;
-      }
-      final points = _calculatePoints(eventType);
+      }      final points = _calculatePoints(eventType);
       await Provider.of<PointsProvider>(context, listen: false).addPoints(points);
       await prefs.setBool(key, true);
+      
       // Unlock badge related to this event
       final badgesProvider = Provider.of<BadgesProvider>(context, listen: false);
       await badgesProvider.unlockBadge(eventType, context);
+        // Complete 'cleanup' challenge if QR code was scanned
+      final challengesProvider = Provider.of<ChallengesProvider>(context, listen: false);
+      await challengesProvider.completeChallenge('cleanup', context);
+      
+      // Complete additional challenges based on event type
+      if (eventType == 'bicycle|parade' || eventType == 'car|pool') {
+        await challengesProvider.completeChallenge('bike', context);
+      } else if (eventType == 'car|free|day|meet|up') {
+        await challengesProvider.completeChallenge('car-free', context);
+      }
+      
       _showSuccessMessage('Parabéns! Você ganhou $points pontos.');
     } catch (e) {
       _showErrorMessage('Erro ao processar QR Code: $e');
@@ -108,7 +120,6 @@ class _QRScannerScreenState extends State<QRScannerScreen> {
         _showError = false;
         _resultMessage = '';
       });
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -119,10 +130,34 @@ class _QRScannerScreenState extends State<QRScannerScreen> {
       body: Column(
         children: [
           Expanded(
-            child: MobileScanner(
-              controller: controller,
-              onDetect: _onDetect,
-            ),
+            child: _isScanning 
+              ? MobileScanner(
+                  controller: controller,
+                  onDetect: _onDetect,
+                )
+              : Container(
+                  color: Colors.white,
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.qr_code_scanner,
+                          size: 100,
+                          color: Colors.green.shade300,
+                        ),
+                        SizedBox(height: 16),
+                        Text(
+                          'QR Code Processed',
+                          style: TextStyle(
+                            fontSize: 18,
+                            color: Colors.green.shade800,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
           ),
           if (_showSuccess || _showError)
             Padding(
