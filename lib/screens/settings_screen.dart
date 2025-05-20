@@ -6,7 +6,7 @@ import '../providers/challenges_provider.dart';
 import '../providers/points_provider.dart';
 import '../services/auth_service.dart';
 import '../widgets/auth_wrapper.dart';
-import 'bottom_navigation_bar.dart'; // Importação corrigida
+import 'bottom_navigation_bar.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({Key? key}) : super(key: key);
@@ -204,33 +204,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 style: TextStyle(color: Colors.white, fontSize: 16),
               ),
             ),
-
-            const SizedBox(height: 10),
-
-            // Botão de redefinir configurações
-            OutlinedButton(
-              onPressed: () {
-                setState(() {
-                  _notificationsEnabled = true;
-                });
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Configurações padrão restauradas'),
-                    backgroundColor: Colors.green,
-                  ),
-                );
-              },
-              style: OutlinedButton.styleFrom(
-                foregroundColor: Colors.green,
-                side: const BorderSide(color: Colors.green),
-                padding: const EdgeInsets.symmetric(vertical: 15),
-              ),
-              child: const Text('Redefinir Configurações', style: TextStyle(fontSize: 16)),
-            ),
           ],
         ),
       ),
-      bottomNavigationBar: const CustomBottomNavigationBar( // Usando o nome correto da classe
+      bottomNavigationBar: const CustomBottomNavigationBar(
         currentScreen: 'SettingsScreen',
       ),
     );
