@@ -1,0 +1,28 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // User progress: only the user can read/write their own document
+    match /user_progress/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+
+    // Challenges: all authenticated users can read
+    match /challenges/{challengeId} {
+      allow read: if request.auth != null;
+    }
+
+    // Trade items: authenticated users can list; only owners can create/delete
+    match /trade_items/{itemId} {
+      // Read listing for all signed-in users
+      allow read: if request.auth != null;
+
+      // Create new trade item only if ownerId matches auth UID
+      allow create: if request.auth != null
+        && request.resource.data.ownerId == request.auth.uid;
+
+      // Allow any authenticated user to delete (when purchasing)
+      allow delete: if request.auth != null;
+    }
+  }
+}

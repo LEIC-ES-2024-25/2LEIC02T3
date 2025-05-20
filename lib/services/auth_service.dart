@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import '../services/progress_service.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -23,7 +24,12 @@ class AuthService {
   // Sign up with Email and Password
   Future<UserCredential?> signUpWithEmailAndPassword(String email, String password) async {
     try {
-      return await _auth.createUserWithEmailAndPassword(email: email, password: password);
+      final credential = await _auth.createUserWithEmailAndPassword(email: email, password: password);
+      // Initialize user_progress with empty badges field
+      if (credential.user != null) {
+        await ProgressService().setUserProgress({'badges': []});
+      }
+      return credential;
     } on FirebaseAuthException catch (e) {
       // Handle errors (e.g., email-already-in-use, weak-password)
       print('Sign up failed: ${e.message}');

@@ -46,3 +46,15 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+### Firebase ###
+.idea
+**/node_modules/*
+**/.firebaserc
+
+### Firebase Patch ###
+.runtimeconfig.json
+.firebase/
+
+# Ignore Firestore security rules
+firestore.rules

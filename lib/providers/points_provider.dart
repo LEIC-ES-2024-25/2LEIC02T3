@@ -1,56 +1,83 @@
+import 'dart:async';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import '../services/progress_service.dart';
 
 class PointsProvider with ChangeNotifier {
-  static const String _pointsKey = 'user_points';
   int _points = 0;
-  
+  late final StreamSubscription<User?> _authSubscription;
+
   PointsProvider() {
+    _authSubscription = FirebaseAuth.instance.authStateChanges().listen((User? user) {
+      if (user != null) {
+        _loadPoints();
+      } else {
+        clearLocalPoints();
+      }
+    });
     _loadPoints();
   }
   
   int get points => _points;
   
   Future<void> _loadPoints() async {
-    final prefs = await SharedPreferences.getInstance();
-    _points = prefs.getInt(_pointsKey) ?? 0;
+    try {
+      final firestoreData = await ProgressService().getUserProgress();
+      if (firestoreData != null && firestoreData.containsKey('points')) {
+        _points = firestoreData['points'] as int;
+      } else {
+        _points = 0; // Default to 0 if no data in Firestore or key missing
+      }
+    } catch (e) {
+      debugPrint('Failed to load points from Firestore: $e. Initializing with 0 points.');
+      _points = 0;
+    }
     notifyListeners();
   }
   
-  Future<void> _savePoints() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setInt(_pointsKey, _points);
-  }
-  
-  Future<void> addPoints(int amount) async {
-    if (amount <= 0) return;
+  Future<void> addPoints(int points) async {
+    _points += points;
     
-    _points += amount;
-    await _savePoints();
-    notifyListeners();
-  }
-  
-  Future<bool> usePoints(int amount) async {
-    if (amount <= 0 || _points < amount) return false;
+    // --- Firestore progress tracking ---
+    try {
+      await ProgressService().setUserProgress({
+        'points': _points,
+      });
+    } catch (e) {
+      debugPrint('Failed to update points in Firestore: $e');
+    }
+    // --- End Firestore progress tracking ---
     
-    _points -= amount;
-    await _savePoints();
-    notifyListeners();
-    return true;
-  }
-  
-  Future<void> resetPoints() async {
-    _points = 0;
-    await _savePoints();
     notifyListeners();
   }
   
-  // Method for development/testing only
-  Future<void> setPoints(int value) async {
-    if (value < 0) return;
+  Future<void> removePoints(int points) async {
+    _points -= points;
+    if (_points < 0) {
+      _points = 0;
+    }
     
-    _points = value;
-    await _savePoints();
+    // --- Firestore progress tracking ---
+    try {
+      await ProgressService().setUserProgress({
+        'points': _points,
+      });
+    } catch (e) {
+      debugPrint('Failed to update points in Firestore: $e');
+    }
+    // --- End Firestore progress tracking ---
+    
     notifyListeners();
+  }
+
+  Future<void> clearLocalPoints() async {
+    _points = 0; // Reset in-memory points to 0
+    notifyListeners();
+  }
+
+  @override
+  void dispose() {
+    _authSubscription.cancel();
+    super.dispose();
   }
 }
