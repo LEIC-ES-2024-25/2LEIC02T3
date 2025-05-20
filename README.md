@@ -431,7 +431,6 @@ You can download the demo video:
 0:00-0:05 : Share app button showcase;
 0:05-end : Browser open on a public repository that has the apk ready to download;
 
-### Sprint 4
 
 ### Final Release
 
