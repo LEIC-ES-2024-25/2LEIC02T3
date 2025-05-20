@@ -379,6 +379,36 @@ You can download the demo video [here](assets/demos/demo_sprint2.mp4).
 - Add the trade study materials shop feature.
 
 ### Sprint 3
+**Before**
+![before_sprint3](https://github.com/user-attachments/assets/53c83fea-f175-4c36-b775-6e66ef49d4fe)
+
+**After**
+![after_sprint3](https://github.com/user-attachments/assets/87c16457-50e4-497e-a254-8cd5fcb76095)
+
+
+*What went well:*
+Successfully set up the Firestore database and implemented the 'Invite Friends' and 'Trade Items' features.
+
+*What went wrong:*
+Encountered unexpected bugs when syncing trade item data across different users, as well as some initial issues setting up Firestore at the beginning of the sprint, which took time to resolve.
+
+*What we would change:*
+Aamount of points of each item in the shop.
+
+**Happiness Meter**
+
+| **Avaliador \ Avaliado** | **Francisco Antunes** | **Carlos Cristelo** | **Luis Ferreira** | **Joao Quental** |
+|--------------------------|------------------------|----------------------|-------------------|------------------|
+| **Francisco Antunes**    |           😊           |          ⭐           |        ⭐          |       ⭐          |
+| **Carlos Cristelo**      |          😊              |          ⭐           |        ⭐           |      😊           |
+| **Luis Ferreira**        |            😊             |         😊              |          😊       |             ⭐      |
+| **Joao Quental**         |           ⭐             |           😊          |         😊          |         😊         |
+
+
+⭐ Excellent
+😊 Good
+😒 Fair
+🤔 No idea
 
 ## Demo Video:
 You can download the demo video:
