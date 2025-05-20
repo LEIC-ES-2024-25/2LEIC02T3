@@ -12,14 +12,6 @@ class ChallengesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Check for completed step goals when the screen builds
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      final challengesProvider = Provider.of<ChallengesProvider>(context, listen: false);
-      if (challengesProvider.stepGoalAchieved) {
-        challengesProvider.checkAndAwardStepPoints(context);
-      }
-    });
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Your Challenges',
@@ -64,7 +56,7 @@ class ChallengesScreen extends StatelessWidget {
   Widget _buildChallengeCard(BuildContext context, Challenge challenge, ChallengesProvider provider) {
     switch (challenge.id) {
       case 'steps':
-        return _buildStepsChallenge(challenge);
+        return _buildStepsChallenge(context, challenge, provider);
       case 'car-free':
         return _buildCarFreeChallenge(challenge);
       case 'bike':
@@ -80,7 +72,7 @@ class ChallengesScreen extends StatelessWidget {
     }
   }
   
-  Widget _buildStepsChallenge(Challenge challenge) {
+  Widget _buildStepsChallenge(BuildContext context, Challenge challenge, ChallengesProvider provider) {
     final progress = challenge.currentSteps / challenge.totalSteps;
     
     return Column(
@@ -124,7 +116,15 @@ class ChallengesScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text('${challenge.currentSteps} / ${challenge.totalSteps} steps'),
-            if (progress >= 1.0)
+            if (!challenge.isCompleted && progress >= 1.0)
+              ElevatedButton(
+                onPressed: () => provider.completeChallenge(challenge.id, context),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.green,
+                ),
+                child: const Text('Complete', style: TextStyle(color: Colors.white)),
+              )
+            else if (challenge.isCompleted)
               const Icon(Icons.check_circle, color: Colors.green),
           ],
         ),
