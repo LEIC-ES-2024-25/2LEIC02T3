@@ -417,6 +417,20 @@ You can download the demo video:
 
 [here](assets/demos/demo_sprint3_invite_friends.mp4) -- Invite Friends.
 
+**Video Description: Trade Items**
+
+0:00-0:17 : Login with an account and shop showcase;
+
+0:18-0:37 : Item published on the shop;
+
+0:38-0:52 : Login with a different account;
+
+0:53-end : Shop showcase and item bought from the first user logged in;
+
+**Next Sprint Planning**
+- Invite people to the app via link.
+- Add the trade study materials shop feature.
+
 
 ### Sprint 4
 
