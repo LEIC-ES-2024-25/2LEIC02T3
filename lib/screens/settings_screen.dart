@@ -10,7 +10,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 /// Tela de configurações que permite aos usuários gerenciar preferências
-/// e realizar ações como logout, alterar tema e compartilhar o aplicativo.
+/// e realizar ações como logout e compartilhar o aplicativo.
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
 
@@ -21,7 +21,6 @@ class SettingsScreen extends StatefulWidget {
 class _SettingsScreenState extends State<SettingsScreen> {
   // Estado para preferências do usuário
   bool _notificationsEnabled = true;
-  bool _darkModeEnabled = false;
   String _selectedLanguage = 'Português';
   bool _isLoading = false;
 
@@ -41,7 +40,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
       final prefs = await SharedPreferences.getInstance();
       setState(() {
         _notificationsEnabled = prefs.getBool('notifications_enabled') ?? true;
-        _darkModeEnabled = prefs.getBool('dark_mode_enabled') ?? false;
         _selectedLanguage = prefs.getString('selected_language') ?? 'Português';
         _isLoading = false;
       });
@@ -55,7 +53,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Future<void> _savePreferences() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool('notifications_enabled', _notificationsEnabled);
-    await prefs.setBool('dark_mode_enabled', _darkModeEnabled);
     await prefs.setString('selected_language', _selectedLanguage);
 
     ScaffoldMessenger.of(context).showSnackBar(
@@ -159,40 +156,20 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ),
               child: Padding(
                 padding: const EdgeInsets.all(12.0),
-                child: Column(
-                  children: [
-                    ListTile(
-                      leading: const Icon(Icons.account_circle, color: Colors.green),
-                      title: const Text('Meu Perfil'),
-                      subtitle: Text(
-                        Provider.of<AuthService>(context).currentUser?.email ?? 'Não logado',
+                child: ListTile(
+                  leading: const Icon(Icons.account_circle, color: Colors.green),
+                  title: const Text('Meu Perfil'),
+                  subtitle: Text(
+                    Provider.of<AuthService>(context).currentUser?.email ?? 'Não logado',
+                  ),
+                  onTap: () {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Recurso em desenvolvimento'),
+                        backgroundColor: Colors.green,
                       ),
-                      trailing: const Icon(Icons.arrow_forward_ios, size: 18),
-                      onTap: () {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('Recurso em desenvolvimento'),
-                            backgroundColor: Colors.green,
-                          ),
-                        );
-                      },
-                    ),
-                    const Divider(),
-                    ListTile(
-                      leading: const Icon(Icons.password, color: Colors.green),
-                      title: const Text('Alterar Senha'),
-                      trailing: const Icon(Icons.arrow_forward_ios, size: 18),
-                      onTap: () {
-                        // Implementação futura para alteração de senha
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('Recurso em desenvolvimento'),
-                            backgroundColor: Colors.green,
-                          ),
-                        );
-                      },
-                    ),
-                  ],
+                    );
+                  },
                 ),
               ),
             ),
@@ -221,22 +198,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       onChanged: (value) {
                         setState(() {
                           _notificationsEnabled = value;
-                        });
-                      },
-                    ),
-                    const Divider(),
-                    SwitchListTile(
-                      title: const Text('Modo Escuro'),
-                      subtitle: const Text('Alterar aparência do app'),
-                      secondary: Icon(
-                          _darkModeEnabled ? Icons.dark_mode : Icons.light_mode,
-                          color: Colors.green
-                      ),
-                      value: _darkModeEnabled,
-                      onChanged: (value) {
-                        setState(() {
-                          _darkModeEnabled = value;
-                          // Em um app completo, isso deveria alterar o tema
                         });
                       },
                     ),
@@ -298,7 +259,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       leading: const Icon(Icons.privacy_tip, color: Colors.green),
                       title: const Text('Política de Privacidade'),
                       onTap: () {
-                        // Implementação futura
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
                             content: Text('Recurso em desenvolvimento'),
@@ -329,12 +289,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
             const SizedBox(height: 10),
 
-            // Botão de redefinir configurações - versão melhorada
+            // Botão de redefinir configurações
             OutlinedButton(
               onPressed: () {
                 setState(() {
                   _notificationsEnabled = true;
-                  _darkModeEnabled = false;
                   _selectedLanguage = 'Português';
                 });
                 ScaffoldMessenger.of(context).showSnackBar(
