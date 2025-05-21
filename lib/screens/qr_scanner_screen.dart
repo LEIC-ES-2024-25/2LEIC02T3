@@ -33,13 +33,13 @@ class _QRScannerScreenState extends State<QRScannerScreen> {
     // Daily limit: ensure only one QR code scan per day
     final challengesProvider = Provider.of<ChallengesProvider>(context, listen: false);
     if (await challengesProvider.hasQRCodeBeenScannedToday()) {
-      _showErrorMessage('Você já escaneou um QR code hoje! Tente novamente amanhã.');
+      _showErrorMessage('You have already scanned a QR code today! Please try again tomorrow.');
       return;
     }
     try {
       final parts = code.split(' ');
       if (parts.length < 2) {
-        _showErrorMessage('QR Code inválido. Formato: "tipo_evento AAAA-MM-DD"');
+        _showErrorMessage('Invalid QR code. Format: "eventType YYYY-MM-DD"');
         return;
       }      final eventType = parts[0];
       final eventDateStr = parts[1];
@@ -60,12 +60,12 @@ class _QRScannerScreenState extends State<QRScannerScreen> {
           parsedDate = DateTime.parse(eventDateStr);
         }
       } catch (e) {
-        _showErrorMessage('Formato de data inválido no QR Code: $eventDateStr. Formato esperado: AAAA-MM-DD');
+        _showErrorMessage('Invalid date in QR code: $eventDateStr. Format expected: YYYY-MM-DD');
         return;
       }
       final today = DateTime.now();
       if (parsedDate.isBefore(today) && !_isSameDay(parsedDate, today)) {
-        _showErrorMessage('Este QR Code é para um evento passado');
+        _showErrorMessage('This QR code is for a past event');
         return;
       }      // Unlock badge related to this event
       final badgesProvider = Provider.of<BadgesProvider>(context, listen: false);
