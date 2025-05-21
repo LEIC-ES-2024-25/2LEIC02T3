@@ -31,6 +31,12 @@ class _QRScannerScreenState extends State<QRScannerScreen> {
   }
 
   Future<void> _processQRCode(String code) async {
+    // Daily limit: ensure only one QR code scan per day
+    final challengesProvider = Provider.of<ChallengesProvider>(context, listen: false);
+    if (await challengesProvider.hasQRCodeBeenScannedToday()) {
+      _showErrorMessage('Você já escaneou um QR code hoje! Tente novamente amanhã.');
+      return;
+    }
     try {
       final parts = code.split(' ');
       if (parts.length < 2) {
@@ -63,7 +69,7 @@ class _QRScannerScreenState extends State<QRScannerScreen> {
         _showErrorMessage('Este QR Code é para um evento passado');
         return;
       }      final prefs = await SharedPreferences.getInstance();
-      final key = '${eventType}_${parsedDate.year}-${parsedDate.month}-${parsedDate.day}_${today.year}-${today.month}-${today.day}';
+      final key = '${eventType}_${parsedDate.year}-${parsedDate.month}-${parsedDate.day}';
       if (prefs.getBool(key) ?? false) {
         _showErrorMessage('Você já escaneou este QR Code hoje!');
         return;
@@ -75,10 +81,11 @@ class _QRScannerScreenState extends State<QRScannerScreen> {
       final badgesProvider = Provider.of<BadgesProvider>(context, listen: false);
       await badgesProvider.unlockBadge(eventType, context);      
         // Complete 'cleanup' challenge for ANY QR code scanned successfully
-      final challengesProvider = Provider.of<ChallengesProvider>(context, listen: false);
       
       // Update the QR code status with the event type
       await challengesProvider.updateQRCodeStatus(eventType.replaceAll('|', ' '));
+      // Mark daily scan in provider
+      await challengesProvider.markQRCodeScannedToday();
       
       // First, complete the cleanup challenge regardless of event type
       await challengesProvider.completeChallenge('cleanup', context);
