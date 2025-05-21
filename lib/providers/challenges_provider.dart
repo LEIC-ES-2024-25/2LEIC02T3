@@ -15,6 +15,7 @@ class ChallengesProvider with ChangeNotifier {
   List<Challenge> _challenges = [];
   DateTime? _lastShowerDate; // Tracks the last date the shower challenge was completed/attempted
   DateTime? _lastQRCodeDate; // Tracks the last date a QR code was scanned
+  DateTime? _lastBikeDate; // Tracks the last date a bike challenge was completed
   Timer? _showerTimer;
   int _lastRecordedStepCount = 0;
   DateTime? _lastRecordedDate;
@@ -37,6 +38,7 @@ class ChallengesProvider with ChangeNotifier {
   )).elapsedTime;
   DateTime? get lastShowerDate => _lastShowerDate; // Getter for testing or other UI needs if any
   DateTime? get lastQRCodeDate => _lastQRCodeDate; // Getter for last QR code scan date
+  DateTime? get lastBikeDate => _lastBikeDate; // Getter for last bike ride date
 
   ChallengesProvider() {
     // Listen to auth changes to refresh or clear challenge state
@@ -94,15 +96,33 @@ class ChallengesProvider with ChangeNotifier {
         } else {
           _lastQRCodeDate = null;
         }
+        // Load last bike ride date
+        if (firestoreData.containsKey('lastBikeDate') && firestoreData['lastBikeDate'] != null) {
+          _lastBikeDate = DateTime.tryParse(firestoreData['lastBikeDate'].toString());
+        } else {
+          _lastBikeDate = null;
+        }
+        // Update bike challenge status based on lastBikeDate
+        final bikeChallenge = _challenges.firstWhere((c) => c.id == 'bike', orElse: () => Challenge(id:'', title:'', description:'', points:0));
+        if (_lastBikeDate != null && DateTime.now().difference(_lastBikeDate!).inHours < 24) {
+          bikeChallenge.isCompleted = true;
+          bikeChallenge.bikeRideStatus = "completed";
+        } else {
+          bikeChallenge.isCompleted = false;
+          bikeChallenge.bikeRideStatus = "not done yet";
+        }
 
         // Load completed challenges
         if (firestoreData['completedChallenges'] is List) {
           final completedIds = List<String>.from(firestoreData['completedChallenges']);
           for (var challenge in _challenges) {
+            // skip daily challenges
+            if (challenge.id == 'shower' || challenge.id == 'bike') continue;
             challenge.isCompleted = completedIds.contains(challenge.id);
           }
         } else {
           for (var challenge in _challenges) { // Default to not completed if key missing
+            if (challenge.id == 'shower' || challenge.id == 'bike') continue;
             challenge.isCompleted = false;
           }
         }
@@ -137,10 +157,12 @@ class ChallengesProvider with ChangeNotifier {
       } else {
         // No data in Firestore, ensure all challenges are not completed and dynamic state is reset
         for (var challenge in _challenges) {
+          // reset all, including daily ones
           challenge.isCompleted = false;
           if (challenge.id == 'steps') challenge.currentSteps = 0;
         }
         _lastShowerDate = null;
+        _lastBikeDate = null;
       }
     } catch (e) {
       debugPrint('Failed to load challenge state from Firestore: $e. Initializing with default states.');
@@ -149,15 +171,16 @@ class ChallengesProvider with ChangeNotifier {
         if (challenge.id == 'steps') challenge.currentSteps = 0;
       }
       _lastShowerDate = null;
+      _lastBikeDate = null;
     }
     notifyListeners();
   }
 
   Future<void> _saveChallengeProgressToFirestore() async {
     try {
-      // Exclude 'shower' since it's daily and handled via lastShowerDate
+      // Exclude 'shower' and 'bike' (both daily) from persistent completed list
       final completedChallengeIds = _challenges
-        .where((c) => c.isCompleted && c.id != 'shower')
+        .where((c) => c.isCompleted && c.id != 'shower' && c.id != 'bike')
         .map((c) => c.id)
         .toList();
       final stepsChallenge = _challenges.firstWhere((c) => c.id == 'steps');
@@ -180,6 +203,12 @@ class ChallengesProvider with ChangeNotifier {
         progressData['lastQRCodeDate'] = _lastQRCodeDate!.toIso8601String();
       } else {
         progressData['lastQRCodeDate'] = null;
+      }
+      // Save last bike ride date
+      if (_lastBikeDate != null) {
+        progressData['lastBikeDate'] = _lastBikeDate!.toIso8601String();
+      } else {
+        progressData['lastBikeDate'] = null;
       }
       await ProgressService().setUserProgress(progressData);
     } catch (e) {
@@ -249,19 +278,6 @@ class ChallengesProvider with ChangeNotifier {
   }
   
   // SHOWER METHODS
-  Future<bool> _hasShowerChallengeBeenUsedToday() async {
-    if (_lastShowerDate == null) return false;
-    final now = DateTime.now();
-    return _lastShowerDate!.year == now.year &&
-           _lastShowerDate!.month == now.month &&
-           _lastShowerDate!.day == now.day;
-  }
-
-  Future<void> _markShowerChallengeUsedToday() async {
-    _lastShowerDate = DateTime.now();
-    await _saveChallengeProgressToFirestore(); // Save updated shower date
-  }
-
   void toggleShowerTimer(BuildContext context) async {
     // Refresh lastShowerDate directly from Firestore to enforce cooldown
     final firestoreData = await ProgressService().getUserProgress();
@@ -326,7 +342,46 @@ class ChallengesProvider with ChangeNotifier {
     notifyListeners();
   }
   
-  // Other methods for bike riding, car-free day, screen time, and QR code can be implemented similarly
+  // Helper: mark shower challenge used today and persist
+  Future<void> _markShowerChallengeUsedToday() async {
+    _lastShowerDate = DateTime.now();
+    await _saveChallengeProgressToFirestore();
+  }
+
+  // BIKE CHALLENGE METHODS
+  /// Public: complete the bike challenge once per day
+  Future<void> completeBikeChallenge(BuildContext context) async {
+    // Enforce cooldown by checking last saved date from Firestore
+    final firestoreData = await ProgressService().getUserProgress();
+    DateTime? lastDateDb;
+    if (firestoreData != null && firestoreData['lastBikeDate'] != null) {
+      lastDateDb = DateTime.tryParse(firestoreData['lastBikeDate'].toString());
+    }
+    if (lastDateDb != null && DateTime.now().difference(lastDateDb).inHours < 24) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("You can only complete the bike challenge once per day"),
+          backgroundColor: Colors.green,
+          duration: Duration(seconds: 4),
+        ),
+      );
+      return;
+    }
+    // Mark as used and save
+    await _markBikeChallengeUsedToday();
+    // Update challenge status
+    final bikeChallenge = _challenges.firstWhere((c) => c.id == 'bike');
+    bikeChallenge.bikeRideStatus = "completed";
+    // Award points and badges
+    await completeChallenge('bike', context);
+    notifyListeners();
+  }
+  
+  // Helper: mark bike challenge used today and persist
+  Future<void> _markBikeChallengeUsedToday() async {
+    _lastBikeDate = DateTime.now();
+    await _saveChallengeProgressToFirestore();
+  }
 
   // Method to award points when a challenge is completed
   Future<void> completeChallenge(String challengeId, BuildContext context) async {
@@ -395,6 +450,7 @@ class ChallengesProvider with ChangeNotifier {
     _initializeChallengesBase();
     _lastShowerDate = null;
     _lastQRCodeDate = null;
+    _lastBikeDate = null;
     _lastRecordedStepCount = 0;
     _lastRecordedDate = null; 
 
@@ -413,7 +469,7 @@ class ChallengesProvider with ChangeNotifier {
         }
         // Reset other challenge-specific statuses if any
         if (challenge.id == 'car-free') challenge.carFreeStatus = "car-free by now"; // Default
-        if (challenge.id == 'bike') challenge.bikeRideStatus = "not done yet"; // Default
+        if (challenge.id == 'bike') challenge.bikeRideStatus = "not done yet"; // Default bike status
         if (challenge.id == 'cleanup') challenge.qrCodeStatus = "not scanned"; // Default
     }
 
