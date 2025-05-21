@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'bottom_navigation_bar.dart';
 import '../providers/badges_provider.dart';
 import '../providers/challenges_provider.dart';
@@ -68,20 +67,10 @@ class _QRScannerScreenState extends State<QRScannerScreen> {
       if (parsedDate.isBefore(today) && !_isSameDay(parsedDate, today)) {
         _showErrorMessage('Este QR Code é para um evento passado');
         return;
-      }      final prefs = await SharedPreferences.getInstance();
-      final key = '${eventType}_${parsedDate.year}-${parsedDate.month}-${parsedDate.day}';
-      if (prefs.getBool(key) ?? false) {
-        _showErrorMessage('Você já escaneou este QR Code hoje!');
-        return;
-      }
-      
-      await prefs.setBool(key, true);
-      
-      // Unlock badge related to this event
+      }      // Unlock badge related to this event
       final badgesProvider = Provider.of<BadgesProvider>(context, listen: false);
-      await badgesProvider.unlockBadge(eventType, context);      
-        // Complete 'cleanup' challenge for ANY QR code scanned successfully
-      
+      await badgesProvider.unlockBadge(eventType, context);
+
       // Update the QR code status with the event type
       await challengesProvider.updateQRCodeStatus(eventType.replaceAll('|', ' '));
       // Mark daily scan in provider
