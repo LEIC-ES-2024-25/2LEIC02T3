@@ -208,9 +208,7 @@ class ChallengesScreen extends StatelessWidget {
         Text('Status: ${challenge.bikeRideStatus}'),
         const SizedBox(height: 12),
         ElevatedButton.icon(
-          onPressed: challenge.isCompleted
-              ? null
-              : () => provider.completeBikeChallenge(context),
+          onPressed: () => provider.completeBikeChallenge(context),
           icon: const Icon(Icons.directions_bike),
           label: const Text('I Rode a Bike Today'),
           style: ElevatedButton.styleFrom(

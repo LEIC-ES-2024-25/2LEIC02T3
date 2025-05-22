@@ -351,13 +351,9 @@ class ChallengesProvider with ChangeNotifier {
   // BIKE CHALLENGE METHODS
   /// Public: complete the bike challenge once per day
   Future<void> completeBikeChallenge(BuildContext context) async {
-    // Enforce cooldown by checking last saved date from Firestore
-    final firestoreData = await ProgressService().getUserProgress();
-    DateTime? lastDateDb;
-    if (firestoreData != null && firestoreData['lastBikeDate'] != null) {
-      lastDateDb = DateTime.tryParse(firestoreData['lastBikeDate'].toString());
-    }
-    if (lastDateDb != null && DateTime.now().difference(lastDateDb).inHours < 24) {
+    // Use local _lastBikeDate to enforce a 24h cooldown
+    final now = DateTime.now();
+    if (_lastBikeDate != null && now.difference(_lastBikeDate!).inHours < 24) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text("You can only complete the bike challenge once per day"),
@@ -367,22 +363,17 @@ class ChallengesProvider with ChangeNotifier {
       );
       return;
     }
-    // Mark as used and save
-    await _markBikeChallengeUsedToday();
-    // Update challenge status
-    final bikeChallenge = _challenges.firstWhere((c) => c.id == 'bike');
-    bikeChallenge.bikeRideStatus = "completed";
-    // Award points and badges
-    await completeChallenge('bike', context);
-    notifyListeners();
-  }
-  
-  // Helper: mark bike challenge used today and persist
-  Future<void> _markBikeChallengeUsedToday() async {
-    _lastBikeDate = DateTime.now();
+    // Mark as used and persist
+    _lastBikeDate = now;
     await _saveChallengeProgressToFirestore();
-  }
-
+     // Update challenge status
+     final bikeChallenge = _challenges.firstWhere((c) => c.id == 'bike');
+     bikeChallenge.bikeRideStatus = "completed";
+     // Award points and badges
+     await completeChallenge('bike', context);
+     notifyListeners();
+   }
+  
   // Method to award points when a challenge is completed
   Future<void> completeChallenge(String challengeId, BuildContext context) async {
     final challengeIndex = _challenges.indexWhere((c) => c.id == challengeId);
