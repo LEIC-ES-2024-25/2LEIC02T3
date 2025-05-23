@@ -44,6 +44,17 @@ class NotificationService {
             playSound: false, // Disable sound
           ),
         );
+        
+        // Add notification channel for challenge completions
+        await androidImplementation.createNotificationChannel(
+          const AndroidNotificationChannel(
+            'challenge_completed_channel',
+            'Challenge Completed',
+            description: 'Notifications for completed challenges',
+            importance: Importance.high,
+            playSound: true,
+          ),
+        );
       }
     }
 
@@ -81,5 +92,26 @@ class NotificationService {
 
   Future<void> cancelNotification() async {
     await flutterLocalNotificationsPlugin.cancel(0);
+  }
+
+  Future<void> showChallengeCompletedNotification(String challengeTitle, int points) async {
+    const AndroidNotificationDetails androidDetails = AndroidNotificationDetails(
+      'challenge_completed_channel',
+      'Challenge Completed',
+      channelDescription: 'Notifications for completed challenges',
+      importance: Importance.high,
+      priority: Priority.high,
+      playSound: true,
+      enableVibration: true,
+      icon: '@mipmap/ic_launcher',
+    );
+    const NotificationDetails platformDetails = NotificationDetails(android: androidDetails);
+
+    await flutterLocalNotificationsPlugin.show(
+      1, // Different ID from step count notification
+      'Challenge Completed!',
+      'You completed "$challengeTitle" (+$points points)',
+      platformDetails,
+    );
   }
 }
