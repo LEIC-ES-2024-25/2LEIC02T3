@@ -19,16 +19,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
   bool _isLoading = false;
   bool _notificationsEnabled = true;
 
-  Future<void> _savePreferences() async {
-    // Implementation of preferences saving
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Preferences saved successfully!'),
-        backgroundColor: Colors.green,
-      ),
-    );
-  }
-
   Future<void> _handleLogout(BuildContext context) async {
     setState(() => _isLoading = true);
 
@@ -104,14 +94,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   subtitle: Text(
                     Provider.of<AuthService>(context).currentUser?.email ?? 'Not logged in',
                   ),
-                  onTap: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Feature in development'),
-                        backgroundColor: Colors.green,
-                      ),
-                    );
-                  },
                 ),
               ),
             ),
@@ -191,19 +173,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
 
             const SizedBox(height: 20),
-
-            // Save settings button
-            ElevatedButton(
-              onPressed: _savePreferences,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.green,
-                padding: const EdgeInsets.symmetric(vertical: 15),
-              ),
-              child: const Text(
-                'Save Settings',
-                style: TextStyle(color: Colors.white, fontSize: 16),
-              ),
-            ),
           ],
         ),
       ),
