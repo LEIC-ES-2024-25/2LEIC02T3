@@ -15,7 +15,7 @@ class BadgeService {
       Badge_(
         id: 'step_enthusiast',
         name: 'Step Enthusiast',
-        description: 'Walk 10,000 steps in one day',
+        description: 'Walk 5000 steps in one day',
         icon: Icons.directions_walk,
         pointsToGain: 50,
       ),
@@ -29,7 +29,7 @@ class BadgeService {
       Badge_(
         id: 'cycling_pro',
         name: 'Cycling Pro',
-        description: 'Use a bicycle instead of a car 10 times',
+        description: 'Use a bicycle instead of a car',
         icon: Icons.directions_bike,
         pointsToGain: 150,
       ),
