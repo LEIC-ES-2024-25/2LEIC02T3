@@ -27,13 +27,6 @@ class BadgeService {
         pointsToGain: 75,
       ),
       Badge_(
-        id: 'screen_balancer',
-        name: 'Screen Balancer',
-        description: 'Keep your screen time under 2 hours for a week',
-        icon: Icons.phone_android,
-        pointsToGain: 100,
-      ),
-      Badge_(
         id: 'cycling_pro',
         name: 'Cycling Pro',
         description: 'Use a bicycle instead of a car 10 times',
