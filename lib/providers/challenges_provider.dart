@@ -386,6 +386,7 @@ class ChallengesProvider with ChangeNotifier {
       
       final pointsProvider = Provider.of<PointsProvider>(context, listen: false);
       final challengePoints = _challenges[challengeIndex].points;
+      final challengeTitle = _challenges[challengeIndex].title;
       await pointsProvider.addPoints(challengePoints);
       
       // Show a success message with the points earned
@@ -395,6 +396,12 @@ class ChallengesProvider with ChangeNotifier {
           backgroundColor: Colors.green,
           duration: const Duration(seconds: 3),
         ),
+      );
+      
+      // Also show a notification
+      await NotificationService().showChallengeCompletedNotification(
+        challengeTitle,
+        challengePoints
       );
       
       await _saveChallengeProgressToFirestore();
