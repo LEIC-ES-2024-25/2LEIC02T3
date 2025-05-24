@@ -58,7 +58,7 @@ class ChallengesScreen extends StatelessWidget {
       case 'car-free':
         return _buildCarFreeChallenge(challenge);
       case 'bike':
-        return _buildBikeChallenge(challenge);
+        return _buildBikeChallenge(context, challenge, provider);
       case 'shower':
         return _buildShowerChallenge(context, challenge, provider);
       case 'screen-time':
@@ -173,7 +173,7 @@ class ChallengesScreen extends StatelessWidget {
     );
   }
   
-  Widget _buildBikeChallenge(Challenge challenge) {
+  Widget _buildBikeChallenge(BuildContext context, Challenge challenge, ChallengesProvider provider) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -208,9 +208,7 @@ class ChallengesScreen extends StatelessWidget {
         Text('Status: ${challenge.bikeRideStatus}'),
         const SizedBox(height: 12),
         ElevatedButton.icon(
-          onPressed: () {
-            // Implement bike ride completion logic
-          },
+          onPressed: () => provider.completeBikeChallenge(context),
           icon: const Icon(Icons.directions_bike),
           label: const Text('I Rode a Bike Today'),
           style: ElevatedButton.styleFrom(
