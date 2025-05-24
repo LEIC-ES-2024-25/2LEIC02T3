@@ -243,9 +243,10 @@ class _QRcodeGeneratorScreenState extends State<QRcodeGeneratorScreen> {
                         style: TextStyle(color: Colors.red),
                       ),
                     );
-                  },
-                ),
-              ),
+                  },              ),
+            ),
+
+            // Scan QR Code button removed
           ],
         ),
       ),

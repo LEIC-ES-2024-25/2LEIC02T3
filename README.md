@@ -135,6 +135,26 @@ Figma Prototype: https://www.figma.com/proto/ezcvtAeSm4rhMbg6pXw0XD/es_app?node-
 
 ## Acceptance tests
 
+### Feature: User Authentication and Profile Access
+
+#### Scenario: User successfully signs up for an account
+```gherkin
+Given the user is on the "Sign Up" screen
+When the user enters all required details (email, password and confirm password)
+And taps the "Sign Up" button
+Then the system should create a new user account
+And redirect the user to the login screen or log them in automatically
+```
+
+#### Scenario: User fails to log in with invalid credentials
+```gherkin
+Given the user is on the "Login" screen
+When the user enters an incorrect email or password
+And taps the "Sign In" button
+Then the system should reject the login attempt
+And display an error message ("Sign in failed. Please check your credentials.")
+```
+
 ### Feature: Earn Points by Completing Challenges
 
 #### Scenario: User completes an eco-friendly challenge and earns points
@@ -157,6 +177,48 @@ When the system detects the milestone completion
 Then the user should receive a badge associated with the milestone and the point balance should increase by the points assigned to the badge
 And a notification should appear (e.g., "Badge unlocked: Eco Beginner (+10 points) ")
 ```
+
+### Feature: Generate Unique QR Codes for User Events
+
+#### Scenario: User generates a unique QR Code for a new event
+```gherkin
+Given the user is logged into the app
+And the user navigates to the "Create Event" screen
+When the user enters a valid event type (e.g., "Beach Cleanup")
+And selects a valid date and time (e.g., "2025-06-01 at 10:00 AM")
+And taps the "Generate QR Code" button
+Then a unique QR Code should be generated for the event
+And the QR Code should be linked to the event's type and date
+```
+
+#### Scenario: Generated QR Code is unique across multiple events
+```gherkin
+Given the user creates two different events with different types or dates
+When the user generates a QR Code for each event
+Then each QR Code should be unique
+And scanning each QR Code should link to the correct corresponding event information
+```
+### Feature: User Notifications
+
+#### Scenario: User receives a notification when walking
+```gherkin
+Given the user is logged into the app 
+And the user has an active eco-friendly activity (e.g., "Recycle plastic bottles")
+When the user completes the activity
+Then the user should receive a notification (e.g., "Well done! You earned 10 points for recycling")
+And the notification should include the activity name and points earned
+```
+#### Scenario: User disables notifications from app settings
+```gherkin
+Given the user navigates to the app settings
+And the user turns off activity notifications
+When the user completes another eco-friendly activity
+Then no notification should be displayed or sent
+```
+
+
+
+
 
 <!-- 
 In this section, you should describe all kinds of requirements for your module: functional and non-functional requirements.
@@ -379,6 +441,36 @@ You can download the demo video [here](assets/demos/demo_sprint2.mp4).
 - Add the trade study materials shop feature.
 
 ### Sprint 3
+**Before**
+![before_sprint3](https://github.com/user-attachments/assets/53c83fea-f175-4c36-b775-6e66ef49d4fe)
+
+**After**
+![after_sprint3](https://github.com/user-attachments/assets/87c16457-50e4-497e-a254-8cd5fcb76095)
+
+
+*What went well:*
+Successfully set up the Firestore database and implemented the 'Invite Friends' and 'Trade Items' features.
+
+*What went wrong:*
+Encountered unexpected bugs when syncing trade item data across different users, as well as some initial issues setting up Firestore at the beginning of the sprint, which took time to resolve.
+
+*What we would change:*
+Amount of points of each item in the shop.
+
+**Happiness Meter**
+
+| **Avaliador \ Avaliado** | **Francisco Antunes** | **Carlos Cristelo** | **Luis Ferreira** | **Joao Quental** |
+|--------------------------|------------------------|----------------------|-------------------|------------------|
+| **Francisco Antunes**    |           😊           |          ⭐           |        ⭐          |       ⭐          |
+| **Carlos Cristelo**      |          😊              |          ⭐           |        ⭐           |      😊           |
+| **Luis Ferreira**        |            😊             |         😊              |          😊       |             ⭐      |
+| **Joao Quental**         |           ⭐             |           😊          |         😊          |         😊         |
+
+
+⭐ Excellent
+😊 Good
+😒 Fair
+🤔 No idea
 
 ## Demo Video:
 You can download the demo video:
@@ -387,8 +479,22 @@ You can download the demo video:
 
 [here](assets/demos/demo_sprint3_invite_friends.mp4) -- Invite Friends.
 
+**Video Description: Trade Items**
 
-### Sprint 4
+0:00-0:17 : Login with an account and shop showcase;
+
+0:18-0:37 : Item published on the shop;
+
+0:38-0:52 : Login with a different account;
+
+0:53-end : Shop showcase and item bought from the first user logged in;
+
+**Video Description: Invite Friend**
+
+0:00-0:05 : Share app button showcase;
+
+0:05-end : Browser open on a public repository that has the apk ready to download;
+
 
 ### Final Release
 

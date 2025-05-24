@@ -1,77 +1,229 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart'; // Import Provider
-import '../services/auth_service.dart';
-import '../widgets/auth_wrapper.dart';   // ← import AuthWrapper
-import 'bottom_navigation_bar.dart';
-import '../providers/badges_provider.dart';
-import '../providers/points_provider.dart';
-import '../providers/challenges_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../providers/badges_provider.dart';
+import '../providers/challenges_provider.dart';
+import '../providers/points_provider.dart';
+import '../services/auth_service.dart';
+import '../widgets/auth_wrapper.dart';
+import 'bottom_navigation_bar.dart';
 
-class SettingsScreen extends StatelessWidget {
-  const SettingsScreen({super.key});
+class SettingsScreen extends StatefulWidget {
+  const SettingsScreen({Key? key}) : super(key: key);
+
+  @override
+  State<SettingsScreen> createState() => _SettingsScreenState();
+}
+
+class _SettingsScreenState extends State<SettingsScreen> {
+  bool _isLoading = false;
+  bool _notificationsEnabled = true;
+
+  Future<void> _savePreferences() async {
+    // Implementation of preferences saving
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Preferences saved successfully!'),
+        backgroundColor: Colors.green,
+      ),
+    );
+  }
+
+  Future<void> _handleLogout(BuildContext context) async {
+    setState(() => _isLoading = true);
+
+    try {
+      final authService = Provider.of<AuthService>(context, listen: false);
+
+      // 1. Clear local data
+      await Provider.of<BadgesProvider>(context, listen: false).clearLocalProgress();
+      await Provider.of<PointsProvider>(context, listen: false).clearLocalPoints();
+      await Provider.of<ChallengesProvider>(context, listen: false).clearLocalChallengeProgress();
+
+      // 2. Log out the user
+      await authService.signOut();
+
+      // 3. Clear pending SnackBars
+      if (mounted) {
+        ScaffoldMessenger.of(context).clearSnackBars();
+
+        // 4. Navigate to authentication screen
+        Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (_) => const AuthWrapper()),
+              (route) => false,
+        );
+      }
+    } catch (e) {
+      setState(() => _isLoading = false);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error logging out: $e'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    // Get AuthService from Provider
-    final authService = Provider.of<AuthService>(context, listen: false);
-
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Settings'),
+        title: const Text(
+          'Settings',
+          style: TextStyle(color: Colors.white),
+        ),
+        backgroundColor: Colors.green,
         actions: [
           IconButton(
-            icon: const Icon(Icons.logout),
-            tooltip: 'Sign Out',
-            onPressed: () async {
-              // 1. Clear local progress for all providers
-              await Provider.of<BadgesProvider>(context, listen: false).clearLocalProgress();
-              await Provider.of<PointsProvider>(context, listen: false).clearLocalPoints();
-              await Provider.of<ChallengesProvider>(context, listen: false).clearLocalChallengeProgress();
-              // 2. Sign out the user
-              await authService.signOut();
-              // 3. Clear any pending SnackBars/notifications
-              ScaffoldMessenger.of(context).clearSnackBars();
-              // 4. Navigate back to AuthWrapper (login/register)
-              Navigator.of(context).pushAndRemoveUntil(
-                MaterialPageRoute(builder: (_) => const AuthWrapper()),
-                (route) => false,
-              );
-            },
+            icon: const Icon(Icons.logout, color: Colors.white),
+            tooltip: 'Logout',
+            onPressed: _isLoading ? null : () => _handleLogout(context),
           ),
         ],
       ),
-      body: Padding(
+      backgroundColor: Colors.green.shade50,
+      body: _isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            ElevatedButton.icon(
-              icon: const Icon(Icons.share),
-              label: const Text('Share App'),
-              onPressed: () async {
-                final uri = Uri.parse('https://github.com/LuisF775/ESOF_APP');
-                try {
-                  final success = await launchUrl(uri, mode: LaunchMode.externalApplication);
-                  if (!success) {
-                    throw 'Could not launch $uri';
-                  }
-                } catch (_) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Could not open URL')),
-                  );
-                }
-              },
+            // Account section
+            _buildSectionHeader('Account'),
+            Card(
+              elevation: 2,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: ListTile(
+                  leading: const Icon(Icons.account_circle, color: Colors.green),
+                  title: const Text('My Profile'),
+                  subtitle: Text(
+                    Provider.of<AuthService>(context).currentUser?.email ?? 'Not logged in',
+                  ),
+                  onTap: () {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Feature in development'),
+                        backgroundColor: Colors.green,
+                      ),
+                    );
+                  },
+                ),
+              ),
             ),
-            const SizedBox(height: 24),
-            const Expanded(
-              child: Center(child: Text('User Settings Area')),
+
+            const SizedBox(height: 20),
+
+            // Preferences section
+            _buildSectionHeader('Preferences'),
+            Card(
+              elevation: 2,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: SwitchListTile(
+                  title: const Text('Notifications'),
+                  subtitle: const Text('Receive alerts about challenges'),
+                  secondary: Icon(
+                      _notificationsEnabled ? Icons.notifications_active : Icons.notifications_off,
+                      color: Colors.green
+                  ),
+                  value: _notificationsEnabled,
+                  onChanged: (value) {
+                    setState(() {
+                      _notificationsEnabled = value;
+                    });
+                  },
+                ),
+              ),
+            ),
+
+            const SizedBox(height: 20),
+
+            // About section
+            _buildSectionHeader('About'),
+            Card(
+              elevation: 2,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Column(
+                  children: [
+                    ListTile(
+                      leading: const Icon(Icons.share, color: Colors.green),
+                      title: const Text('Share App'),
+                      onTap: () async {
+                        final uri = Uri.parse('https://github.com/LuisF775/ESOF_APP');
+                        try {
+                          final success = await launchUrl(
+                              uri,
+                              mode: LaunchMode.externalApplication
+                          );
+                          if (!success && mounted) {
+                            throw 'Could not open $uri';
+                          }
+                        } catch (e) {
+                          if (mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text('Error: $e')),
+                            );
+                          }
+                        }
+                      },
+                    ),
+                    const Divider(),
+                    ListTile(
+                      leading: const Icon(Icons.info_outline, color: Colors.green),
+                      title: const Text('App Version'),
+                      subtitle: const Text('1.0.0'),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
+            const SizedBox(height: 20),
+
+            // Save settings button
+            ElevatedButton(
+              onPressed: _savePreferences,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.green,
+                padding: const EdgeInsets.symmetric(vertical: 15),
+              ),
+              child: const Text(
+                'Save Settings',
+                style: TextStyle(color: Colors.white, fontSize: 16),
+              ),
             ),
           ],
         ),
       ),
       bottomNavigationBar: const CustomBottomNavigationBar(
         currentScreen: 'SettingsScreen',
+      ),
+    );
+  }
+
+  /// Creates a section header
+  Widget _buildSectionHeader(String title) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
+      child: Text(
+        title,
+        style: const TextStyle(
+          fontSize: 18,
+          fontWeight: FontWeight.bold,
+          color: Colors.green,
+        ),
       ),
     );
   }

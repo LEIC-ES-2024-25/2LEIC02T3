@@ -11,26 +11,73 @@ class BadgesScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Your Badges'),
+        title: const Text(
+          'Your Achievements',
+          style: TextStyle(color: Colors.white),
+        ),
+        backgroundColor: Colors.green,
       ),
+      backgroundColor: Colors.green.shade50,
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'Earn badges by completing eco-friendly challenges!',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            Card(
+              elevation: 2,
+              color: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: const Padding(
+                padding: EdgeInsets.all(16.0),
+                child: Row(
+                  children: [
+                    Icon(Icons.eco, color: Colors.green, size: 32),
+                    SizedBox(width: 16),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Collect Badges!',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.green,
+                            ),
+                          ),
+                          SizedBox(height: 4),
+                          Text(
+                            'Complete ecological challenges to earn special badges',
+                            style: TextStyle(fontSize: 14),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 20),
             Consumer<BadgesProvider>(
               builder: (context, badgesProvider, child) {
                 final badges = badgesProvider.badges;
+                if (badges.isEmpty) {
+                  return const Expanded(
+                    child: Center(
+                      child: Text(
+                        'No badges available yet',
+                        style: TextStyle(fontSize: 16),
+                      ),
+                    ),
+                  );
+                }
                 return Expanded(
                   child: GridView.builder(
                     gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
                       maxCrossAxisExtent: 180,
-                      childAspectRatio: 1,
+                      childAspectRatio: 0.85,
                       crossAxisSpacing: 12,
                       mainAxisSpacing: 12,
                     ),
@@ -62,86 +109,161 @@ class BadgeTile extends StatelessWidget {
     return Card(
       elevation: 4,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(16),
       ),
-      child: Padding(
-        padding: const EdgeInsets.all(8.0), // Reduced padding
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            // Calculate icon size based on available width
-            final iconSize = constraints.maxWidth * 0.25;
-            
-            return Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    Container(
-                      padding: EdgeInsets.all(iconSize * 0.3),
-                      decoration: BoxDecoration(
-                        color: badge.isUnlocked ? Colors.green.shade100 : Colors.grey.shade300,
-                        shape: BoxShape.circle,
+      color: badge.isUnlocked ? Colors.white : Colors.grey.shade100,
+      child: InkWell(
+        onTap: () {
+          _showBadgeDetails(context, badge);
+        },
+        borderRadius: BorderRadius.circular(16),
+        child: Padding(
+          padding: const EdgeInsets.all(12.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Stack(
+                alignment: Alignment.center,
+                children: [
+                  Container(
+                    width: 70,
+                    height: 70,
+                    decoration: BoxDecoration(
+                      gradient: badge.isUnlocked
+                          ? LinearGradient(
+                        colors: [Colors.green.shade300, Colors.green.shade600],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      )
+                          : LinearGradient(
+                        colors: [Colors.grey.shade300, Colors.grey.shade500],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
                       ),
-                      child: Icon(
-                        badge.icon,
-                        size: iconSize,
-                        color: badge.isUnlocked ? Colors.green : Colors.grey,
-                      ),
+                      shape: BoxShape.circle,
+                      boxShadow: [
+                        BoxShadow(
+                          color: badge.isUnlocked
+                              ? Colors.green.withOpacity(0.3)
+                              : Colors.grey.withOpacity(0.3),
+                          blurRadius: 10,
+                          spreadRadius: 2,
+                        ),
+                      ],
                     ),
-                    if (!badge.isUnlocked)
-                      Container(
-                        padding: EdgeInsets.all(iconSize * 0.1),
-                        decoration: const BoxDecoration(
+                    child: Icon(
+                      badge.icon,
+                      size: 35,
+                      color: Colors.white,
+                    ),
+                  ),
+                  if (!badge.isUnlocked)
+                    Positioned(
+                      right: 0,
+                      bottom: 0,
+                      child: Container(
+                        padding: const EdgeInsets.all(4),
+                        decoration: BoxDecoration(
                           color: Colors.black54,
                           shape: BoxShape.circle,
+                          border: Border.all(color: Colors.white, width: 2),
                         ),
-                        child: Icon(
+                        child: const Icon(
                           Icons.lock,
-                          size: iconSize * 0.5,
+                          size: 16,
                           color: Colors.white,
                         ),
                       ),
-                  ],
-                ),
-                const SizedBox(height: 4),
-                FittedBox(
-                  fit: BoxFit.scaleDown,
-                  child: Text(
-                    badge.name,
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: badge.isUnlocked ? Colors.green : Colors.grey,
                     ),
-                    textAlign: TextAlign.center,
-                  ),
+                ],
+              ),
+              const SizedBox(height: 12),
+              Text(
+                badge.name,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 14,
+                  color: badge.isUnlocked ? Colors.green.shade800 : Colors.grey.shade700,
                 ),
-                const SizedBox(height: 2),
-                Expanded(
-                  child: Text(
-                    badge.description,
-                    style: TextStyle(
-                      fontSize: 10,
-                      color: Colors.grey.shade700,
-                    ),
-                    textAlign: TextAlign.center,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
+                textAlign: TextAlign.center,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+              const SizedBox(height: 4),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                decoration: BoxDecoration(
+                  color: badge.isUnlocked ? Colors.orange.shade100 : Colors.grey.shade200,
+                  borderRadius: BorderRadius.circular(12),
                 ),
-                const SizedBox(height: 2),
-                Text(
+                child: Text(
                   '${badge.pointsToGain} points',
                   style: TextStyle(
-                    fontSize: 10,
-                    color: Colors.orange.shade800,
+                    fontSize: 12,
+                    color: badge.isUnlocked ? Colors.orange.shade800 : Colors.grey.shade600,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-              ],
-            );
-          }
+              ),
+            ],
+          ),
         ),
+      ),
+    );
+  }
+
+  void _showBadgeDetails(BuildContext context, Badge_ badge) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(
+          badge.name,
+          style: const TextStyle(color: Colors.green, fontWeight: FontWeight.bold),
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: badge.isUnlocked ? Colors.green.shade100 : Colors.grey.shade200,
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                badge.icon,
+                size: 50,
+                color: badge.isUnlocked ? Colors.green : Colors.grey,
+              ),
+            ),
+            const SizedBox(height: 16),
+            Text(
+              badge.description,
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'Value: ${badge.pointsToGain} points',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Colors.orange.shade800,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              badge.isUnlocked ? 'Badge unlocked!' : 'Complete challenges to unlock',
+              style: TextStyle(
+                fontStyle: FontStyle.italic,
+                color: badge.isUnlocked ? Colors.green : Colors.grey.shade600,
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('Close'),
+          ),
+        ],
       ),
     );
   }
