@@ -14,6 +14,7 @@ class ChallengesProvider with ChangeNotifier {
   late final StreamSubscription<User?> _authSubscription;
   List<Challenge> _challenges = [];
   DateTime? _lastShowerDate; // Tracks the last date the shower challenge was completed/attempted
+  DateTime? _lastQRCodeDate; // Tracks the last date a QR code was scanned
   Timer? _showerTimer;
   int _lastRecordedStepCount = 0;
   DateTime? _lastRecordedDate;
@@ -35,6 +36,7 @@ class ChallengesProvider with ChangeNotifier {
     elapsedTime: 0,
   )).elapsedTime;
   DateTime? get lastShowerDate => _lastShowerDate; // Getter for testing or other UI needs if any
+  DateTime? get lastQRCodeDate => _lastQRCodeDate; // Getter for last QR code scan date
 
   ChallengesProvider() {
     // Listen to auth changes to refresh or clear challenge state
@@ -59,7 +61,7 @@ class ChallengesProvider with ChangeNotifier {
       Challenge(id: 'bike', title: "Rode a Bike Today", description: "Swap your car ride for a bike ride today.", points: 30, bikeRideStatus: "not done yet"),
       Challenge(id: 'shower', title: "5-minutes-shower", description: "Take a shower in under 5 minutes.", points: 30, isTimerRunning: false, elapsedTime: 0, showerStatus: "not started"),
       Challenge(id: 'screen-time', title: "Screen Time", description: "Limit your screen time to 2 hours.", points: 80, totalSteps: 120, currentSteps: 0),
-      Challenge(id: 'cleanup', title: "Go to Clean-up Event", description: "Participate in a clean-up event today.", points: 50, qrCodeStatus: "not scanned"),
+      Challenge(id: 'cleanup', title: "Attend Any Eco Event", description: "Participate in any environmental event and scan the QR code.", points: 50, qrCodeStatus: "not scanned"),
     ];
   }
   
@@ -74,12 +76,25 @@ class ChallengesProvider with ChangeNotifier {
   
   // PERSISTENCE METHODS (Firestore)
   Future<void> _loadChallengeState() async {
-    // Ensure base challenges are initialized before trying to update their state
+    // Ensure base challenges are initialized
     if (_challenges.isEmpty) _initializeChallengesBase();
 
     try {
       final firestoreData = await ProgressService().getUserProgress();
       if (firestoreData != null) {
+        // Load last shower date
+        if (firestoreData.containsKey('lastShowerDate') && firestoreData['lastShowerDate'] != null) {
+          _lastShowerDate = DateTime.tryParse(firestoreData['lastShowerDate'].toString());
+        } else {
+          _lastShowerDate = null;
+        }
+        // Load last QR code scan date
+        if (firestoreData.containsKey('lastQRCodeDate') && firestoreData['lastQRCodeDate'] != null) {
+          _lastQRCodeDate = DateTime.tryParse(firestoreData['lastQRCodeDate'].toString());
+        } else {
+          _lastQRCodeDate = null;
+        }
+
         // Load completed challenges
         if (firestoreData['completedChallenges'] is List) {
           final completedIds = List<String>.from(firestoreData['completedChallenges']);
@@ -90,13 +105,6 @@ class ChallengesProvider with ChangeNotifier {
           for (var challenge in _challenges) { // Default to not completed if key missing
             challenge.isCompleted = false;
           }
-        }
-        
-        // Load last shower date
-        if (firestoreData.containsKey('lastShowerDate') && firestoreData['lastShowerDate'] != null) {
-          _lastShowerDate = DateTime.tryParse(firestoreData['lastShowerDate'].toString());
-        } else {
-          _lastShowerDate = null;
         }
 
         // Load current steps for 'steps' challenge if stored
@@ -116,6 +124,12 @@ class ChallengesProvider with ChangeNotifier {
           _totalSteps = firestoreData['totalSteps'] as int? ?? 0;
         } else {
           _totalSteps = 0;
+        }
+
+        // Load QR code status if available
+        final cleanupChallenge = _challenges.firstWhere((c) => c.id == 'cleanup', orElse: () => Challenge(id:'', title:'', description:'', points:0));
+        if (cleanupChallenge.id.isNotEmpty && firestoreData.containsKey('qrCodeStatus')) {
+          cleanupChallenge.qrCodeStatus = firestoreData['qrCodeStatus'] as String? ?? "not scanned";
         }
 
         // Reset baseline on load so sensor subscription calibrates properly
@@ -147,17 +161,25 @@ class ChallengesProvider with ChangeNotifier {
         .map((c) => c.id)
         .toList();
       final stepsChallenge = _challenges.firstWhere((c) => c.id == 'steps');
+      final cleanupChallenge = _challenges.firstWhere((c) => c.id == 'cleanup');
+      
       Map<String, dynamic> progressData = {
         'completedChallenges': completedChallengeIds,
         'currentStepsToday': stepsChallenge.currentSteps,
         'stepsDate': DateTime.now().toIso8601String().substring(0,10),
         'totalSteps': _totalSteps, // persist cumulative steps
+        'qrCodeStatus': cleanupChallenge.qrCodeStatus, // Save QR code status
       };
       if (_lastShowerDate != null) {
         progressData['lastShowerDate'] = _lastShowerDate!.toIso8601String();
       } else {
-        // Explicitly set to null if it is null, to clear it in Firestore if needed
         progressData['lastShowerDate'] = null;
+      }
+      // Save last QR code scan date
+      if (_lastQRCodeDate != null) {
+        progressData['lastQRCodeDate'] = _lastQRCodeDate!.toIso8601String();
+      } else {
+        progressData['lastQRCodeDate'] = null;
       }
       await ProgressService().setUserProgress(progressData);
     } catch (e) {
@@ -354,11 +376,26 @@ class ChallengesProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  // Public: check if QR code has been scanned today
+  Future<bool> hasQRCodeBeenScannedToday() async {
+    if (_lastQRCodeDate == null) return false;
+    final now = DateTime.now();
+    return _lastQRCodeDate!.year == now.year &&
+           _lastQRCodeDate!.month == now.month &&
+           _lastQRCodeDate!.day == now.day;
+  }
+
+  // Public: mark QR code as scanned today
+  Future<void> markQRCodeScannedToday() async {
+    _lastQRCodeDate = DateTime.now();
+    await _saveChallengeProgressToFirestore();
+  }
+
   Future<void> clearLocalChallengeProgress() async {
-    _initializeChallengesBase(); 
-    
+    _initializeChallengesBase();
     _lastShowerDate = null;
-    _lastRecordedStepCount = 0; 
+    _lastQRCodeDate = null;
+    _lastRecordedStepCount = 0;
     _lastRecordedDate = null; 
 
     _showerTimer?.cancel();
@@ -391,5 +428,15 @@ class ChallengesProvider with ChangeNotifier {
   //   // });
   // }
 
-  // ... (rest of the class, including any methods related to QR code, activity recognition if they exist)
+  // Method to update the QR code status for the cleanup challenge
+  Future<void> updateQRCodeStatus(String eventType) async {
+    final cleanupChallenge = _challenges.firstWhere((c) => c.id == 'cleanup', orElse: () => Challenge(id: '', title: '', description: '', points: 0));
+    if (cleanupChallenge.id.isNotEmpty) {
+      cleanupChallenge.qrCodeStatus = "Scanned: $eventType";
+      // mark daily scan
+      await markQRCodeScannedToday();
+      await _saveChallengeProgressToFirestore();
+      notifyListeners();
+    }
+  }
 }
