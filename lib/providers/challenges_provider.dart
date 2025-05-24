@@ -146,10 +146,14 @@ class ChallengesProvider with ChangeNotifier {
           _totalSteps = 0;
         }
 
-        // Load QR code status if available
+        // Load or reset QR code status after 24h
         final cleanupChallenge = _challenges.firstWhere((c) => c.id == 'cleanup', orElse: () => Challenge(id:'', title:'', description:'', points:0));
-        if (cleanupChallenge.id.isNotEmpty && firestoreData.containsKey('qrCodeStatus')) {
-          cleanupChallenge.qrCodeStatus = firestoreData['qrCodeStatus'] as String? ?? "not scanned";
+        if (cleanupChallenge.id.isNotEmpty) {
+          if (_lastQRCodeDate != null && DateTime.now().difference(_lastQRCodeDate!).inHours < 24 && firestoreData.containsKey('qrCodeStatus')) {
+            cleanupChallenge.qrCodeStatus = firestoreData['qrCodeStatus'] as String? ?? "not scanned";
+          } else {
+            cleanupChallenge.qrCodeStatus = "not scanned";
+          }
         }
 
         // Reset baseline on load so sensor subscription calibrates properly
