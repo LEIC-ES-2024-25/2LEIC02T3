@@ -66,11 +66,10 @@ class _QRcodeGeneratorScreenState extends State<QRcodeGeneratorScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Generate QR Code'),
-        backgroundColor: Colors.green.shade800, // Dark green for the header
+        backgroundColor: Colors.green, // Dark green for the header
         titleTextStyle: TextStyle(
           color: Colors.white, // Set the header text color to white
           fontSize: 20, // Optional: Adjust font size if needed
-          fontWeight: FontWeight.bold, // Optional: Make the text bold
         ),
       ),
       backgroundColor: Colors.green.shade100, // Light green for the body background
