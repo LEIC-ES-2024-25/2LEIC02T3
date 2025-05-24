@@ -385,7 +385,17 @@ class ChallengesProvider with ChangeNotifier {
       _challenges[challengeIndex].isCompleted = true;
       
       final pointsProvider = Provider.of<PointsProvider>(context, listen: false);
-      await pointsProvider.addPoints(_challenges[challengeIndex].points);
+      final challengePoints = _challenges[challengeIndex].points;
+      await pointsProvider.addPoints(challengePoints);
+      
+      // Show a success message with the points earned
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Challenge completed +${challengePoints} points!'),
+          backgroundColor: Colors.green,
+          duration: const Duration(seconds: 3),
+        ),
+      );
       
       await _saveChallengeProgressToFirestore();
       // Unlock badge corresponding to this challenge
