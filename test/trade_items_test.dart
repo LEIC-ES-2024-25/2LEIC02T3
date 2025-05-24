@@ -2,7 +2,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../lib/models/trade_item.dart';
-import '../lib/services/trade_service.dart';
 
 void main() {
   group('TradeItem Model Tests', () {

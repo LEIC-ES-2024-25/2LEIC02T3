@@ -1,6 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
 import '../lib/models/challenge.dart';
-import 'package:flutter/material.dart';
 
 void main() {
   group('Shower Challenge Tests', () {
