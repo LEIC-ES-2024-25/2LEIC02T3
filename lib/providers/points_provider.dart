@@ -26,7 +26,7 @@ class PointsProvider with ChangeNotifier {
       if (firestoreData != null && firestoreData.containsKey('points')) {
         _points = firestoreData['points'] as int;
       } else {
-        _points = 0; // Default to 0 if no data in Firestore or key missing
+        _points = 0; 
       }
     } catch (e) {
       debugPrint('Failed to load points from Firestore: $e. Initializing with 0 points.');
@@ -38,7 +38,7 @@ class PointsProvider with ChangeNotifier {
   Future<void> addPoints(int points) async {
     _points += points;
     
-    // --- Firestore progress tracking ---
+    
     try {
       await ProgressService().setUserProgress({
         'points': _points,
@@ -46,7 +46,7 @@ class PointsProvider with ChangeNotifier {
     } catch (e) {
       debugPrint('Failed to update points in Firestore: $e');
     }
-    // --- End Firestore progress tracking ---
+    
     
     notifyListeners();
   }
@@ -57,7 +57,7 @@ class PointsProvider with ChangeNotifier {
       _points = 0;
     }
     
-    // --- Firestore progress tracking ---
+    
     try {
       await ProgressService().setUserProgress({
         'points': _points,
@@ -65,13 +65,13 @@ class PointsProvider with ChangeNotifier {
     } catch (e) {
       debugPrint('Failed to update points in Firestore: $e');
     }
-    // --- End Firestore progress tracking ---
+    
     
     notifyListeners();
   }
 
   Future<void> clearLocalPoints() async {
-    _points = 0; // Reset in-memory points to 0
+    _points = 0; 
     notifyListeners();
   }
 

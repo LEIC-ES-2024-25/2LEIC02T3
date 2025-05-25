@@ -1,10 +1,5 @@
-// filepath: /home/luis/Documents/FEUP/ESOF_proj/2LEIC02T3/test/challenges_provider_test.dart
-
 import 'package:flutter_test/flutter_test.dart';
 import '../lib/models/challenge.dart';
-
-// We're focusing on testing the Challenge model directly
-// ChallengesProvider requires Firebase initialization which would need mocks for testing
 
 void main() {
   group('Challenge Model Tests', () {
@@ -63,7 +58,7 @@ void main() {
       expect(challenge.elapsedTime, 120);
       expect(challenge.showerStatus, 'in progress');
       
-      // Simulate stopping the timer under 5 minutes
+      
       challenge.isTimerRunning = false;
       challenge.showerStatus = 'completed';
       
@@ -83,7 +78,7 @@ void main() {
       expect(challenge.bikeRideStatus, 'not done yet');
       expect(challenge.isCompleted, false);
       
-      // Simulate completing the challenge
+      
       challenge.bikeRideStatus = 'completed';
       challenge.isCompleted = true;
       
@@ -102,7 +97,7 @@ void main() {
       
       expect(challenge.qrCodeStatus, 'not scanned');
       
-      // Simulate scanning a QR code
+      
       challenge.qrCodeStatus = 'Scanned: Beach Cleanup';
       challenge.isCompleted = true;
       
@@ -113,7 +108,7 @@ void main() {
   
   group('Daily Challenge Reset Tests', () {
     test('Bike challenge should reset after 24 hours', () {
-      // Create a bike challenge with completed status
+      
       final bikeChallenge = Challenge(
         id: 'bike',
         title: 'Rode a Bike Today',
@@ -123,26 +118,26 @@ void main() {
         isCompleted: true
       );
       
-      // Set a lastBikeDate 25 hours ago (exceeds 24h limit)
+      
       final lastBikeDate = DateTime.now().subtract(const Duration(hours: 25));
       
-      // Check if time difference exceeds 24 hours
+      
       final hourDifference = DateTime.now().difference(lastBikeDate).inHours;
       expect(hourDifference >= 24, true, reason: 'Difference should be at least 24 hours');
       
-      // Apply the reset logic that happens in the app when loading challenge state
+      
       if (hourDifference >= 24) {
         bikeChallenge.isCompleted = false;
         bikeChallenge.bikeRideStatus = "not done yet";
       }
       
-      // Verify bike challenge status was reset
+      
       expect(bikeChallenge.bikeRideStatus, "not done yet");
       expect(bikeChallenge.isCompleted, false);
     });
     
     test('Bike challenge should not reset before 24 hours', () {
-      // Create the challenge with completed status
+      
       final bikeChallenge = Challenge(
         id: 'bike',
         title: 'Rode a Bike Today',
@@ -152,20 +147,20 @@ void main() {
         isCompleted: true
       );
       
-      // Set a lastBikeDate 23 hours ago (within 24h limit)
+      
       final lastBikeDate = DateTime.now().subtract(const Duration(hours: 23));
       
-      // Check if time difference is less than 24 hours
+      
       final hourDifference = DateTime.now().difference(lastBikeDate).inHours;
       expect(hourDifference < 24, true, reason: 'Difference should be less than 24 hours');
       
-      // Apply the reset logic that happens in the app
+      
       if (hourDifference >= 24) {
         bikeChallenge.isCompleted = false;
         bikeChallenge.bikeRideStatus = "not done yet";
       }
       
-      // Verify bike challenge status was not reset
+      
       expect(bikeChallenge.bikeRideStatus, "completed");
       expect(bikeChallenge.isCompleted, true);
     });
@@ -182,16 +177,16 @@ void main() {
         currentSteps: 0
       );
       
-      // Initial state
+      
       expect(stepsChallenge.currentSteps, 0);
       expect(stepsChallenge.isCompleted, false);
       
-      // Update steps - not yet complete
+      
       stepsChallenge.currentSteps = 2500;
       expect(stepsChallenge.currentSteps, 2500);
       expect(stepsChallenge.isCompleted, false);
       
-      // Update steps - challenge complete
+      
       stepsChallenge.currentSteps = 5000;
       stepsChallenge.isCompleted = true;
       expect(stepsChallenge.currentSteps, 5000);
@@ -208,7 +203,7 @@ void main() {
         currentSteps: 0
       );
       
-      // Exceed step goal
+      
       stepsChallenge.currentSteps = 7500;
       expect(stepsChallenge.currentSteps, 7500);
       expect(stepsChallenge.currentSteps > stepsChallenge.totalSteps, isTrue);
@@ -227,17 +222,17 @@ void main() {
         showerStatus: 'not started'
       );
       
-      // Start timer
+      
       showerChallenge.isTimerRunning = true;
       showerChallenge.showerStatus = 'in progress';
       expect(showerChallenge.isTimerRunning, true);
       expect(showerChallenge.showerStatus, 'in progress');
       
-      // Simulate time passing (in real app this would be done by a Timer)
-      showerChallenge.elapsedTime = 120; // 2 minutes
+      
+      showerChallenge.elapsedTime = 120; 
       expect(showerChallenge.elapsedTime, 120);
       
-      // Stop timer - successful completion (under 5 minutes)
+      
       showerChallenge.isTimerRunning = false;
       showerChallenge.showerStatus = 'completed';
       expect(showerChallenge.isTimerRunning, false);
@@ -256,10 +251,10 @@ void main() {
         showerStatus: 'in progress'
       );
       
-      // Simulate time passing beyond 5 minutes (300 seconds)
-      showerChallenge.elapsedTime = 330; // 5.5 minutes
       
-      // Stop timer - failed completion (over 5 minutes)
+      showerChallenge.elapsedTime = 330; 
+      
+      
       showerChallenge.isTimerRunning = false;
       showerChallenge.showerStatus = 'failed';
       
@@ -279,11 +274,11 @@ void main() {
         points: 60
       );
       
-      // Check initial state
+      
       expect(carFreeChallenge.carFreeStatus, 'car-free by now');
       expect(carFreeChallenge.isCompleted, false);
       
-      // Mark as completed
+      
       carFreeChallenge.isCompleted = true;
       expect(carFreeChallenge.isCompleted, true);
     });
@@ -298,11 +293,11 @@ void main() {
         points: 50
       );
       
-      // Initially not scanned
+      
       expect(cleanupChallenge.qrCodeStatus, 'not scanned');
       expect(cleanupChallenge.isCompleted, false);
       
-      // Simulate scanning a QR code
+      
       cleanupChallenge.qrCodeStatus = 'Scanned: River Cleanup';
       cleanupChallenge.isCompleted = true;
       
@@ -318,7 +313,7 @@ void main() {
         points: 50
       );
       
-      // Test different event types
+      
       final eventTypes = ['Beach Cleanup', 'Tree Planting', 'Recycling Workshop', 'Climate March'];
       
       for (var eventType in eventTypes) {
@@ -330,7 +325,7 @@ void main() {
   
   group('Challenge Points Tests', () {
     test('Challenges should have correct point values', () {
-      // Create challenges with default point values from the app
+      
       final stepsChallenge = Challenge(
         id: 'steps',
         title: 'Walk 5,000 Steps',
@@ -366,7 +361,7 @@ void main() {
         points: 50
       );
       
-      // Verify point values
+      
       expect(stepsChallenge.points, 20);
       expect(carFreeChallenge.points, 60);
       expect(bikeChallenge.points, 30);

@@ -47,7 +47,7 @@ class _ShopScreenState extends State<ShopScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Toggle between available items and my items
+                
                 Row(
                   children: [
                     Expanded(
@@ -82,7 +82,7 @@ class _ShopScreenState extends State<ShopScreen> {
                   ],
                 ),
                 const SizedBox(height: 16),
-                // If showing my items, display add form
+                
                 if (_showMyItems) ...[
                   const Text(
                     'Add Item to Trade',
@@ -116,7 +116,7 @@ class _ShopScreenState extends State<ShopScreen> {
                           _titleController.clear();
                           _descriptionController.clear();
                           _priceController.clear();
-                          // Switch to My Items view to display the new listing
+                          
                           setState(() => _showMyItems = true);
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(content: Text('Item added for trade'), 
@@ -139,7 +139,7 @@ class _ShopScreenState extends State<ShopScreen> {
                   ),
                   const SizedBox(height: 8),
                 ],
-                // Header for available items when not in my items mode
+                
                 if (!_showMyItems) ...[
                   const Text(
                     'Available Items',
@@ -147,7 +147,7 @@ class _ShopScreenState extends State<ShopScreen> {
                   ),
                   const SizedBox(height: 8),
                 ],
-                // List of trade items
+                
                 Expanded(
                   child: StreamBuilder<List<TradeItem>>(
                     stream: _showMyItems
@@ -173,7 +173,7 @@ class _ShopScreenState extends State<ShopScreen> {
                               title: Text(item.title),
                               subtitle: Text(item.description),
                               trailing: _showMyItems
-                                  // Show delete button for my items
+                                  
                                   ? IconButton(
                                       icon: const Icon(Icons.delete),
                                       onPressed: () async {
@@ -184,7 +184,7 @@ class _ShopScreenState extends State<ShopScreen> {
                                         );
                                       },
                                     )
-                                  // Purchase button for available items
+                                  
                                   : ElevatedButton(
                                       onPressed: pointsProvider.points >= item.price
                                           ? () {
@@ -204,7 +204,7 @@ class _ShopScreenState extends State<ShopScreen> {
                                                         try {
                                                           await _tradeService.buyItem(item);
                                                           await pointsProvider.removePoints(item.price);
-                                                          // Refresh UI to remove the purchased item
+                                                          
                                                           setState(() {});
                                                           ScaffoldMessenger.of(context).showSnackBar(
                                                             SnackBar(content: Text('Purchased "${item.title}" for ${item.price} pts'),

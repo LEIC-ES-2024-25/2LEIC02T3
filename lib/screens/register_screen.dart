@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart'; // Import FirebaseAuthException
+import 'package:firebase_auth/firebase_auth.dart'; 
 import '../services/auth_service.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -13,13 +13,13 @@ class RegisterScreen extends StatefulWidget {
 class _RegisterScreenState extends State<RegisterScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  final _confirmPasswordController = TextEditingController(); // Add confirm password
+  final _confirmPasswordController = TextEditingController(); 
   final AuthService _authService = AuthService();
   String? _errorMessage;
-  bool _isLoading = false; // Add loading state
+  bool _isLoading = false; 
 
   Future<void> _signUp() async {
-    // Check if passwords match
+    
     if (_passwordController.text.trim() != _confirmPasswordController.text.trim()) {
       setState(() {
         _errorMessage = "Passwords do not match.";
@@ -29,7 +29,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
     setState(() {
       _errorMessage = null;
-      _isLoading = true; // Start loading
+      _isLoading = true; 
     });
 
     try {
@@ -37,11 +37,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
         _emailController.text.trim(),
         _passwordController.text.trim(),
       );
-      // AuthWrapper handles navigation on success, no need to check result here
-      // if (result == null) { // This check is handled by the catch block now
-      //   // Generic error if specific exception wasn't caught (shouldn't happen often)
-      //   setState(() { _errorMessage = "Sign up failed. Please try again."; });
-      // }
+      
+      
+      
+      
+      
     } on FirebaseAuthException catch (e) {
       String message;
       switch (e.code) {
@@ -56,21 +56,21 @@ class _RegisterScreenState extends State<RegisterScreen> {
           break;
         default:
           message = 'An unknown error occurred. Please try again.';
-          print('Sign up failed with code: ${e.code}, message: ${e.message}'); // Log unknown errors
+          print('Sign up failed with code: ${e.code}, message: ${e.message}'); 
       }
       setState(() {
         _errorMessage = message;
       });
     } catch (e) {
-      // Catch any other unexpected errors
+      
       setState(() {
         _errorMessage = 'An unexpected error occurred. Please try again.';
       });
       print('Unexpected sign up error: $e');
     } finally {
-      if (mounted) { // Check if the widget is still in the tree
+      if (mounted) { 
         setState(() {
-          _isLoading = false; // Stop loading
+          _isLoading = false; 
         });
       }
     }
@@ -80,7 +80,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
-    _confirmPasswordController.dispose(); // Dispose the new controller
+    _confirmPasswordController.dispose(); 
     super.dispose();
   }
 
@@ -90,8 +90,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
       appBar: AppBar(title: const Text('Register')),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Center( // Center the content
-          child: SingleChildScrollView( // Allow scrolling on smaller screens
+        child: Center( 
+          child: SingleChildScrollView( 
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -99,7 +99,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   controller: _emailController,
                   decoration: const InputDecoration(
                     labelText: 'Email',
-                    prefixIcon: Icon(Icons.email), // Add icon
+                    prefixIcon: Icon(Icons.email), 
                   ),
                   keyboardType: TextInputType.emailAddress,
                 ),
@@ -108,16 +108,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   controller: _passwordController,
                   decoration: const InputDecoration(
                     labelText: 'Password',
-                    prefixIcon: Icon(Icons.lock), // Add icon
+                    prefixIcon: Icon(Icons.lock), 
                   ),
                   obscureText: true,
                 ),
                 const SizedBox(height: 16),
-                TextField( // Add confirm password field
+                TextField( 
                   controller: _confirmPasswordController,
                   decoration: const InputDecoration(
                     labelText: 'Confirm Password',
-                    prefixIcon: Icon(Icons.lock_outline), // Add icon
+                    prefixIcon: Icon(Icons.lock_outline), 
                   ),
                   obscureText: true,
                 ),
@@ -131,18 +131,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       textAlign: TextAlign.center,
                     ),
                   ),
-                if (_isLoading) // Show loading indicator
+                if (_isLoading) 
                   const CircularProgressIndicator()
                 else
                   ElevatedButton(
                     onPressed: _signUp,
-                    style: ElevatedButton.styleFrom( // Add some style
+                    style: ElevatedButton.styleFrom( 
                       padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
                     ),
                     child: const Text('Sign Up'),
                   ),
                 TextButton(
-                  onPressed: _isLoading ? null : widget.showLoginScreen, // Disable during loading
+                  onPressed: _isLoading ? null : widget.showLoginScreen, 
                   child: const Text('Already have an account? Login'),
                 ),
               ],
