@@ -61,8 +61,6 @@ class ChallengesScreen extends StatelessWidget {
         return _buildBikeChallenge(context, challenge, provider);
       case 'shower':
         return _buildShowerChallenge(context, challenge, provider);
-      case 'screen-time':
-        return _buildScreenTimeChallenge(challenge);
       case 'cleanup':
         return _buildCleanupEventChallenge(context, challenge);
       default:
@@ -278,54 +276,6 @@ class ChallengesScreen extends StatelessWidget {
             foregroundColor: Colors.white,
           ),
         ),
-      ],
-    );
-  }
-  
-  Widget _buildScreenTimeChallenge(Challenge challenge) {
-    final hours = challenge.currentSteps ~/ 60;
-    final minutes = challenge.currentSteps % 60;
-    final displayTime = '$hours:${minutes.toString().padLeft(2, '0')}';
-    final progress = challenge.currentSteps / challenge.totalSteps;
-    
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Expanded(
-              child: Text(
-                challenge.title,
-                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-            ),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-              decoration: BoxDecoration(
-                color: Colors.green,
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Text(
-                '${challenge.points} pts',
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 8),
-        Text(challenge.description),
-        const SizedBox(height: 12),
-        LinearProgressIndicator(
-          value: progress.clamp(0.0, 1.0),
-          backgroundColor: Colors.grey[300],
-          color: progress >= 1.0 ? Colors.red : Colors.green,
-        ),
-        const SizedBox(height: 8),
-        Text('Screen time today: $displayTime hours'),
       ],
     );
   }
