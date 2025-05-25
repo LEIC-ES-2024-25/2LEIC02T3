@@ -761,3 +761,44 @@ You can download the demo video:
 
 ### Final Release
 
+![Screenshot from 2025-05-25 18-24-25](https://github.com/user-attachments/assets/5ca7ad6d-49f5-4c4d-b233-da358952f089)
+
+
+*What went well:*
+
+All the expected features, according to the user stories, were implemented without any major setbacks and on time. 
+
+The app ran perfectly on a real smartphone as well as in the emulator. 
+
+Good teamwork and communication contributed to a smooth development process. 
+
+
+
+*What went wrong:*
+
+Tight time constraints and challenges with time management affected the overall workflow.
+
+
+
+*What we would change:*
+
+The app’s scope, with all its features, was too ambitious for the given time frame. Alternativly, we would have prioritized some features over anothers, that could've been discarted.
+
+
+
+**Happiness Meter**
+
+| **Avaliador \ Avaliado** | **Francisco Antunes** | **Carlos Cristelo** | **Luis Ferreira** | **Joao Quental** |
+|--------------------------|------------------------|----------------------|-------------------|------------------|
+| **Francisco Antunes**    |           😊           |          😊           |        😊          |       😊          |
+| **Carlos Cristelo**      |          😊              |          😊           |        😊           |      ⭐          |
+| **Luis Ferreira**        |            😊             |         ⭐              |          ⭐       |             ⭐      |
+| **Joao Quental**         |           😊             |           😊          |         ⭐          |         😊         |
+
+
+⭐ Excellent
+😊 Good
+😒 Fair
+🤔 No idea
+
+
