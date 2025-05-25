@@ -30,7 +30,7 @@ class _QRScannerScreenState extends State<QRScannerScreen> {
   }
 
   Future<void> _processQRCode(String code) async {
-    // Daily limit: ensure only one QR code scan per day
+    
     final challengesProvider = Provider.of<ChallengesProvider>(context, listen: false);
     if (await challengesProvider.hasQRCodeBeenScannedToday()) {
       _showErrorMessage('You have already scanned a QR code today! Please try again tomorrow.');
@@ -45,7 +45,7 @@ class _QRScannerScreenState extends State<QRScannerScreen> {
       final eventDateStr = parts[1];
       late DateTime parsedDate;
       try {
-        // Make date format more flexible by handling both formats
+        
         if (eventDateStr.split('-').length == 3) {
           final dateParts = eventDateStr.split('-');
           if (dateParts.length == 3) {
@@ -67,18 +67,18 @@ class _QRScannerScreenState extends State<QRScannerScreen> {
       if (parsedDate.isBefore(today) && !_isSameDay(parsedDate, today)) {
         _showErrorMessage('This QR code is for a past event');
         return;
-      }      // Unlock badge related to this event
+      }      
       final badgesProvider = Provider.of<BadgesProvider>(context, listen: false);
       await badgesProvider.unlockBadge(eventType, context);
 
-      // Update the QR code status with the event type
+      
       await challengesProvider.updateQRCodeStatus(eventType.replaceAll('|', ' '));
-      // Mark daily scan in provider
+      
       await challengesProvider.markQRCodeScannedToday();
       
-      // First, complete the cleanup challenge regardless of event type
+      
       await challengesProvider.completeChallenge('cleanup', context);
-        // Then complete additional challenges based on specific event types if applicable
+        
       if (eventType == 'bicycle|parade' || eventType == 'car|pool') {
         await challengesProvider.completeChallenge('bike', context);
       } else if (eventType == 'car|free|day|meet|up') {
@@ -87,7 +87,7 @@ class _QRScannerScreenState extends State<QRScannerScreen> {
       
       _showSuccessMessage('Parabéns! QR code escaneado com sucesso!');
       
-      // Navigate back after a short delay to show the success message
+      
       Future.delayed(const Duration(seconds: 2), () {
         if (mounted) {
           Navigator.pop(context);
@@ -178,6 +178,6 @@ class _QRScannerScreenState extends State<QRScannerScreen> {
       bottomNavigationBar: const CustomBottomNavigationBar(
         currentScreen: 'QRScannerScreen',
       ),
-    ); // end Scaffold
-  } // end build
-} // end _QRScannerScreenState and QRScannerScreen
+    ); 
+  } 
+} 

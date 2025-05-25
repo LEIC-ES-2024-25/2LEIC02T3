@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import '../models/challenge.dart';
 import '../providers/challenges_provider.dart';
 import 'bottom_navigation_bar.dart';
-import 'qr_scanner_screen.dart'; // Import the QR scanner screen
+import 'qr_scanner_screen.dart'; 
 
 class ChallengesScreen extends StatelessWidget {
   const ChallengesScreen({Key? key}) : super(key: key);
@@ -15,9 +15,9 @@ class ChallengesScreen extends StatelessWidget {
         title: const Text('Your Challenges',
         style: TextStyle(color: Colors.white),
         ),
-        backgroundColor: Colors.green, // Green app bar
+        backgroundColor: Colors.green, 
       ),
-      backgroundColor: Colors.green.shade100, // Green background for the entire screen
+      backgroundColor: Colors.green.shade100, 
       body: Consumer<ChallengesProvider>(
         builder: (context, challengesProvider, child) {
           final challenges = challengesProvider.challenges;
@@ -30,7 +30,7 @@ class ChallengesScreen extends StatelessWidget {
               return Padding(
                 padding: const EdgeInsets.only(bottom: 16),
                 child: Card(
-                  color: Colors.white, // White cards
+                  color: Colors.white, 
                   elevation: 4,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
@@ -326,7 +326,7 @@ class ChallengesScreen extends StatelessWidget {
         if (!challenge.isCompleted)
           ElevatedButton.icon(
             onPressed: () {
-              // Navigate to the QRScannerScreen
+              
               Navigator.push(
                 context, 
                 MaterialPageRoute(builder: (context) => const QRScannerScreen())

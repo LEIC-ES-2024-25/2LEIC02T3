@@ -11,10 +11,10 @@ class CustomBottomNavigationBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BottomNavigationBar(
-      type: BottomNavigationBarType.fixed, // Ensures all items are visible
-      currentIndex: _getCurrentIndex(), // Determine the active index
+      type: BottomNavigationBarType.fixed, 
+      currentIndex: _getCurrentIndex(), 
       onTap: (index) {
-        // Navigate to the corresponding screen when a button is tapped
+        
         switch (index) {
           case 0:
             if (currentScreen != 'ShopScreen') {
@@ -65,12 +65,12 @@ class CustomBottomNavigationBar extends StatelessWidget {
           label: 'Settings',
         ),
       ],
-      selectedItemColor: Colors.green, // Highlight color for the active item
-      unselectedItemColor: Colors.green.shade200, // Color for inactive items
+      selectedItemColor: Colors.green, 
+      unselectedItemColor: Colors.green.shade200, 
     );
   }
 
-  // Helper method to determine the current index based on the active screen
+  
   int _getCurrentIndex() {
     switch (currentScreen) {
       case 'ShopScreen':
@@ -84,7 +84,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
       case 'SettingsScreen':
         return 4;
       default:
-        return 2; // Default to Home (ChallengesScreen)
+        return 2; 
     }
   }
 }

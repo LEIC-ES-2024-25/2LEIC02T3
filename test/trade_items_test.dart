@@ -25,8 +25,8 @@ void main() {
     });
     
     test('TradeItem.fromDoc should create item from document snapshot', () {
-      // This is a conceptual test since we can't mock DocumentSnapshot
-      // In a real scenario, TradeItem.fromDoc converts Firestore doc to TradeItem
+      
+      
       final docData = {
         'ownerId': 'user-2',
         'title': 'Item from doc',
@@ -35,7 +35,7 @@ void main() {
         'timestamp': Timestamp.now(),
       };
       
-      // Verify the keys match what the fromDoc constructor would expect
+      
       expect(docData.containsKey('ownerId'), true);
       expect(docData.containsKey('title'), true);
       expect(docData.containsKey('description'), true);
@@ -66,8 +66,8 @@ void main() {
   
   group('TradeService Functional Tests', () {
     test('getMyItems should return only items owned by current user', () {
-      // Since we can't use firebase in tests, we verify the concept:
-      // TradeService.getMyItems applies a filter on ownerId matching current user
+      
+      
       
       final itemsFromCurrentUser = [
         TradeItem(
@@ -88,16 +88,16 @@ void main() {
         ),
       ];
       
-      // Assert all items are from current user
+      
       expect(itemsFromCurrentUser.every((item) => item.ownerId == 'current-user-id'), true);
     });
     
     test('getAvailableItems should return items not owned by current user', () {
-      // Test the filter logic conceptually
+      
       final allItems = [
         TradeItem(
           id: 'item1',
-          ownerId: 'current-user-id', // Current user's item
+          ownerId: 'current-user-id', 
           title: 'My Item', 
           description: 'Should be filtered out', 
           price: 100,
@@ -105,7 +105,7 @@ void main() {
         ),
         TradeItem(
           id: 'item2',
-          ownerId: 'other-user-1', // Other user's item
+          ownerId: 'other-user-1', 
           title: 'Available Item 1', 
           description: 'Should be included', 
           price: 200,
@@ -113,7 +113,7 @@ void main() {
         ),
         TradeItem(
           id: 'item3',
-          ownerId: 'other-user-2', // Other user's item
+          ownerId: 'other-user-2', 
           title: 'Available Item 2', 
           description: 'Should be included', 
           price: 300,
@@ -121,32 +121,32 @@ void main() {
         ),
       ];
       
-      // Manually apply the same filter as in TradeService.getAvailableItems
+      
       final filteredItems = allItems.where((item) => item.ownerId != 'current-user-id').toList();
       
-      // Assert filtered items don't include current user's items
+      
       expect(filteredItems.length, 2);
       expect(filteredItems.every((item) => item.ownerId != 'current-user-id'), true);
       
-      // Check if we have the expected items
+      
       final titles = filteredItems.map((e) => e.title).toList();
       expect(titles.contains('Available Item 1'), true);
       expect(titles.contains('Available Item 2'), true);
     });
     
     test('addTradeItem should add new item to the collection', () {
-      // Since we can't test Firebase directly, verify the data structure
-      // that would be sent to Firestore in TradeService.addTradeItem
+      
+      
       
       final newItemData = {
         'ownerId': 'current-user-id',
         'title': 'New Item',
         'description': 'Test Description',
         'price': 150,
-        // TradeService adds 'timestamp' with serverTimestamp()
+        
       };
       
-      // Assert the item data contains all required fields
+      
       expect(newItemData.containsKey('ownerId'), true);
       expect(newItemData.containsKey('title'), true);
       expect(newItemData.containsKey('description'), true);
@@ -154,8 +154,8 @@ void main() {
     });
     
     test('buyItem should remove the item from the collection', () {
-      // Conceptually test that buyItem deletes the document
-      // In TradeService.buyItem, we call delete() on document reference
+      
+      
       
       final itemToBuy = TradeItem(
         id: 'item-to-buy',
@@ -166,12 +166,12 @@ void main() {
         timestamp: Timestamp.now(),
       );
       
-      // Assert the item has the id that would be used to delete it
+      
       expect(itemToBuy.id, 'item-to-buy');
     });
     
     test('delete item should remove the item from myItems', () {
-      // Conceptually same as buyItem but in the context of deleting own items
+      
       
       final itemToDelete = TradeItem(
         id: 'my-item-to-delete',
@@ -182,7 +182,7 @@ void main() {
         timestamp: Timestamp.now(),
       );
       
-      // Assert the item has the properties we'd expect for deletion
+      
       expect(itemToDelete.id, 'my-item-to-delete');
       expect(itemToDelete.ownerId, 'current-user-id');
     });

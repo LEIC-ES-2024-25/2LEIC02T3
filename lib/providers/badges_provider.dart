@@ -28,7 +28,7 @@ class BadgesProvider with ChangeNotifier {
   List<Badge_> get badges => _badges;
   
   Future<void> _loadBadges() async {
-    _badges = _badgeService.getAllBadges(); // Initialize with all badges (default unlocked state is false)
+    _badges = _badgeService.getAllBadges(); 
     try {
       final firestoreData = await ProgressService().getUserProgress();
       if (firestoreData != null && firestoreData['badges'] is List) {
@@ -37,7 +37,7 @@ class BadgesProvider with ChangeNotifier {
           badge.isUnlocked = unlockedIds.contains(badge.id);
         }
       } else {
-        // No data in Firestore or incorrect format, ensure all badges are locked (initial state)
+        
         for (var badge in _badges) {
           badge.isUnlocked = false;
         }
@@ -57,12 +57,12 @@ class BadgesProvider with ChangeNotifier {
       final badge = _badges[badgeIndex];
       badge.isUnlocked = true;
       
-      // Add points if context is provided
+      
       if (context != null) {
         final pointsProvider = Provider.of<PointsProvider>(context, listen: false);
         await pointsProvider.addPoints(badge.pointsToGain);
         
-        // Show a notification that badge was unlocked with points
+        
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Badge unlocked: ${badge.name} (+${badge.pointsToGain} points)'),
@@ -72,7 +72,7 @@ class BadgesProvider with ChangeNotifier {
         );
       }
       
-      // --- Firestore progress tracking ---
+      
       try {
         final unlockedBadges = _badges.where((b) => b.isUnlocked).map((b) => b.id).toList();
         await ProgressService().setUserProgress({
@@ -81,23 +81,23 @@ class BadgesProvider with ChangeNotifier {
       } catch (e) {
         debugPrint('Failed to update badges in Firestore: $e');
       }
-      // --- End Firestore progress tracking ---
+      
       
       notifyListeners();
     }
   }
   
-  // Overload unlockBadge to work with provider directly
+  
   Future<void> unlockBadgeWithPoints(String badgeId, PointsProvider pointsProvider) async {
     final badgeIndex = _badges.indexWhere((badge) => badge.id == badgeId);
     if (badgeIndex != -1 && !_badges[badgeIndex].isUnlocked) {
       final badge = _badges[badgeIndex];
       badge.isUnlocked = true;
       
-      // Add points directly using the provided points provider
+      
       await pointsProvider.addPoints(badge.pointsToGain);
 
-      // --- Firestore progress tracking ---
+      
       try {
         final unlockedBadges = _badges.where((b) => b.isUnlocked).map((b) => b.id).toList();
         await ProgressService().setUserProgress({
@@ -106,7 +106,7 @@ class BadgesProvider with ChangeNotifier {
       } catch (e) {
         debugPrint('Failed to update badges in Firestore: $e');
       }
-      // --- End Firestore progress tracking ---
+      
       
       notifyListeners();
     }
@@ -125,11 +125,11 @@ class BadgesProvider with ChangeNotifier {
   int get totalBadgesCount => _badges.length;
 
   Future<void> clearLocalProgress() async {
-    // Reset in-memory state to default (all badges locked)
-    _badges = _badgeService.getAllBadges(); // Re-initializes with default unlocked states (false)
-    // for (var badge in _badges) { // This is redundant if _badgeService.getAllBadges() returns fresh instances
-    //   badge.isUnlocked = false;
-    // }
+    
+    _badges = _badgeService.getAllBadges(); 
+    
+    
+    
     notifyListeners();
   }
   

@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-/// Model representing a study material available for trade in the shop
+
 class TradeItem {
   final String id;
   final String ownerId;
@@ -20,7 +20,7 @@ class TradeItem {
 
   factory TradeItem.fromDoc(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>;
-    // Fallback to now if serverTimestamp not yet set
+    
     final ts = data['timestamp'] as Timestamp?;
     return TradeItem(
       id: doc.id,
