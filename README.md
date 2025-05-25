@@ -250,7 +250,7 @@ At the end, it is good to add a rough indication of the value of the user story 
 
 -->
 
-### Domain model
+## Domain model
 ![image](https://github.com/user-attachments/assets/fcbae9a8-6954-44a5-925c-d054fbd7a902)
 
 <!-- 
@@ -265,6 +265,111 @@ Example:
 
 
 ## Architecture and Design
+
+The **GreenWay** application follows a **Model-View-Provider (MVP)** architecture pattern, leveraging Flutter's reactive programming paradigm with the **Provider** package for state management. The architecture is designed to promote **separation of concerns**, **maintainability**, and **scalability**.
+
+![image](https://github.com/user-attachments/assets/6c9ed262-6595-453e-b771-947457491d32)
+
+---
+
+## High-Level Architecture
+
+### Core Components
+
+### 1. Models (`models`)
+Data structures that represent the core entities of the application:
+- `Challenge`: Represents eco-friendly challenges with progress tracking
+- `Badge_`: Achievement system with unlock conditions
+- `TradeItem`: Marketplace items for the eco-points trading system
+
+### 2. Providers (`providers`)
+State management layer implementing the **Provider Pattern**:
+- `ChallengesProvider`: Manages challenge state and progress
+- `BadgesProvider`: Handles badge unlocking and achievement logic
+- `PointsProvider`: Manages the eco-points system
+
+### 3. Services (`services`)
+Backend integration and business logic following the **Service Layer Pattern**:
+- `AuthService`: Firebase authentication integration
+- `TradeService`: Marketplace functionality with Firestore
+- `NotificationService`: Local notifications for achievements
+- `ProgressService`: Step counting and activity tracking
+
+### 4. Screens (`screens`)
+UI components implementing the **Screen-Controller Pattern**:
+- Feature-specific screens (Challenges, Shop, Badges, etc.)
+- Authentication screens (Login, Register)
+- Utility screens (QR Scanner/Generator, Settings)
+
+---
+
+## Key Architectural Patterns
+
+### 1. Provider Pattern
+- Used for **state management** and **dependency injection**
+```
+  MultiProvider(
+  providers: [
+    ChangeNotifierProvider(create: (_) => PointsProvider()),
+    ChangeNotifierProvider(create: (_) => BadgesProvider()),
+    ChangeNotifierProvider(create: (_) => ChallengesProvider()),
+  ],
+  child: MyApp(),
+)
+```
+
+### 2. Repository Pattern
+- Services act as repositories, abstracting data access:
+  - Firebase Firestore for persistent data
+  - SharedPreferences for local storage
+  - External APIs for step counting
+
+### 3. Observer Pattern
+- Reactive UI updates through Provider's `ChangeNotifier`:
+  - Automatic UI rebuilds when state changes
+  - Decoupled communication between components
+
+### 4. Factory Pattern
+- Model classes implement **factory constructors** for data serialization
+
+
+---
+
+## Design Decisions
+
+### 1. Separation of Concerns
+- **UI Layer**: Pure presentation logic, no business rules
+- **Provider Layer**: State management and business logic
+- **Service Layer**: External integrations and data persistence
+
+### 2. Reactive Architecture
+- Stream-based data flow for real-time updates
+- Provider pattern ensures UI consistency
+- Firebase listeners for live data synchronization
+
+### 3. Modular Design
+- Feature-based organization
+- Loose coupling between components
+- Easy to test and maintain individual modules
+
+### 4. Error Handling Strategy
+- Service-level error handling with user-friendly messages
+- Graceful degradation for offline scenarios
+- Validation at multiple layers (UI, Provider, Service)
+
+---
+
+## Scalability Considerations
+
+- **State Management**: Provider pattern allows for easy scaling to more complex state
+- **Service Architecture**: Services can be easily extended or replaced
+- **Database Design**: Firestore collections are designed for horizontal scaling
+- **Feature Addition**: New challenges and badges can be added without code changes
+
+---
+
+This architecture provides a solid foundation for the **GreenWay** application, ensuring **maintainability**, **testability**, and **scalability** while following **Flutter and Dart best practices**.
+
 <!--
 The architecture of a software system encompasses the set of key decisions about its organization. 
 
@@ -275,8 +380,114 @@ To document the architecture requires describing the decomposition of the system
 In this section you should start by briefly describing the components of the project and their interrelations. You should describe how you solved typical problems you may have encountered, pointing to well-known architectural and design patterns, if applicable.
 -->
 
+---
 
-### Logical architecture
+## Logical architecture
+
+The logical architecture of the GreenWay application is organized into distinct layers that separate concerns and promote maintainability. The system follows a layered architecture pattern with clear dependencies flowing from top to bottom.
+
+![image](https://github.com/user-attachments/assets/5b786dbc-7b27-41d9-bab6-62414d8c2a94)
+
+
+### Package Descriptions
+
+The GreenWay application is organized into a modular and layered structure that supports **clean architecture** principles. Each layer has specific responsibilities and communicates with adjacent layers through well-defined interfaces.
+
+---
+
+### Presentation Layer
+
+### `Screens`
+- Contains all the main application screens that users interact with:
+  - Challenge management
+  - Shopping interface
+  - Badge display
+  - QR code functionality
+  - Settings
+  - Authentication flows (Login/Register)
+
+### `Widgets`
+- Reusable UI components and navigation elements
+- Promotes UI consistency across the application
+
+---
+
+### Business Logic Layer
+
+### `Providers`
+- Core state management classes using the **Provider Pattern**
+- Handles application business logic:
+  - Challenge progression
+  - Badge unlocking
+  - Points management
+
+### `State Management`
+- Implements Flutter's Provider pattern for:
+  - Reactive state updates
+  - Dependency injection
+  - Decoupled business logic
+
+---
+
+### Service Layer
+
+### `External Services`
+- Integration with device capabilities and third-party APIs:
+  - Authentication (`AuthService`)
+  - Notifications (`NotificationService`)
+  - Step tracking (`ProgressService`)
+
+### `Data Services`
+- Responsible for core data operations:
+  - Marketplace transactions (`TradeService`)
+  - Firebase integration for persistent storage
+
+---
+
+### Data Layer
+
+### `Models`
+- Core data structures representing domain entities:
+  - Challenges
+  - Badges
+  - Trade items
+
+### `Data Sources`
+- Persistence mechanisms:
+  - Cloud storage via Firestore
+  - Local storage with SharedPreferences
+  - Device storage for step tracking or QR data
+
+### `Static Data`
+- Predefined data used across the app:
+  - Default badges
+  - Challenge templates
+
+---
+
+### External Dependencies
+
+### `Firebase`
+- Backend-as-a-service platform:
+  - Authentication
+  - Firestore cloud database
+
+### `Device APIs`
+- Native capabilities used in-app:
+  - Step counting
+  - Camera access (QR scanning)
+  - Local notifications
+
+---
+
+### Architectural Benefits
+
+This logical architecture ensures a **clear separation of concerns**, with each layer having:
+- **Specific responsibilities**
+- **Unidirectional dependency flow** from presentation → data layer
+- Improved **maintainability** and **testability**
+- Support for **Flutter’s reactive programming model**
+
 <!--
 The purpose of this subsection is to document the high-level logical structure of the code (Logical View), using a UML diagram with logical packages, without the worry of allocating to components, processes or machines.
 
@@ -288,7 +499,10 @@ Example of _UML package diagram_ showing a _logical view_ of the Eletronic Ticke
 -->
 
 
-### Physical architecture
+## Physical architecture
+
+![image](https://github.com/user-attachments/assets/2f0d3d43-8d01-42ab-b02b-185ac91739e9)
+
 <!--
 The goal of this subsection is to document the high-level physical structure of the software system (machines, connections, software components installed, and their dependencies) using UML deployment diagrams (Deployment View) or component diagrams (Implementation View), separate or integrated, showing the physical structure of the system.
 
@@ -300,7 +514,53 @@ Example of _UML deployment diagram_ showing a _deployment view_ of the Eletronic
 -->
 
 
-### Vertical prototype
+## Vertical prototype
+
+## Challenge Management System Prototype
+
+To validate our technology choices, we implemented a **Challenge Management System** that demonstrates the core functionality and integrates our main technologies.
+
+---
+
+## Implemented Features
+
+- **Challenge List**: Display of eco-friendly challenges with progress tracking
+- **QR Code Scanner**: Scan codes to complete environmental events
+- **Points System**: Earn points for completing challenges
+- **Real-time Updates**: UI updates automatically when challenges are completed
+
+---
+
+## User Interface
+
+### Challenge Screen
+
+- List of available challenges (e.g., steps, car-free day, shower timer)
+- Progress bars showing completion status
+- Point values for each challenge
+
+### QR Scanner
+
+- Real-time camera preview
+- Automatic code detection
+- Visual feedback for success or error
+
+---
+
+## Validation Results
+
+- **Cross-platform**: Single codebase works on Android and iOS
+- **Real-time sync**: Firebase updates UI instantly
+- **Device integration**: Camera and step counter integration functional
+- **State management**: Provider pattern handles complex state transitions
+- **Performance**: Smooth and responsive UI with reactive updates
+
+---
+
+## Conclusion
+
+This prototype proves that our architecture can deliver the required functionality with **good performance**, **cross-platform support**, and **maintainability**. It validates our use of Flutter, Firebase, and Provider for a scalable and user-friendly application.
+
 <!--
 To help on validating all the architectural, design and technological decisions made, we usually implement a vertical prototype, a thin vertical slice of the system integrating as much technologies we can.
 
