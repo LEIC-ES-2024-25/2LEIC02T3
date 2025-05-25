@@ -20,13 +20,13 @@ Future<void> main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  // Initialize notifications
+  
   await NotificationService().init();
 
   runApp(
     MultiProvider(
       providers: [
-        Provider<AuthService>(create: (_) => AuthService()), // Provide AuthService
+        Provider<AuthService>(create: (_) => AuthService()), 
         ChangeNotifierProvider(create: (_) => PointsProvider()),
         ChangeNotifierProvider(create: (_) => BadgesProvider()),
         ChangeNotifierProvider(create: (_) => ChallengesProvider()),
@@ -44,14 +44,14 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Eco-Friendly Challenges',
       theme: ThemeData(
-        primaryColor: Colors.green, // Set the primary color to green
+        primaryColor: Colors.green, 
         colorScheme: ColorScheme.light(
-          primary: Colors.green, // Use green as the primary color
-          secondary: Colors.green, // Use green as the secondary/accent color
+          primary: Colors.green, 
+          secondary: Colors.green, 
         ),
         inputDecorationTheme: InputDecorationTheme(
           focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.green), // Match the focus border color
+            borderSide: BorderSide(color: Colors.green), 
           ),
         ),
       ),

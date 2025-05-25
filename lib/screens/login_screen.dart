@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import '../services/auth_service.dart'; // Import your AuthService
+import '../services/auth_service.dart'; 
 
 class LoginScreen extends StatefulWidget {
-  final VoidCallback showRegisterScreen; // Callback to switch to register screen
+  final VoidCallback showRegisterScreen; 
   const LoginScreen({super.key, required this.showRegisterScreen});
 
   @override
@@ -16,7 +16,7 @@ class _LoginScreenState extends State<LoginScreen> {
   String? _errorMessage;
 
   Future<void> _signIn() async {
-    setState(() { _errorMessage = null; }); // Clear previous error
+    setState(() { _errorMessage = null; }); 
     final result = await _authService.signInWithEmailAndPassword(
       _emailController.text.trim(),
       _passwordController.text.trim(),
@@ -26,7 +26,7 @@ class _LoginScreenState extends State<LoginScreen> {
         _errorMessage = "Sign in failed. Please check your credentials.";
       });
     }
-    // No need to navigate here, the AuthWrapper will handle it
+    
   }
 
   @override

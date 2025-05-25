@@ -1,15 +1,14 @@
-// lib/models/challenge.dart
 class Challenge {
   final String id;
   String title;
   String description;
   int points;
-  int totalSteps; // Total steps required for this challenge
-  int currentSteps; // Current steps completed (mutable)
-  String carFreeStatus; // For Car-Free Day challenge
-  String bikeRideStatus; // New property for bike-riding status
-  bool isTimerRunning; // For tracking if the timer is running
-  int elapsedTime; // Elapsed time in seconds
+  int totalSteps; 
+  int currentSteps; 
+  String carFreeStatus; 
+  String bikeRideStatus; 
+  bool isTimerRunning; 
+  int elapsedTime; 
   String showerStatus;
   String qrCodeStatus;
   bool isCompleted;
@@ -19,12 +18,12 @@ class Challenge {
     required this.title,
     required this.description,
     required this.points,
-    this.totalSteps = 0, // Default to 0 if not a step-based challenge
-    this.currentSteps = 0, // Start with 0 steps completed
-    this.carFreeStatus = "car-free by now", // Default status for Car-Free Day
-    this.bikeRideStatus = "not done yet", // Default status for bike-riding
-    this.isTimerRunning = false, // Timer is not running initially
-    this.elapsedTime = 0, // Elapsed time starts at 0
+    this.totalSteps = 0, 
+    this.currentSteps = 0, 
+    this.carFreeStatus = "car-free by now", 
+    this.bikeRideStatus = "not done yet", 
+    this.isTimerRunning = false, 
+    this.elapsedTime = 0, 
     this.showerStatus = "not started",
     this.qrCodeStatus = "not scanned",
     this.isCompleted = false,

@@ -4,7 +4,7 @@ import 'dart:async';
 
 import 'package:es_app/services/progress_service.dart';
 
-// Mock classes - Simplified versions without using mockito since it requires code generation
+
 class MockUser implements User {
   final String _uid;
   final String _email;
@@ -101,7 +101,7 @@ class MockFirebaseAuth implements FirebaseAuth {
   dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
 }
 
-// Mock ProgressService
+
 class MockProgressService implements ProgressService {
   Map<String, dynamic> userData = {};
   
@@ -116,7 +116,7 @@ class MockProgressService implements ProgressService {
   }
 }
 
-// Test version of AuthService that uses our mocks
+
 class TestAuthService {
   final MockFirebaseAuth _auth;
   final MockProgressService _progressService;
@@ -127,40 +127,40 @@ class TestAuthService {
   }) : _auth = mockAuth,
        _progressService = mockProgress;
   
-  // Stream to listen for auth state changes
+  
   Stream<User?> get authStateChanges => _auth.authStateChanges();
 
-  // Get current user
+  
   User? get currentUser => _auth.currentUser;
 
-  // Sign in with Email and Password
+  
   Future<UserCredential?> signInWithEmailAndPassword(String email, String password) async {
     try {
       return await _auth.signInWithEmailAndPassword(email: email, password: password);
     } on FirebaseAuthException catch (e) {
-      // Handle errors (e.g., user-not-found, wrong-password)
+      
       print('Sign in failed: ${e.message}');
       return null;
     }
   }
 
-  // Sign up with Email and Password
+  
   Future<UserCredential?> signUpWithEmailAndPassword(String email, String password) async {
     try {
       final credential = await _auth.createUserWithEmailAndPassword(email: email, password: password);
-      // Initialize user_progress with empty badges field
+      
       if (credential.user != null) {
         await _progressService.setUserProgress({'badges': []});
       }
       return credential;
     } on FirebaseAuthException catch (e) {
-      // Handle errors (e.g., email-already-in-use, weak-password)
+      
       print('Sign up failed: ${e.message}');
       return null;
     }
   }
 
-  // Sign out
+  
   Future<void> signOut() async {
     await _auth.signOut();
   }
@@ -186,45 +186,45 @@ void main() {
   
   group('AuthService Tests', () {
     test('should return current user', () {
-      // Initially no user is signed in
+      
       expect(authService.currentUser, isNull);
       
-      // Sign in a mock user
+      
       final mockUser = MockUser(uid: 'test-uid', email: 'test@example.com');
       mockFirebaseAuth.signInUser(mockUser);
       
-      // Now currentUser should return the mock user
+      
       expect(authService.currentUser, isNotNull);
       expect(authService.currentUser?.uid, equals('test-uid'));
       expect(authService.currentUser?.email, equals('test@example.com'));
     });
     
     test('authStateChanges should emit events when auth state changes', () async {
-      // Set up a listener for auth state changes
+      
       final states = <User?>[];
       final subscription = authService.authStateChanges.listen(states.add);
       
-      // Initially no user is signed in
+      
       expect(states, isEmpty);
       
-      // Sign in a user
+      
       final mockUser = MockUser(uid: 'test-uid', email: 'test@example.com');
       mockFirebaseAuth.signInUser(mockUser);
       
-      // Wait for the event to be processed
+      
       await Future.delayed(Duration.zero);
       expect(states.length, 1);
       expect(states.first?.uid, equals('test-uid'));
       
-      // Sign out the user
+      
       mockFirebaseAuth.signOutUser();
       
-      // Wait for the event to be processed
+      
       await Future.delayed(Duration.zero);
       expect(states.length, 2);
       expect(states.last, isNull);
       
-      // Clean up the subscription
+      
       subscription.cancel();
     });
     
@@ -255,7 +255,7 @@ void main() {
       expect(result?.user?.email, equals('new@example.com'));
       expect(result?.user?.uid, equals('new-user-uid'));
       
-      // Verify that user progress was initialized
+      
       expect(mockProgressService.userData.containsKey('badges'), isTrue);
       expect(mockProgressService.userData['badges'], isEmpty);
     });
@@ -273,17 +273,17 @@ void main() {
     });
     
     test('signOut should sign out the current user', () async {
-      // First sign in a user
+      
       final mockUser = MockUser(uid: 'test-uid', email: 'test@example.com');
       mockFirebaseAuth.signInUser(mockUser);
       
-      // Verify the user is signed in
+      
       expect(authService.currentUser, isNotNull);
       
-      // Sign out
+      
       await authService.signOut();
       
-      // Verify the user is signed out
+      
       expect(authService.currentUser, isNull);
     });
   });

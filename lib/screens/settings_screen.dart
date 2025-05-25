@@ -62,19 +62,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
     try {
       final authService = Provider.of<AuthService>(context, listen: false);
 
-      // 1. Clear local data
       await Provider.of<BadgesProvider>(context, listen: false).clearLocalProgress();
       await Provider.of<PointsProvider>(context, listen: false).clearLocalPoints();
       await Provider.of<ChallengesProvider>(context, listen: false).clearLocalChallengeProgress();
 
-      // 2. Log out the user
       await authService.signOut();
 
-      // 3. Clear pending SnackBars
       if (mounted) {
         ScaffoldMessenger.of(context).clearSnackBars();
 
-        // 4. Navigate to authentication screen
         Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(builder: (_) => const AuthWrapper()),
               (route) => false,
@@ -116,7 +112,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            // Account section
             _buildSectionHeader('Account'),
             Card(
               elevation: 2,
@@ -137,7 +132,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
             const SizedBox(height: 20),
 
-            // Preferences section
             _buildSectionHeader('Preferences'),
             Card(
               elevation: 2,
@@ -160,7 +154,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     });
                     await _saveNotificationPreference(value);
                     
-                    // Show feedback to user
                     if (mounted) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
@@ -177,7 +170,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
             const SizedBox(height: 20),
 
-            // About section
             _buildSectionHeader('About'),
             Card(
               elevation: 2,
@@ -231,7 +223,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
-  /// Creates a section header
   Widget _buildSectionHeader(String title) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),

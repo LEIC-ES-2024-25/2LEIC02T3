@@ -2,7 +2,6 @@ import 'package:flutter/material.dart' hide Badge;
 import '../models/badge.dart';
 
 class BadgeService {
-  // In a real app, this would come from a database or API
   List<Badge_> getAllBadges() {
     return [
       Badge_(
