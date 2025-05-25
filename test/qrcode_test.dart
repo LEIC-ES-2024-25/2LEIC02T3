@@ -11,7 +11,8 @@ void main() {
         title: 'Cleanup Challenge',
         description: 'Participate in any environmental event',
         points: 50,
-        qrCodeStatus: 'Scanned: clean up event'
+        qrCodeStatus: 'Scanned: clean up event',
+        isCompleted: true,
       );
       
       // Set a lastQRCodeDate 25 hours ago (exceeds 24h limit)
@@ -24,11 +25,14 @@ void main() {
       // Apply the status reset logic that happens in the app
       if (hourDifference >= 24) {
         cleanupChallenge.qrCodeStatus = "not scanned";
+        cleanupChallenge.isCompleted = false;
       }
       
       // Verify QR code status was reset
       expect(cleanupChallenge.qrCodeStatus, "not scanned", 
         reason: 'QR code status should be reset after 24 hours');
+      expect(cleanupChallenge.isCompleted, false,
+        reason: 'Completion flag should reset after 24 hours');
     });
     
     test('QR code status should not reset before 24 hours', () {
@@ -38,7 +42,8 @@ void main() {
         title: 'Cleanup Challenge',
         description: 'Participate in any environmental event',
         points: 50,
-        qrCodeStatus: 'Scanned: clean up event'
+        qrCodeStatus: 'Scanned: clean up event',
+        isCompleted: true,
       );
       
       // Set a lastQRCodeDate 23 hours ago (within 24h limit)
@@ -51,11 +56,14 @@ void main() {
       // Apply the status reset logic that happens in the app
       if (hourDifference >= 24) {
         cleanupChallenge.qrCodeStatus = "not scanned";
+        cleanupChallenge.isCompleted = false;
       }
       
       // Verify QR code status was not reset
       expect(cleanupChallenge.qrCodeStatus, "Scanned: clean up event", 
         reason: 'QR code status should not reset before 24 hours');
+      expect(cleanupChallenge.isCompleted, true,
+        reason: 'Completion flag should not reset before 24 hours');
     });
     
     test('Scan status is updated when scanning a QR code', () {
