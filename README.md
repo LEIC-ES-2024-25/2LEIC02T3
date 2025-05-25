@@ -1,8 +1,8 @@
-# _FEUP-COINS_ Development Report
+# _GreenWay_ Development Report
 
-Welcome to the documentation pages of _FEUP-COINS_!
+Welcome to the documentation pages of _GreenWay_!
 
-This Software Development Report, tailored for LEIC-ES-2024-25, provides comprehensive details about _FEUP-COINS_, from high-level vision to low-level implementation decisions. It’s organised by the following activities.
+This Software Development Report, tailored for LEIC-ES-2024-25, provides comprehensive details about _GreenWay_, from high-level vision to low-level implementation decisions. It’s organised by the following activities.
 
 * [Business modeling](#Business-Modelling)
   * [Product Vision](#Product-Vision)
@@ -10,11 +10,13 @@ This Software Development Report, tailored for LEIC-ES-2024-25, provides compreh
   * [Elevator Pitch](#Elevator-pitch)
 * [Requirements](#Requirements)
   * [User stories](#User-stories)
-  * [Domain model](#Domain-model)
-* [Architecture and Design](#Architecture-And-Design)
+  <!-- 
+  [Domain model](#Domain-model)
+   [Architecture and Design](#Architecture-And-Design)
   * [Logical architecture](#Logical-Architecture)
   * [Physical architecture](#Physical-Architecture)
   * [Vertical prototype](#Vertical-Prototype)
+  -->
 * [Project management](#Project-Management)
   * [Sprint 0](#Sprint-0)
   * [Sprint 1](#Sprint-1)
