@@ -251,6 +251,7 @@ At the end, it is good to add a rough indication of the value of the user story 
 -->
 
 ### Domain model
+![image](https://github.com/user-attachments/assets/fcbae9a8-6954-44a5-925c-d054fbd7a902)
 
 <!-- 
 To better understand the context of the software system, it is useful to have a simple UML class diagram with all and only the key concepts (names, attributes) and relationships involved of the problem domain addressed by your app. 
