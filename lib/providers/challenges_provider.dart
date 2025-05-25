@@ -150,8 +150,10 @@ class ChallengesProvider with ChangeNotifier {
         if (cleanupChallenge.id.isNotEmpty) {
           if (_lastQRCodeDate != null && DateTime.now().difference(_lastQRCodeDate!).inHours < 24 && firestoreData.containsKey('qrCodeStatus')) {
             cleanupChallenge.qrCodeStatus = firestoreData['qrCodeStatus'] as String? ?? "not scanned";
+            cleanupChallenge.isCompleted = true; // keep completed within 24h window
           } else {
             cleanupChallenge.qrCodeStatus = "not scanned";
+            cleanupChallenge.isCompleted = false; // reset completion after expiration
           }
         }
 
