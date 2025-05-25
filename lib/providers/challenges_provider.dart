@@ -62,7 +62,6 @@ class ChallengesProvider with ChangeNotifier {
       Challenge(id: 'car-free', title: "Car-Free Day", description: "Avoid using a car today.", points: 60, carFreeStatus: "car-free by now"),
       Challenge(id: 'bike', title: "Rode a Bike Today", description: "Swap your car ride for a bike ride today.", points: 30, bikeRideStatus: "not done yet"),
       Challenge(id: 'shower', title: "5-minutes-shower", description: "Take a shower in under 5 minutes.", points: 30, isTimerRunning: false, elapsedTime: 0, showerStatus: "not started"),
-      Challenge(id: 'screen-time', title: "Screen Time", description: "Limit your screen time to 2 hours.", points: 80, totalSteps: 120, currentSteps: 0),
       Challenge(id: 'cleanup', title: "Attend Any Eco Event", description: "Participate in any environmental event and scan the QR code.", points: 50, qrCodeStatus: "not scanned"),
     ];
   }
@@ -414,7 +413,6 @@ class ChallengesProvider with ChangeNotifier {
           case 'shower': badgeId = 'water_saver'; break;
           case 'bike': badgeId = 'cycling_pro'; break;
           case 'cleanup': badgeId = 'community_leader'; break;
-          case 'screen-time': badgeId = 'screen_balancer'; break;
         }
         if (badgeId != null) {
           await badgesProvider.unlockBadge(badgeId, context);
@@ -424,7 +422,7 @@ class ChallengesProvider with ChangeNotifier {
             await badgesProvider.unlockBadge(firstBadge, context);
           }
           // Unlock 'Eco Master' when all other badges are unlocked
-          final allBadgeIds = ['eco_beginner','step_enthusiast','water_saver','screen_balancer','cycling_pro','community_leader'];
+          final allBadgeIds = ['eco_beginner','step_enthusiast','water_saver','cycling_pro','community_leader'];
           final unlockedIds = badgesProvider.badges.where((b) => b.isUnlocked).map((b) => b.id).toList();
           if (!unlockedIds.contains('eco_master') && allBadgeIds.every((id) => unlockedIds.contains(id))) {
             await badgesProvider.unlockBadge('eco_master', context);

@@ -5,6 +5,7 @@ import '../providers/badges_provider.dart';
 import '../providers/challenges_provider.dart';
 import '../providers/points_provider.dart';
 import '../services/auth_service.dart';
+import '../services/progress_service.dart';
 import '../widgets/auth_wrapper.dart';
 import 'bottom_navigation_bar.dart';
 
@@ -18,15 +19,41 @@ class SettingsScreen extends StatefulWidget {
 class _SettingsScreenState extends State<SettingsScreen> {
   bool _isLoading = false;
   bool _notificationsEnabled = true;
-
-  Future<void> _savePreferences() async {
-    // Implementation of preferences saving
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Preferences saved successfully!'),
-        backgroundColor: Colors.green,
-      ),
-    );
+  
+  @override
+  void initState() {
+    super.initState();
+    _loadNotificationPreference();
+  }
+  
+  Future<void> _loadNotificationPreference() async {
+    try {
+      final progressService = ProgressService();
+      final userData = await progressService.getUserProgress();
+      if (userData != null && userData.containsKey('notifications_enabled')) {
+        setState(() {
+          _notificationsEnabled = userData['notifications_enabled'] as bool;
+        });
+      }
+    } catch (e) {
+      debugPrint('Error loading notification preference: $e');
+    }
+  }
+  
+  Future<void> _saveNotificationPreference(bool enabled) async {
+    try {
+      await ProgressService().setUserProgress({
+        'notifications_enabled': enabled,
+      });
+    } catch (e) {
+      debugPrint('Error saving notification preference: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error saving notification settings: $e'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
   }
 
   Future<void> _handleLogout(BuildContext context) async {
@@ -104,14 +131,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   subtitle: Text(
                     Provider.of<AuthService>(context).currentUser?.email ?? 'Not logged in',
                   ),
-                  onTap: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Feature in development'),
-                        backgroundColor: Colors.green,
-                      ),
-                    );
-                  },
                 ),
               ),
             ),
@@ -135,10 +154,22 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       color: Colors.green
                   ),
                   value: _notificationsEnabled,
-                  onChanged: (value) {
+                  onChanged: (value) async {
                     setState(() {
                       _notificationsEnabled = value;
                     });
+                    await _saveNotificationPreference(value);
+                    
+                    // Show feedback to user
+                    if (mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(value ? 'Notifications enabled' : 'Notifications disabled'),
+                          backgroundColor: Colors.green,
+                          duration: const Duration(seconds: 2),
+                        ),
+                      );
+                    }
                   },
                 ),
               ),
@@ -191,19 +222,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
 
             const SizedBox(height: 20),
-
-            // Save settings button
-            ElevatedButton(
-              onPressed: _savePreferences,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.green,
-                padding: const EdgeInsets.symmetric(vertical: 15),
-              ),
-              child: const Text(
-                'Save Settings',
-                style: TextStyle(color: Colors.white, fontSize: 16),
-              ),
-            ),
           ],
         ),
       ),

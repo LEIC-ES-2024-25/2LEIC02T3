@@ -1,5 +1,7 @@
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import '../services/progress_service.dart';
 
 class NotificationService {
   static final NotificationService _instance = NotificationService._internal();
@@ -69,6 +71,11 @@ class NotificationService {
   }
 
   Future<void> showStepCountNotification(int stepCount) async {
+    // Check user preference before showing notification
+    if (!await _areNotificationsEnabled()) {
+      return;
+    }
+    
     const AndroidNotificationDetails androidDetails = AndroidNotificationDetails(
       'step_count_channel_silent', // Use the new channel ID
       'Step Count (Silent)',
@@ -89,12 +96,32 @@ class NotificationService {
       platformDetails,
     );
   }
+  
+  Future<bool> _areNotificationsEnabled() async {
+    try {
+      final progressService = ProgressService();
+      final userData = await progressService.getUserProgress();
+      // Default to true if the setting doesn't exist in Firestore
+      return userData != null && userData.containsKey('notifications_enabled') 
+          ? userData['notifications_enabled'] as bool
+          : true;
+    } catch (e) {
+      // Default to true on error
+      print('Error checking notification preference: $e');
+      return true;
+    }
+  }
 
   Future<void> cancelNotification() async {
     await flutterLocalNotificationsPlugin.cancel(0);
   }
 
   Future<void> showChallengeCompletedNotification(String challengeTitle, int points) async {
+    // Check user preference before showing notification
+    if (!await _areNotificationsEnabled()) {
+      return;
+    }
+    
     const AndroidNotificationDetails androidDetails = AndroidNotificationDetails(
       'challenge_completed_channel',
       'Challenge Completed',

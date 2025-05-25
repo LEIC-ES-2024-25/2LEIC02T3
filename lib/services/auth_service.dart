@@ -25,9 +25,12 @@ class AuthService {
   Future<UserCredential?> signUpWithEmailAndPassword(String email, String password) async {
     try {
       final credential = await _auth.createUserWithEmailAndPassword(email: email, password: password);
-      // Initialize user_progress with empty badges field
+      // Initialize user_progress with empty badges field and notification preferences
       if (credential.user != null) {
-        await ProgressService().setUserProgress({'badges': []});
+        await ProgressService().setUserProgress({
+          'badges': [], 
+          'notifications_enabled': true  // Default notification setting is enabled
+        });
       }
       return credential;
     } on FirebaseAuthException catch (e) {
