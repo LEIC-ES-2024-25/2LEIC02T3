@@ -97,6 +97,8 @@ Optionally, indicate an initial/tentative list of assumptions that you are doing
 -->
 
 ### Elevator Pitch
+
+Ever wondered how small daily choices can add up to a healthier planet? GreenWay  makes it easy (and fun!) to build eco-friendly habits. Track your steps, cut down your shower time, switch to greener and healthier transportation, and earn points for every sustainable choice. Unlock badges and scan QR codes at eco-events, and stay engaged with challenges that fit your lifestyle and your interests. You can even trade study materials and electronics for your earned points, helping to reduce waste while taking advantage of the app's virtual-currency system. Built for eco-conscious users and students, GreenWay blends gamification with real-world impact—helping you stay motivated while making a difference. Because going green shouldn’t just be good for the planet — it should feel great, too.
 <!-- 
 Draft a small text to help you quickly introduce and describe your product in a short time (lift travel time ~90 seconds) and a few words (~800 characters), a technique usually known as elevator pitch.
 
@@ -115,8 +117,6 @@ Take a look at the following links to learn some techniques:
 - As a user, I want to trade study materials so that I can reduce waste and promote the reuse of resources.   XXL
 
 - As a user, I want to earn points by completing challenges & earn badges so that I feel motivated to complete more challenges.   L
-
-<!-- - As a user, I want a friend leaderboard so that I can compete in a fun and eco-friendly way. -->
 
 - As a user, I want to generate QR Codes for the eco-friendly events I organize, so the other users who join it can scan it and earn points.   M
 
